@@ -17,7 +17,7 @@ internal fun Articles.toArticlesDto(typeArticles: TypeArticles): ArticlesDB {
         publishedAt,
         typeArticles
     )
-}
+}//Преобразования данных из модели API в модель БД
 
 internal fun ArticlesDB.toArticles(): Articles {
     return Articles(
@@ -29,4 +29,4 @@ internal fun ArticlesDB.toArticles(): Articles {
         urlToImage,
         publishedAt
     )
-}
+}//Преобразования данных из модели БД в модель API

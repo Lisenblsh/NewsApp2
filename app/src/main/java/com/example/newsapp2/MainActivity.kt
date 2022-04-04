@@ -2,8 +2,7 @@ package com.example.newsapp2
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.newsapp2.data.network.Articles
-import com.example.newsapp2.data.network.Source
+import com.example.newsapp2.data.network.*
 import com.example.newsapp2.data.room.TypeArticles
 import com.example.newsapp2.data.room.TypeSource
 import com.example.newsapp2.data.toArticlesDto

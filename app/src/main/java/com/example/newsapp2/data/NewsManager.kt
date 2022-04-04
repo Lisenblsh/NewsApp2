@@ -1,4 +1,6 @@
 package com.example.newsapp2.data
 
-class NewsManager {
+import com.example.newsapp2.data.network.retrofit.RetrofitService
+
+class NewsManager(private val retrofitService: RetrofitService) {
 }
