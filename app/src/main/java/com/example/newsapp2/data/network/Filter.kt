@@ -9,17 +9,11 @@ data class Filter(
     val newsTo: String = "",
     val page: Int = 1,
     val pageSize: Int = 10,
-    val excludeDomains: String = ""
-)
-
-data class FilterForFavorite(
-    val newsQuery: String = "q",
-    val page: Int = 1,
-    val pageSize: Int = 10,
+    val excludeDomains: String = "",
     val newsDomains: String = ""
 )
 
 object CurrentFilter{
     var filterForNews = Filter()
-    var filterForFavorite = FilterForFavorite()
+    var filterForFavorite = Filter()
 }
