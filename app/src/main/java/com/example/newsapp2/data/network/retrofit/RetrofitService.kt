@@ -1,6 +1,7 @@
 package com.example.newsapp2.data.network.retrofit
 
 import com.example.newsapp2.data.network.Articles
+import com.example.newsapp2.data.network.NewsModel
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -18,5 +19,5 @@ interface RetrofitService {
         @Query("page") page: Int,
         @Query("pageSize") pageSize: Int,
         @Query("excludeDomains") excludeDomains: String
-    ): Response<List<Articles>>
+    ): Response<NewsModel>
 }
