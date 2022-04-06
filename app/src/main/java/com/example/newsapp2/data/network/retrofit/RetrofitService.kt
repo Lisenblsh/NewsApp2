@@ -1,8 +1,10 @@
 package com.example.newsapp2.data.network.retrofit
 
-import com.example.newsapp2.data.network.Articles
 import com.example.newsapp2.data.network.NewsModel
+import okhttp3.OkHttpClient
 import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -19,5 +21,37 @@ interface RetrofitService {
         @Query("page") page: Int,
         @Query("pageSize") pageSize: Int,
         @Query("excludeDomains") excludeDomains: String
-    ): Response<NewsModel>
+    ): NewsModel
+
+    companion object {
+        private const val key = "c8556aedf85d4a5b80ad98ac35763a7a"
+        private const val BASE_URL = "https://newsapi.org/v2/"
+
+        fun create(): RetrofitService {
+            val okHttpClient = OkHttpClient.Builder()
+                .addInterceptor { chain ->
+                    val original = chain.request()
+
+                    val requestBuilder = original.newBuilder()
+                        .addHeader("authorization", key)
+                        .method(original.method, original.body)
+
+                    val request = requestBuilder.build()
+
+                    chain.proceed(request)
+                }
+                .retryOnConnectionFailure(true)
+                .build()
+
+            return Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(RetrofitService::class.java)
+
+        }
+
+
+    }
 }

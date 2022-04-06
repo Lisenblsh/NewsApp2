@@ -1,33 +1,30 @@
 package com.example.newsapp2.data.room
 
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.paging.PagingSource
+import androidx.room.*
 
+@Dao
 interface NewsDao {
-
     //Articles
-    @Query("select* from tableArticles where typeArticles = :type")
-    fun getArticlesData(type: TypeArticles): List<ArticlesDB>
+    //Добавить новости в БД
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllArticles(articles: List<ArticlesDB>)
 
-    @Query("select* from tableArticles where typeArticles = :type and idArticles = :idArticles")
+    //ПОлучить список новостей
+    @Query("select* from articles where typeArticles = :type")
+    fun getArticlesData(type: TypeArticles): PagingSource<Int, ArticlesDB>
+
+    //ПОлучить список новостей
+    @Query("select* from articles where typeArticles = :type")
+    fun getArticlesData2(type: TypeArticles): List<ArticlesDB>
+
+    //Получить новость по ID
+    @Query("select* from articles where typeArticles = :type and idArticles = :idArticles")
     fun getArticlesData(type: TypeArticles, idArticles: Int): ArticlesDB
 
-    @Query("select* from tableArticles")
-    fun getArticlesData(): List<ArticlesDB>
-
-    @Insert
-    fun insertArticles(articles: ArticlesDB)
-
-    @Delete
-    fun deleteArticles(articles: ArticlesDB)
-
-    @Query("delete from tableArticles where typeArticles = :type")
-    fun deleteArticles(type: TypeArticles)
-
+    //Удалить одну новость из списка избраных
     @Query(
-        "delete from tableArticles where :title = title " +
+        "delete from articles where :title = title " +
                 "and :url = url and :publishedAt = publishedAt " +
                 "and typeArticles = :type"
     )
@@ -38,11 +35,21 @@ interface NewsDao {
         type: TypeArticles = TypeArticles.FavoriteNews
     )
 
-    @Query("delete from tableArticles where typeArticles = 3 and source = :source ")
-    fun deleteArticlesFromFavSources(source: String)
+    //Отчистка Новостей
+    @Query("delete from articles where typeArticles = :type")
+    suspend fun clearArticles(type: TypeArticles)
 
-    @Query("delete from tableArticles where typeArticles = :type")
-    fun clearArticles(type: TypeArticles)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllKeys(remoteKey: List<RemoteKeys>)
+
+    @Query("SELECT * FROM remote_keys WHERE newsId = :newsId")
+    suspend fun remoteKeysNewsId(newsId: Long): RemoteKeys?
+
+    @Query("DELETE FROM remote_keys where typeArticles = :type")
+    suspend fun clearRemoteKeys(type: TypeArticles)
+
+
 
 
     //Sources
@@ -51,9 +58,6 @@ interface NewsDao {
 
     @Query("select* from tableSources where typeSource = :type and idSource = :idSource")
     fun getSourcesData(type: TypeSource, idSource: Int): SourcesDB
-
-    @Query("select* from tableSources")
-    fun getSourcesData(): List<SourcesDB>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertSources(sources: SourcesDB)

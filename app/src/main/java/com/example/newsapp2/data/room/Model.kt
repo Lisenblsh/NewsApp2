@@ -3,9 +3,9 @@ package com.example.newsapp2.data.room
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "tableArticles")
+@Entity(tableName = "articles")
 data class ArticlesDB(
-    @PrimaryKey(autoGenerate = true) val idArticles: Int = 0,
+    @PrimaryKey(autoGenerate = true) val idArticles: Long = 0,
     val source: String,
     val author: String?,
     val title: String?,
@@ -21,6 +21,14 @@ enum class TypeArticles(val type: Int) {
     FavoriteNews(2),
     NewsFromFavoriteSource(3);
 }
+
+@Entity(tableName = "remote_keys")
+data class RemoteKeys(
+    @PrimaryKey val newsId: Long,
+    val prevKey: Int?,
+    val nextKey: Int?,
+    val typeArticles: TypeArticles
+)
 
 /*Типы:
 * 1 - Обычные новости

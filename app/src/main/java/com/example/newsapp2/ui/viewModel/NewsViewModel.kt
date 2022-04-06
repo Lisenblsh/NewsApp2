@@ -1,35 +1,51 @@
 package com.example.newsapp2.ui.viewModel
 
-import android.util.Log
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.map
+import androidx.savedstate.SavedStateRegistryOwner
 import com.example.newsapp2.data.NewsRepository
 import com.example.newsapp2.data.Resource
 import com.example.newsapp2.data.network.NewsModel
+import com.example.newsapp2.data.room.ArticlesDB
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import java.lang.IllegalArgumentException
 
-class NewsViewModel(private val newsRepository: NewsRepository) : ViewModel() {
-    var news: MutableLiveData<Resource<NewsModel>> = MutableLiveData()
+class NewsViewModel(
+    private val newsRepository: NewsRepository,
+    private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
+
+    val pagingDataFlow: Flow<PagingData<ArticlesDB>>
 
     init {
-        getCurrentNews()
+        pagingDataFlow = getCurrentNews().cachedIn(viewModelScope)
+
     }
 
-    private fun getCurrentNews() = viewModelScope.launch {
-        newsRepository.getNews(news)
+    private fun getCurrentNews(): Flow<PagingData<ArticlesDB>> =
+        newsRepository.getNews()
+}
+
+class NewsViewModelFactory(
+    owner: SavedStateRegistryOwner,
+    private val newsRepository: NewsRepository
+) : AbstractSavedStateViewModelFactory(owner, null) {
+    override fun <T : ViewModel?> create(
+        key: String,
+        modelClass: Class<T>,
+        handle: SavedStateHandle
+    ): T {
+        if (modelClass.isAssignableFrom(NewsViewModel::class.java)) {
+            return NewsViewModel(newsRepository, handle) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
 
-class NewsViewModelFactory(private val newsRepository: NewsRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return if (modelClass.isAssignableFrom(NewsViewModel::class.java)) {
-            NewsViewModel(this.newsRepository) as T
-        } else {
-            throw IllegalArgumentException("ViewModel is not found")
-        }
-    }
-
+sealed class UiModel {
+    data class NewsItem(val news: ArticlesDB) : UiModel()
 }

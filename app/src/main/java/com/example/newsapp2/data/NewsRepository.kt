@@ -1,38 +1,39 @@
 package com.example.newsapp2.data
 
-import android.util.Log
-import androidx.lifecycle.MutableLiveData
-import com.example.newsapp2.data.network.CurrentFilter
-import com.example.newsapp2.data.network.NewsModel
-import retrofit2.HttpException
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.example.newsapp2.data.network.retrofit.RetrofitService
+import com.example.newsapp2.data.room.ArticlesDB
+import com.example.newsapp2.data.room.NewsDataBase
+import com.example.newsapp2.data.room.TypeArticles
+import kotlinx.coroutines.flow.Flow
 
 class NewsRepository(
-    private val localDataSource: LocalDataSource,
-    private val remoteDataSource: RemoteDataSource
+    private val retrofitService: RetrofitService,
+    private val dataBase: NewsDataBase
 ) {
-    suspend fun getNews(news: MutableLiveData<Resource<NewsModel>>) {
-        try {
-            news.postValue(Resource.Loading())
-            val response = remoteDataSource.getNews(CurrentFilter.filterForNews)
-            if (response.isSuccessful) {
-                news.postValue(response.body()?.let {
-                    Log.e("news", "${it.articles[0].author}")
-                    Resource.Success(it)
-                })
-            } else {
-                val responseDB = localDataSource.getNews()
-                if (responseDB.articles.isNotEmpty()) {
-                    news.postValue(Resource.DataBase(responseDB, HttpException(response).message()))
-                } else {
-                    news.postValue(Resource.Error(HttpException(response).message()))
-                }
-            }
-        } catch (e: HttpException) {
-            news.postValue(Resource.Error("${e.message}"))
-        } catch (e: Exception) {
-            news.postValue(Resource.Error("${e.message}"))
-        }
+    fun getNews(): Flow<PagingData<ArticlesDB>> {
+        val pagingSourceFactory = {dataBase.newsListDao().getArticlesData(TypeArticles.RegularNews)}
+
+        @OptIn(ExperimentalPagingApi::class)
+        return Pager(
+            config = PagingConfig(
+                pageSize = NETWORK_PAGE_SIZE,
+                enablePlaceholders = false
+            ),
+            remoteMediator = NewsRemoteMediator(
+                retrofitService,
+                dataBase,
+                TypeArticles.RegularNews
+            ),
+            pagingSourceFactory = pagingSourceFactory
+        ).flow
     }
 
-    fun getNewsFromFavSources() {}
+    companion object {
+        const val NETWORK_PAGE_SIZE = 10
+    }
+
 }
