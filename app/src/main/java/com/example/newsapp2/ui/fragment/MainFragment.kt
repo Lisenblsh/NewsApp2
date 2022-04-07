@@ -1,7 +1,6 @@
 package com.example.newsapp2.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,24 +8,23 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.PagingData
-import androidx.paging.map
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.newsapp2.data.network.CurrentFilter
 import com.example.newsapp2.data.network.Filter
 import com.example.newsapp2.data.room.ArticlesDB
 import com.example.newsapp2.databinding.FragmentMainBinding
 import com.example.newsapp2.di.Injection
 import com.example.newsapp2.ui.adapters.NewsAdapter
 import com.example.newsapp2.ui.viewModel.NewsViewModel
-import com.example.newsapp2.ui.viewModel.UiModel
+import com.example.newsapp2.ui.viewModel.UiAction
+import com.example.newsapp2.ui.viewModel.UiState
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class MainFragment : Fragment() {
-
-
     private lateinit var viewModel: NewsViewModel
     private lateinit var newsFilter: Filter
 
@@ -48,30 +46,44 @@ class MainFragment : Fragment() {
         ).get(NewsViewModel::class.java)
 
         binding.bindState(
-            pagingData = viewModel.pagingDataFlow
+            uiState = viewModel.state,
+            pagingData = viewModel.pagingDataFlow,
+            uiActions = viewModel.accept
         )
 
         return binding.root
     }
 
-    private fun FragmentMainBinding.bindState(pagingData: Flow<PagingData<ArticlesDB>>) {
+    private fun FragmentMainBinding.bindState(
+        uiState: StateFlow<UiState>,
+        pagingData: Flow<PagingData<ArticlesDB>>,
+        uiActions: (UiAction) -> Unit
+    ) {
         val newsAdapter = NewsAdapter()
         newsList.adapter = newsAdapter
         newsList.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
         bindList(
+            uiState = uiState,
             pagingData = pagingData,
-            newsAdapter = newsAdapter
+            newsAdapter = newsAdapter,
+            onScrollChanged = uiActions
+
         )
     }
 
     private fun FragmentMainBinding.bindList(
         pagingData: Flow<PagingData<ArticlesDB>>,
-        newsAdapter: NewsAdapter
+        newsAdapter: NewsAdapter,
+        onScrollChanged: (UiAction) -> Unit,
+        uiState: StateFlow<UiState>
     ) {
+        newsList.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if(dy != 0) onScrollChanged(UiAction.Scroll(currentFilter = uiState.value.lastQueryScrolled))
+            }
+        })
         lifecycleScope.launch {
-            Log.e("news", "asa")
-
             pagingData.collectLatest(newsAdapter::submitData)
         }
     }

@@ -47,13 +47,14 @@ class NewsRemoteMediator(
             }
             LoadType.APPEND -> {
                 val remoteKeys = getRemoteKeyForLastItem(state)
-                val nextKey = remoteKeys?.prevKey
+                val nextKey = remoteKeys?.nextKey
                     ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
                 nextKey
             }
         }
 
         try {
+            CurrentFilter.filterForNews = Filter(page = page, pageSize = state.config.pageSize)
             val apiResponse = getNews(CurrentFilter.filterForNews)
 
             val news = apiResponse.articles.map { it.toArticlesDto(typeArticles) }
