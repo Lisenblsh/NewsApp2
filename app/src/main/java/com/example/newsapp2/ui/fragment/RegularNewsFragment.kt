@@ -1,5 +1,7 @@
 package com.example.newsapp2.ui.fragment
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,10 +12,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.newsapp2.data.network.CurrentFilter
-import com.example.newsapp2.data.network.Filter
 import com.example.newsapp2.data.room.ArticlesDB
-import com.example.newsapp2.databinding.FragmentMainBinding
+import com.example.newsapp2.databinding.FragmentRegularNewsBinding
 import com.example.newsapp2.di.Injection
 import com.example.newsapp2.ui.adapters.NewsAdapter
 import com.example.newsapp2.ui.viewModel.NewsViewModel
@@ -24,9 +24,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class MainFragment : Fragment() {
-    private lateinit var viewModel: NewsViewModel
-    private lateinit var newsFilter: Filter
+class RegularNewsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,8 +35,7 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val binding = FragmentMainBinding.inflate(inflater, container, false)
-        val view = binding.root
+        val binding = FragmentRegularNewsBinding.inflate(inflater, container, false)
         val viewModel = ViewModelProvider(
             this, Injection.provideViewModelFactory(
                 requireActivity().applicationContext, this
@@ -47,22 +44,30 @@ class MainFragment : Fragment() {
 
         binding.bindState(
             uiState = viewModel.state,
-            pagingData = viewModel.pagingDataFlow,
+            pagingData = viewModel.pagingDataRegularNewsFlow,
             uiActions = viewModel.accept
         )
 
         return binding.root
     }
 
-    private fun FragmentMainBinding.bindState(
+    private fun FragmentRegularNewsBinding.bindState(
         uiState: StateFlow<UiState>,
         pagingData: Flow<PagingData<ArticlesDB>>,
         uiActions: (UiAction) -> Unit
     ) {
         val newsAdapter = NewsAdapter()
+        newsAdapter.setOnItemClickListener(object : NewsAdapter.OnItemClickListener {
+            override fun onItemClick(itemView: View?, url: String?) {
+
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                itemView?.context?.startActivity(intent)
+            }
+
+        })
         newsList.adapter = newsAdapter
         newsList.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-
+        newsList.scrollToPosition(0)
         bindList(
             uiState = uiState,
             pagingData = pagingData,
@@ -72,27 +77,19 @@ class MainFragment : Fragment() {
         )
     }
 
-    private fun FragmentMainBinding.bindList(
+    private fun FragmentRegularNewsBinding.bindList(
         pagingData: Flow<PagingData<ArticlesDB>>,
         newsAdapter: NewsAdapter,
         onScrollChanged: (UiAction) -> Unit,
         uiState: StateFlow<UiState>
     ) {
-        newsList.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+        newsList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if(dy != 0) onScrollChanged(UiAction.Scroll(currentFilter = uiState.value.lastQueryScrolled))
+                if (dy != 0) onScrollChanged(UiAction.Scroll(currentRegularFilter = uiState.value.lastRegularFilterScrolled))
             }
         })
         lifecycleScope.launch {
             pagingData.collectLatest(newsAdapter::submitData)
         }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 }

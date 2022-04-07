@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.newsapp2.R
 import com.example.newsapp2.data.room.ArticlesDB
+import java.text.SimpleDateFormat
+import java.util.*
 
 class NewsAdapter : PagingDataAdapter<ArticlesDB, RecyclerView.ViewHolder>(ARTICLES_COMPARATOR) {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -19,7 +21,9 @@ class NewsAdapter : PagingDataAdapter<ArticlesDB, RecyclerView.ViewHolder>(ARTIC
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return NewsViewHolder.create(parent)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.news_card_layout, parent, false)
+        return NewsViewHolder(view)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -38,11 +42,9 @@ class NewsAdapter : PagingDataAdapter<ArticlesDB, RecyclerView.ViewHolder>(ARTIC
 
         }
     }
-}
 
-class NewsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     interface OnItemClickListener {
-        fun onItemClick(itemView: View?, position: Int)
+        fun onItemClick(itemView: View?, url: String?)
     }
 
     private lateinit var clickListener: OnItemClickListener
@@ -51,68 +53,74 @@ class NewsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         this.clickListener = listener
     }
 
-    private val title: TextView = itemView.findViewById(R.id.news_title)
-    private val description: TextView = itemView.findViewById(R.id.news_description)
-    private val newsDate: TextView = itemView.findViewById(R.id.news_date)
-    private val source: TextView? = itemView.findViewById(R.id.news_source)
-    private val image: ImageView = itemView.findViewById(R.id.news_image)
+    inner class NewsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        private val title: TextView = itemView.findViewById(R.id.news_title)
+        private val description: TextView = itemView.findViewById(R.id.news_description)
+        private val newsDate: TextView = itemView.findViewById(R.id.news_date)
+        private val source: TextView? = itemView.findViewById(R.id.news_source)
+        private val image: ImageView = itemView.findViewById(R.id.news_image)
 
-    private var news: ArticlesDB? = null
+        private var news: ArticlesDB? = null
 
-    init {
-        itemView.setOnClickListener {
-            val position = adapterPosition
-            if (position != RecyclerView.NO_POSITION) {
-                clickListener.onItemClick(itemView, position)
+        init {
+            itemView.setOnClickListener {
+                val url = getItem(layoutPosition)?.url
+                if (position != RecyclerView.NO_POSITION) {
+                    clickListener.onItemClick(itemView, url)
+                }
             }
         }
-    }
 
-    fun bind(news: ArticlesDB?) {
-        if (news == null) {
-            title.text = "Loading.."
-            description.visibility = View.GONE
-            newsDate.text = "Loading.."
-            source?.text = "Loading.."
-            image.visibility = View.GONE
-        } else {
-            showRepoData(news)
+        fun bind(news: ArticlesDB?) {
+            if (news == null) {
+                title.text = "Loading.."
+                description.visibility = View.GONE
+                newsDate.text = "Loading.."
+                source?.text = "Loading.."
+                image.visibility = View.GONE
+            } else {
+                showRepoData(news)
+            }
         }
-    }
 
-    private fun showRepoData(news: ArticlesDB) {
-        this.news = news
-        title.text = news.title
+        private fun showRepoData(news: ArticlesDB) {
+            this.news = news
+            title.text = news.title
 
-        var descriptionVisibility = View.GONE
-        if (news.description != null) {
-            description.text = news.description
-            descriptionVisibility = View.VISIBLE
+            var descriptionVisibility = View.GONE
+            if (news.description != null) {
+                description.text = news.description
+                descriptionVisibility = View.VISIBLE
+            }
+            description.visibility = descriptionVisibility
+
+            newsDate.text = convertToDeviceDate(news.publishedAt)
+            source?.text = news.source
+
+            var imageVisibility = View.GONE
+            if (news.urlToImage != null) {
+                pastImage(news.urlToImage)
+                imageVisibility = View.VISIBLE
+            }
+            image.visibility = imageVisibility
         }
-        description.visibility = descriptionVisibility
 
-        newsDate.text = news.publishedAt
-        source?.text = news.source
-
-        var imageVisibility = View.GONE
-        if (news.urlToImage != null) {
-            pastImage(news.urlToImage)
-            imageVisibility = View.VISIBLE
+        private fun pastImage(url: String) {
+            Glide
+                .with(itemView)
+                .load(url)
+                .into(image)
         }
-        image.visibility = imageVisibility
-    }
 
-    private fun pastImage(url: String) {
-        Glide
-            .with(itemView)
-            .load(url)
-            .into(image)
-    }
-    companion object{
-        fun create(parent: ViewGroup):NewsViewHolder {
-            val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.news_card_layout, parent, false)
-            return NewsViewHolder(view)
+        private fun convertToDeviceDate(date: String): String {
+            val dateString = SimpleDateFormat("d MMMM, HH:mm", Locale("ru"))
+            val defaultDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
+            val currentTimeZone = GregorianCalendar().timeZone.rawOffset
+            return try{
+                dateString.format(Date(defaultDate.parse(date).time + currentTimeZone))
+            }catch (e: Exception) {
+                ""
+            }
         }
     }
 }

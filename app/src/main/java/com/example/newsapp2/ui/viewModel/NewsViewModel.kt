@@ -1,6 +1,9 @@
 package com.example.newsapp2.ui.viewModel
 
-import androidx.lifecycle.*
+import androidx.lifecycle.AbstractSavedStateViewModelFactory
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.savedstate.SavedStateRegistryOwner
@@ -17,15 +20,19 @@ class NewsViewModel(
 ) : ViewModel() {
 
     val state: StateFlow<UiState>
+    val stateFav: StateFlow<UiState>
 
-    val pagingDataFlow: Flow<PagingData<ArticlesDB>>
+    val pagingDataRegularNewsFlow: Flow<PagingData<ArticlesDB>>
+    val pagingDataFavoriteNewsFlow: Flow<PagingData<ArticlesDB>>
 
     val accept: (UiAction) -> Unit
 
     init {
-        pagingDataFlow = getCurrentNews().cachedIn(viewModelScope)
+        pagingDataRegularNewsFlow = getCurrentNews().cachedIn(viewModelScope)
+        pagingDataFavoriteNewsFlow = getFavoriteNews().cachedIn(viewModelScope)
         val actionStateFlow = MutableSharedFlow<UiAction>()
-        val lastFilterScrolled = CurrentFilter.filterForNews
+        val lastRegularFilterScrolled = CurrentFilter.filterForNews
+        val lastFavoriteFilterScrolled = CurrentFilter.filterForFavorite
         val filterScrolled = actionStateFlow
             .filterIsInstance<UiAction.Scroll>()
             .distinctUntilChanged()
@@ -36,11 +43,29 @@ class NewsViewModel(
                 started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
                 replay = 1
             )
-            .onStart { emit(UiAction.Scroll(currentFilter = lastFilterScrolled)) }
+            .onStart {
+                emit(
+                    UiAction.Scroll(
+                        currentRegularFilter = lastRegularFilterScrolled,
+                        lastFavoriteFilterScrolled
+                    )
+                )
+            }
 
-        state = filterScrolled.map {  scroll ->
+        state = filterScrolled.map { scroll ->
             UiState(
-                lastQueryScrolled = scroll.currentFilter
+                lastFavoriteFilterScrolled = scroll.currentRegularFilter
+            )
+        }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
+                initialValue = UiState()
+            )
+
+        stateFav = filterScrolled.map { scroll ->
+            UiState(
+                lastFavoriteFilterScrolled = scroll.currentRegularFilter
             )
         }
             .stateIn(
@@ -56,6 +81,9 @@ class NewsViewModel(
 
     private fun getCurrentNews(): Flow<PagingData<ArticlesDB>> =
         newsRepository.getNews()
+
+    private fun getFavoriteNews(): Flow<PagingData<ArticlesDB>> =
+        newsRepository.getFavoriteNews()
 }
 
 class NewsViewModelFactory(
@@ -79,9 +107,11 @@ sealed class UiModel {
 }
 
 sealed class UiAction {
-    data class Scroll(val currentFilter: Filter) : UiAction()
+    data class Scroll(val currentRegularFilter: Filter = Filter(), val currentFavoriteFiler: Filter = Filter()) :
+        UiAction()
 }
 
 data class UiState(
-    val lastQueryScrolled: Filter = Filter()
+    val lastRegularFilterScrolled: Filter = Filter(),
+    val lastFavoriteFilterScrolled: Filter = Filter(newsDomains = CurrentFilter.newsDomains)
 )

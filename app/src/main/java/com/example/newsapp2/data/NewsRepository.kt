@@ -32,6 +32,24 @@ class NewsRepository(
         ).flow
     }
 
+    fun getFavoriteNews(): Flow<PagingData<ArticlesDB>> {
+        val pagingSourceFactory = {dataBase.newsListDao().getArticlesData(TypeArticles.NewsFromFavoriteSource)}
+
+        @OptIn(ExperimentalPagingApi::class)
+        return Pager(
+            config = PagingConfig(
+                pageSize = NETWORK_PAGE_SIZE,
+                enablePlaceholders = false
+            ),
+            remoteMediator = NewsRemoteMediator(
+                retrofitService,
+                dataBase,
+                TypeArticles.NewsFromFavoriteSource
+            ),
+            pagingSourceFactory = pagingSourceFactory
+        ).flow
+    }
+
     companion object {
         const val NETWORK_PAGE_SIZE = 10
     }

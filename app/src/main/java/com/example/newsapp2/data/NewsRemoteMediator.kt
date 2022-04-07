@@ -9,10 +9,7 @@ import androidx.room.withTransaction
 import com.example.newsapp2.data.network.CurrentFilter
 import com.example.newsapp2.data.network.Filter
 import com.example.newsapp2.data.network.retrofit.RetrofitService
-import com.example.newsapp2.data.room.ArticlesDB
-import com.example.newsapp2.data.room.NewsDataBase
-import com.example.newsapp2.data.room.RemoteKeys
-import com.example.newsapp2.data.room.TypeArticles
+import com.example.newsapp2.data.room.*
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -37,7 +34,7 @@ class NewsRemoteMediator(
         val page = when (loadType) {
             LoadType.REFRESH -> {
                 val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)
-                remoteKeys?.nextKey?.minus(1)?: STARTING_PAGE_INDEX
+                remoteKeys?.nextKey?.minus(1) ?: STARTING_PAGE_INDEX
             }
             LoadType.PREPEND -> {
                 val remoteKeys = getRemoteKeyForFirstItem(state)
@@ -54,8 +51,19 @@ class NewsRemoteMediator(
         }
 
         try {
-            CurrentFilter.filterForNews = Filter(page = page, pageSize = state.config.pageSize)
-            val apiResponse = getNews(CurrentFilter.filterForNews)
+            val apiResponse = if (typeArticles == TypeArticles.RegularNews) {
+                CurrentFilter.filterForNews =
+                    CurrentFilter.filterForNews.copy(page = page, pageSize = state.config.pageSize)
+                getNews(CurrentFilter.filterForNews)
+            } else {
+                CurrentFilter.newsDomains = getNewsDomains()
+                CurrentFilter.filterForFavorite = CurrentFilter.filterForFavorite.copy(
+                    page = page,
+                    pageSize = state.config.pageSize,
+                    newsDomains = CurrentFilter.newsDomains
+                )
+                getNews(CurrentFilter.filterForFavorite)
+            }
 
             val news = apiResponse.articles.map { it.toArticlesDto(typeArticles) }
             val endOfPaginationReached = news.isEmpty()
@@ -67,14 +75,20 @@ class NewsRemoteMediator(
                 val prevKey = if (page == STARTING_PAGE_INDEX) null else page - 1
                 val nextKey = if (endOfPaginationReached) null else page + 1
                 news.forEach {
-                    Log.e("nes","${it.idArticles}")
+                    Log.e("nes", "${it.idArticles}")
 
                 }
                 newsDataBase.newsListDao().insertAllArticles(news)
-                val keys = newsDataBase.newsListDao().getArticlesData2(typeArticles).map {
-                    RemoteKeys(newsId = it.idArticles, prevKey = prevKey, nextKey = nextKey, typeArticles)
-                }
-                Log.e("nes","${keys.size}")
+                val keys =
+                    newsDataBase.newsListDao().getArticlesData2(typeArticles).takeLast(10).map {
+                        RemoteKeys(
+                            newsId = it.idArticles,
+                            prevKey = prevKey,
+                            nextKey = nextKey,
+                            typeArticles
+                        )
+                    }
+                Log.e("nes", "${keys.size}")
                 newsDataBase.newsListDao().insertAllKeys(keys)
             }
             return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
@@ -98,12 +112,17 @@ class NewsRemoteMediator(
         filter.excludeDomains
     )
 
+    private suspend fun getNewsDomains(): String =
+        newsDataBase.newsListDao().getSourcesData(TypeSource.FavoriteSource)
+            .joinToString(",", transform = { it.name })
+
     private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, ArticlesDB>): RemoteKeys? {
         return state.pages.firstOrNull() { it.data.isNotEmpty() }?.data?.firstOrNull()
             ?.let { repo ->
                 newsDataBase.newsListDao().remoteKeysNewsId(repo.idArticles)
             }
     }
+
     private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, ArticlesDB>): RemoteKeys? {
         return state.pages.lastOrNull() { it.data.isNotEmpty() }?.data?.lastOrNull()
             ?.let { repo ->

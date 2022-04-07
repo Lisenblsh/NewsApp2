@@ -3,8 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidSProg/NewsApp22/app/src/main/res/drawable-v24/gradient.xml" value="0.1045" />
         <entry key="..\:/AndroidSProg/NewsApp22/app/src/main/res/layout/activity_main.xml" value="0.2708333333333333" />
+        <entry key="..\:/AndroidSProg/NewsApp22/app/src/main/res/layout/fragment_favorite_news.xml" value="0.27447916666666666" />
         <entry key="..\:/AndroidSProg/NewsApp22/app/src/main/res/layout/fragment_main.xml" value="0.1541095890410959" />
+        <entry key="..\:/AndroidSProg/NewsApp22/app/src/main/res/layout/fragment_news.xml" value="0.2604166666666667" />
+        <entry key="..\:/AndroidSProg/NewsApp22/app/src/main/res/layout/fragment_regular_news.xml" value="0.27447916666666666" />
         <entry key="..\:/AndroidSProg/NewsApp22/app/src/main/res/layout/news_card_layout.xml" value="0.1" />
       </map>
     </option>

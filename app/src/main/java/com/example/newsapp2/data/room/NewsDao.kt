@@ -54,7 +54,7 @@ interface NewsDao {
 
     //Sources
     @Query("select* from tableSources where typeSource = :type")
-    fun getSourcesData(type: TypeSource): List<SourcesDB>
+    suspend fun getSourcesData(type: TypeSource): List<SourcesDB>
 
     @Query("select* from tableSources where typeSource = :type and idSource = :idSource")
     fun getSourcesData(type: TypeSource, idSource: Int): SourcesDB

@@ -2,7 +2,6 @@ package com.example.newsapp2.data.network.retrofit
 
 import com.example.newsapp2.data.network.NewsModel
 import okhttp3.OkHttpClient
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -33,7 +32,7 @@ interface RetrofitService {
                     val original = chain.request()
 
                     val requestBuilder = original.newBuilder()
-                        .addHeader("authorization", key)
+                        .addHeader("X-Api-Key", key)
                         .method(original.method, original.body)
 
                     val request = requestBuilder.build()

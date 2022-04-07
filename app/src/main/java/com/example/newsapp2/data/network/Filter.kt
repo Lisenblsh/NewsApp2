@@ -15,5 +15,6 @@ data class Filter(
 
 object CurrentFilter{
     var filterForNews = Filter()
-    var filterForFavorite = Filter()
+    var newsDomains = ""
+    var filterForFavorite = Filter(newsDomains = newsDomains)
 }
