@@ -1,13 +1,13 @@
 package com.example.newsapp2.ui.fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.newsapp2.R
 import com.example.newsapp2.databinding.FragmentMainBinding
@@ -46,17 +46,17 @@ class MainFragment : Fragment() {
             val tabText = tabCustom.findViewById<TextView>(R.id.tabText)
             when (position) {
                 0 -> {
-                    tabText.text = "Новости"
+                    tabText.text = resources.getString(R.string.news)
                     setIcon(R.drawable.newspaper, tabImg)
 
                 }
                 1 -> {
-                    tabText.text = "Домашняя"
+                    tabText.text = resources.getString(R.string.home)
                     setIcon(R.drawable.home, tabImg)
 
                 }
                 2 -> {
-                    tabText.text = "Настройки"
+                    tabText.text = resources.getString(R.string.settings)
                     setIcon(R.drawable.settings, tabImg)
                 }
             }

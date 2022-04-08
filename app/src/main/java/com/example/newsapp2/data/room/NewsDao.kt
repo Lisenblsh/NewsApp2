@@ -2,6 +2,7 @@ package com.example.newsapp2.data.room
 
 import androidx.paging.PagingSource
 import androidx.room.*
+import java.util.function.IntToLongFunction
 
 @Dao
 interface NewsDao {
@@ -20,7 +21,10 @@ interface NewsDao {
 
     //Получить новость по ID
     @Query("select* from articles where typeArticles = :type and idArticles = :idArticles")
-    fun getArticlesData(type: TypeArticles, idArticles: Int): ArticlesDB
+    fun getArticlesData(type: TypeArticles, idArticles: Long): ArticlesDB
+    //Получить новость по ID
+    @Query("select* from articles where idArticles = :idArticles")
+    suspend fun getArticlesData(idArticles: Long): ArticlesDB
 
     //Удалить одну новость из списка избраных
     @Query(

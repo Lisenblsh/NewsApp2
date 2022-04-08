@@ -15,11 +15,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
-        val viewModel = ViewModelProvider(
-            this, Injection.provideViewModelFactory(
-                this, this
-            )
-        ).get(NewsViewModel::class.java)
         setContentView(view)
     }
 }

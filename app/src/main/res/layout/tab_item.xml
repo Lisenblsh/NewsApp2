@@ -12,9 +12,7 @@
         android:id="@+id/tabImg"
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/newspaper"
-        />
+        android:layout_gravity="center_horizontal" />
 
     <TextView
         android:id="@+id/tabText"
@@ -22,7 +20,6 @@
         android:layout_height="20dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
-        android:text="news"
         android:textAlignment="center"
         style="@style/TaskBarTabLayout"/>
 </LinearLayout>

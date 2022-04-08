@@ -3,10 +3,10 @@ package com.example.newsapp2.ui.fragment
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.PagingData
@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapp2.data.room.ArticlesDB
 import com.example.newsapp2.databinding.FragmentFavoriteNewsBinding
 import com.example.newsapp2.di.Injection
+import com.example.newsapp2.tools.showWebView
 import com.example.newsapp2.ui.adapters.NewsAdapter
 import com.example.newsapp2.ui.viewModel.NewsViewModel
 import com.example.newsapp2.ui.viewModel.UiAction
@@ -26,6 +27,9 @@ import kotlinx.coroutines.launch
 
 class FavoriteNewsFragment : Fragment() {
 
+    private lateinit var binding: FragmentFavoriteNewsBinding
+    private lateinit var viewModel: NewsViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -34,18 +38,20 @@ class FavoriteNewsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentFavoriteNewsBinding.inflate(inflater, container, false)
-        val viewModel = ViewModelProvider(
-            this, Injection.provideViewModelFactory(
-                requireActivity().applicationContext, this
-            )
-        ).get(NewsViewModel::class.java)
+        if(!this::binding.isInitialized) {
+            binding = FragmentFavoriteNewsBinding.inflate(inflater, container, false)
+            viewModel = ViewModelProvider(
+                this, Injection.provideViewModelFactory(
+                    requireActivity().applicationContext, this
+                )
+            ).get(NewsViewModel::class.java)
 
-        binding.bindState(
-            uiState = viewModel.stateFav,
-            pagingData = viewModel.pagingDataFavoriteNewsFlow,
-            uiActions = viewModel.accept
-        )
+            binding.bindState(
+                uiState = viewModel.stateFav,
+                pagingData = viewModel.pagingDataFavoriteNewsFlow,
+                uiActions = viewModel.accept
+            )
+        }
 
         return binding.root
     }
@@ -57,16 +63,14 @@ class FavoriteNewsFragment : Fragment() {
     ) {
         val newsAdapter = NewsAdapter()
         newsAdapter.setOnItemClickListener(object : NewsAdapter.OnItemClickListener {
-            override fun onItemClick(itemView: View?, url: String?) {
-
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                itemView?.context?.startActivity(intent)
+            override fun onItemClick(id: Long?) {
+                if (id != null) {
+                    showWebView(this@FavoriteNewsFragment, id)
+                }
             }
-
         })
         newsList.adapter = newsAdapter
         newsList.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        newsList.scrollToPosition(0)
         bindList(
             uiState = uiState,
             pagingData = pagingData,
@@ -89,6 +93,7 @@ class FavoriteNewsFragment : Fragment() {
         })
         lifecycleScope.launch {
             pagingData.collectLatest(newsAdapter::submitData)
+            newsList.scrollToPosition(0)
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.newsapp2.ui.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,7 +45,7 @@ class NewsAdapter : PagingDataAdapter<ArticlesDB, RecyclerView.ViewHolder>(ARTIC
     }
 
     interface OnItemClickListener {
-        fun onItemClick(itemView: View?, url: String?)
+        fun onItemClick(id: Long?)
     }
 
     private lateinit var clickListener: OnItemClickListener
@@ -64,19 +65,19 @@ class NewsAdapter : PagingDataAdapter<ArticlesDB, RecyclerView.ViewHolder>(ARTIC
 
         init {
             itemView.setOnClickListener {
-                val url = getItem(layoutPosition)?.url
-                if (position != RecyclerView.NO_POSITION) {
-                    clickListener.onItemClick(itemView, url)
-                }
+                val id = news?.idArticles
+                clickListener.onItemClick(id)
+                Log.e("clic", "click")
             }
         }
 
         fun bind(news: ArticlesDB?) {
             if (news == null) {
-                title.text = "Loading.."
+                val resource = itemView.resources
+                title.text = resource.getString(R.string.loading)
                 description.visibility = View.GONE
-                newsDate.text = "Loading.."
-                source?.text = "Loading.."
+                newsDate.text = resource.getString(R.string.loading)
+                source?.text = resource.getString(R.string.loading)
                 image.visibility = View.GONE
             } else {
                 showRepoData(news)
@@ -116,9 +117,9 @@ class NewsAdapter : PagingDataAdapter<ArticlesDB, RecyclerView.ViewHolder>(ARTIC
             val dateString = SimpleDateFormat("d MMMM, HH:mm", Locale("ru"))
             val defaultDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
             val currentTimeZone = GregorianCalendar().timeZone.rawOffset
-            return try{
+            return try {
                 dateString.format(Date(defaultDate.parse(date).time + currentTimeZone))
-            }catch (e: Exception) {
+            } catch (e: Exception) {
                 ""
             }
         }

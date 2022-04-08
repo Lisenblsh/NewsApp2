@@ -8,5 +8,19 @@
         android:id="@+id/mainFragment"
         android:name="com.example.newsapp2.ui.fragment.MainFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_main" />
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainFragment_to_newsWebViewFragment"
+            app:destination="@id/newsWebViewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newsWebViewFragment"
+        android:name="com.example.newsapp2.ui.fragment.NewsWebViewFragment"
+        android:label="fragment_news_web_view"
+        tools:layout="@layout/fragment_news_web_view">
+        <argument
+            android:name="articleId"
+            app:argType="long" />
+
+    </fragment>
 </navigation>

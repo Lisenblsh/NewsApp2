@@ -3,11 +3,11 @@ package com.example.newsapp2.ui.fragment
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapp2.data.room.ArticlesDB
 import com.example.newsapp2.databinding.FragmentRegularNewsBinding
 import com.example.newsapp2.di.Injection
+import com.example.newsapp2.tools.showWebView
 import com.example.newsapp2.ui.adapters.NewsAdapter
 import com.example.newsapp2.ui.adapters.NewsLoadStateAdapter
 import com.example.newsapp2.ui.viewModel.NewsViewModel
@@ -32,6 +33,9 @@ import kotlinx.coroutines.launch
 
 class RegularNewsFragment : Fragment() {
 
+    private lateinit var binding: FragmentRegularNewsBinding
+    private lateinit var viewModel: NewsViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -41,18 +45,21 @@ class RegularNewsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val binding = FragmentRegularNewsBinding.inflate(inflater, container, false)
-        val viewModel = ViewModelProvider(
-            this, Injection.provideViewModelFactory(
-                requireActivity().applicationContext, this
+        if(!this::binding.isInitialized) {
+            binding = FragmentRegularNewsBinding.inflate(inflater, container, false)
+            viewModel = ViewModelProvider(
+                this, Injection.provideViewModelFactory(
+                    requireActivity().applicationContext, this
+                )
+            ).get(NewsViewModel::class.java)
+            binding.bindState(
+                uiState = viewModel.state,
+                pagingData = viewModel.pagingDataRegularNewsFlow,
+                uiActions = viewModel.accept
             )
-        ).get(NewsViewModel::class.java)
+        }
+        Log.e("bind", "${binding.hashCode()}")
 
-        binding.bindState(
-            uiState = viewModel.state,
-            pagingData = viewModel.pagingDataRegularNewsFlow,
-            uiActions = viewModel.accept
-        )
 
         return binding.root
     }
@@ -69,15 +76,16 @@ class RegularNewsFragment : Fragment() {
             footer = NewsLoadStateAdapter { newsAdapter.retry() }
         )
         newsAdapter.setOnItemClickListener(object : NewsAdapter.OnItemClickListener {
-            override fun onItemClick(itemView: View?, url: String?) {
-
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                itemView?.context?.startActivity(intent)
+            override fun onItemClick(id: Long?) {
+                Log.e("clic", "click")
+                if (id != null) {
+                    showWebView(this@RegularNewsFragment, id)
+                }
             }
 
         })
         newsList.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        newsList.scrollToPosition(0)
+
         bindList(
             uiState = uiState,
             header = header,
