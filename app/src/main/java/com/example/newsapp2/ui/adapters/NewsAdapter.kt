@@ -53,7 +53,7 @@ class NewsAdapter : PagingDataAdapter<ArticlesDB, RecyclerView.ViewHolder>(ARTIC
         this.clickListener = listener
     }
 
-    inner class NewsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class NewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val title: TextView = itemView.findViewById(R.id.news_title)
         private val description: TextView = itemView.findViewById(R.id.news_description)
         private val newsDate: TextView = itemView.findViewById(R.id.news_date)

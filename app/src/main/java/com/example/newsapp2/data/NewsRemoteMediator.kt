@@ -34,6 +34,7 @@ class NewsRemoteMediator(
         val page = when (loadType) {
             LoadType.REFRESH -> {
                 val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)
+                Log.e("page", "refresh")
                 remoteKeys?.nextKey?.minus(1) ?: STARTING_PAGE_INDEX
             }
             LoadType.PREPEND -> {
@@ -80,9 +81,9 @@ class NewsRemoteMediator(
                 }
                 newsDataBase.newsListDao().insertAllArticles(news)
                 val keys =
-                    newsDataBase.newsListDao().getArticlesData2(typeArticles).takeLast(10).map {
+                    newsDataBase.newsListDao().getArticlesData2(typeArticles).takeLast(state.config.pageSize).map {
                         RemoteKeys(
-                            newsId = it.idArticles,
+                            articleId = it.idArticles,
                             prevKey = prevKey,
                             nextKey = nextKey,
                             typeArticles

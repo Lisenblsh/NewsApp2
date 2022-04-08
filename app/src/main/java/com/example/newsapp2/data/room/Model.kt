@@ -24,7 +24,7 @@ enum class TypeArticles(val type: Int) {
 
 @Entity(tableName = "remote_keys")
 data class RemoteKeys(
-    @PrimaryKey val newsId: Long,
+    @PrimaryKey val articleId: Long,
     val prevKey: Int?,
     val nextKey: Int?,
     val typeArticles: TypeArticles
