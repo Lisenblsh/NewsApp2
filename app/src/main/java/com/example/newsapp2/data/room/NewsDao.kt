@@ -43,7 +43,7 @@ interface NewsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllKeys(remoteKey: List<RemoteKeys>)
 
-    @Query("SELECT * FROM remote_keys WHERE newsId = :newsId")
+    @Query("SELECT * FROM remote_keys WHERE articleId = :newsId")
     suspend fun remoteKeysNewsId(newsId: Long): RemoteKeys?
 
     @Query("DELETE FROM remote_keys where typeArticles = :type")

@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/AndroidSProg/NewsApp22/app/src/main/res/drawable-v24/gradient.xml" value="0.1045" />
+        <entry key="..\:/AndroidSProg/NewsApp22/app/src/main/res/drawable/tab_indicator.xml" value="0.1425" />
         <entry key="..\:/AndroidSProg/NewsApp22/app/src/main/res/layout/activity_main.xml" value="0.2708333333333333" />
         <entry key="..\:/AndroidSProg/NewsApp22/app/src/main/res/layout/fragment_favorite_news.xml" value="0.27447916666666666" />
         <entry key="..\:/AndroidSProg/NewsApp22/app/src/main/res/layout/fragment_main.xml" value="0.1541095890410959" />
@@ -11,6 +12,7 @@
         <entry key="..\:/AndroidSProg/NewsApp22/app/src/main/res/layout/fragment_regular_news.xml" value="0.27447916666666666" />
         <entry key="..\:/AndroidSProg/NewsApp22/app/src/main/res/layout/news_card_layout.xml" value="0.1" />
         <entry key="..\:/AndroidSProg/NewsApp22/app/src/main/res/layout/news_load_state.xml" value="0.27447916666666666" />
+        <entry key="..\:/AndroidSProg/NewsApp22/app/src/main/res/layout/tab_item.xml" value="0.27447916666666666" />
       </map>
     </option>
   </component>
