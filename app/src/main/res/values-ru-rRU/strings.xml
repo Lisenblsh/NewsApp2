@@ -24,5 +24,6 @@
     <string name="followSource">%1$s отслеживается</string>
     <string name="unfollowSource">%1$s перестал отслеживаться</string>
     <string name="likedArticle">Новость добавлена в избранное</string>
-    <string name="unlikedArticle">Новость удалена из избранного</string>
+    <string name="unlikedArticle">" удалена из избранного"</string>
+    <string name="send">Отправленно</string>
 </resources>

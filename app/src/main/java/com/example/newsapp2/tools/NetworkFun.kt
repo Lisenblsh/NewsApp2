@@ -1,5 +1,6 @@
 package com.example.newsapp2.tools
 
+import android.util.Log
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
@@ -15,22 +16,34 @@ class LogicForWebView(private val dataBase: NewsDataBase, private val articleId:
     private lateinit var domain: String
 
     suspend fun getUrl(): String {
-        article = dataBase.newsListDao().getArticlesData(articleId)
-            .copy(idArticles = 0, typeArticles = TypeArticles.LikedNews)
-        domain = "${article.url.toUri().host}"
-        if (domain.subSequence(0, 4) == "www.") {
-            domain = domain.subSequence(4, domain.length).toString()
+        return try {
+            article = dataBase.newsListDao().getArticlesData(articleId)
+                .copy(idArticles = 0, typeArticles = TypeArticles.LikedNews)
+            domain = "${article.url.toUri().host}"
+            if (domain.subSequence(0, 4) == "www.") {
+                domain = domain.subSequence(4, domain.length).toString()
+            }
+            article.url
+        } catch (e: Exception) {
+            ""
         }
-        return article.url
+    }
+
+    fun getTextForMessage(): String {
+        var text = if (article.title != null) "\"${article.title}\"\n" else ""
+        text += article.url
+        return text
     }
 
     suspend fun isLikedNews(): Boolean {
-        dataBase.withTransaction {
-            dataBase.newsListDao().getArticlesData2(TypeArticles.LikedNews).map {
-                if (it.copy(idArticles = 0) == article) return@withTransaction true
-            }
+        return dataBase.withTransaction {
+            dataBase.newsListDao().getArticlesData(
+                article.source,
+                article.url,
+                article.publishedAt,
+                article.typeArticles
+            ) != null
         }
-        return false
     }
 
     suspend fun likeNews() {
@@ -39,7 +52,7 @@ class LogicForWebView(private val dataBase: NewsDataBase, private val articleId:
 
     suspend fun unlikeNews() {
         dataBase.newsListDao().deleteLikedArticles(
-            article.title,
+            article.source,
             article.url,
             article.publishedAt,
             article.typeArticles
@@ -75,14 +88,5 @@ fun showWebView(fragment: Fragment, articlesId: Long) {
         articlesId
     )
     val navController = NavHostFragment.findNavController(fragment)
-    val navOptions: NavOptions = NavOptions.Builder()
-        .setLaunchSingleTop(true)
-        .setRestoreState(true)
-        .setPopUpTo(
-            navController.graph.startDestinationId,
-            inclusive = false,
-            saveState = true
-        ) // saveState
-        .build()
-    navController.navigate(action, navOptions)
+    navController.navigate(action)
 }//Показать выбранную новость в WebView

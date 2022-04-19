@@ -26,4 +26,5 @@
     <string name="unfollowSource">%1$s unfollowed</string>
     <string name="likedArticle">Article added to favorite</string>
     <string name="unlikedArticle">Article removed from favorite</string>
+    <string name="send">Send</string>
 </resources>

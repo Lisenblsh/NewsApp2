@@ -9,7 +9,6 @@ import com.example.newsapp2.data.room.NewsDataBase
 import com.example.newsapp2.ui.viewModel.NewsViewModelFactory
 
 object Injection {
-
     private fun provideNewsRepository(context: Context): NewsRepository  {
         return NewsRepository(RetrofitService.create(), NewsDataBase.getInstance(context))
     }

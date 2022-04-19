@@ -28,11 +28,20 @@ interface NewsDao {
     @Query("select* from articles where idArticles = :idArticles")
     suspend fun getArticlesData(idArticles: Long): ArticlesDB
 
+    @Query("select* from articles where source = :source and :url = url " +
+            "and :publishedAt = publishedAt and :typeArticles = typeArticles")
+    suspend fun getArticlesData(
+        source: String,
+        url: String,
+        publishedAt: String,
+        typeArticles: TypeArticles
+    ): ArticlesDB?
+
     //Удалить одну новость из списка избраных
-    @Query("delete from articles where :title = title and :url = url " +
+    @Query("delete from articles where :source = source and :url = url " +
             "and :publishedAt = publishedAt and :typeArticles = typeArticles")
     suspend fun deleteLikedArticles(
-        title: String?,
+        source: String,
         url: String,
         publishedAt: String,
         typeArticles: TypeArticles
