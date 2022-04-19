@@ -8,6 +8,7 @@ import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapp2.R
 import com.example.newsapp2.databinding.NewsLoadStateBinding
+import retrofit2.HttpException
 
 class NewsLoadStateAdapter(private val retry: () -> Unit) :
     LoadStateAdapter<NewsLoadStateAdapter.NewsLoadStateViewHolder>() {
@@ -16,7 +17,10 @@ class NewsLoadStateAdapter(private val retry: () -> Unit) :
         holder.bind(loadState)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState): NewsLoadStateViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        loadState: LoadState
+    ): NewsLoadStateViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.news_load_state, parent, false)
         val binding = NewsLoadStateBinding.bind(view)
@@ -32,11 +36,16 @@ class NewsLoadStateAdapter(private val retry: () -> Unit) :
         }
 
         fun bind(loadState: LoadState) {
+            val code =
+                if (loadState is LoadState.Error) (loadState.error as? HttpException)?.code() else 0
             if (loadState is LoadState.Error) {
-                binding.errorMsg.text = loadState.error.localizedMessage
+                binding.errorMsg.text =
+                    if (code == 426) "Вы достигли конца" else loadState.error.localizedMessage
             }
             binding.progressBar.isVisible = loadState is LoadState.Loading
-            binding.retryButton.isVisible = loadState is LoadState.Error
+            if (code != 426) {
+                binding.retryButton.isVisible = loadState is LoadState.Error
+            }
             binding.errorMsg.isVisible = loadState is LoadState.Error
         }
     }

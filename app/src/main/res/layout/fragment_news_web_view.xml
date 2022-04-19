@@ -3,23 +3,108 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragment.NewsWebViewFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.fragment.NewsWebViewFragment"
+    android:theme="@style/Tint">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefresh"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ScrollView
-            android:id="@+id/nestedScroll"
+            android:id="@+id/scroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <WebView
-                android:id="@+id/webView"
+                android:id="@+id/web_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </ScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"/>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/menu_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="250dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="10dp"
+        android:translationX="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:weightSum="3"
+            android:theme="@style/FAB">
+
+            <ImageView
+                android:id="@+id/menu_button"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_baseline_more_vert_24"
+                android:foreground="?android:attr/selectableItemBackground"
+                />
+
+            <ImageView
+                android:id="@+id/like_button"
+                android:layout_width="90dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:paddingVertical="10dp"
+                android:src="@drawable/ic_baseline_favorite_border_24"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:tint="@color/red" />
+
+
+            <ImageView
+                android:id="@+id/follow_button"
+                android:layout_width="30dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:src="@drawable/ic_baseline_add_circle_outline_24"
+                android:foreground="?android:attr/selectableItemBackground" />
+
+
+            <ImageView
+                android:id="@+id/block_button"
+                android:layout_width="30dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:src="@drawable/ic_baseline_remove_circle_outline_24"
+                android:foreground="?android:attr/selectableItemBackground"
+                />
+
+            <ImageView
+                android:id="@+id/share_button"
+                android:layout_width="30dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingEnd="10dp"
+                android:src="@drawable/ic_baseline_share_24"
+                android:foreground="?android:attr/selectableItemBackground"
+                tools:ignore="RtlSymmetry" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
 
 </FrameLayout>

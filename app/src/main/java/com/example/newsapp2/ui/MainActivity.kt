@@ -2,10 +2,7 @@ package com.example.newsapp2.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.example.newsapp2.databinding.ActivityMainBinding
-import com.example.newsapp2.di.Injection
-import com.example.newsapp2.ui.viewModel.NewsViewModel
 
 class MainActivity : AppCompatActivity() {
 

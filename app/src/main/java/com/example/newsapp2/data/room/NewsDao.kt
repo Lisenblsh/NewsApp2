@@ -2,7 +2,6 @@ package com.example.newsapp2.data.room
 
 import androidx.paging.PagingSource
 import androidx.room.*
-import java.util.function.IntToLongFunction
 
 @Dao
 interface NewsDao {
@@ -10,6 +9,9 @@ interface NewsDao {
     //Добавить новости в БД
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllArticles(articles: List<ArticlesDB>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertArticle(article: ArticlesDB)
 
     //ПОлучить список новостей
     @Query("select* from articles where typeArticles = :type")
@@ -27,16 +29,13 @@ interface NewsDao {
     suspend fun getArticlesData(idArticles: Long): ArticlesDB
 
     //Удалить одну новость из списка избраных
-    @Query(
-        "delete from articles where :title = title " +
-                "and :url = url and :publishedAt = publishedAt " +
-                "and typeArticles = :type"
-    )
-    fun deleteFavoriteArticles(
-        title: String,
+    @Query("delete from articles where :title = title and :url = url " +
+            "and :publishedAt = publishedAt and :typeArticles = typeArticles")
+    suspend fun deleteLikedArticles(
+        title: String?,
         url: String,
         publishedAt: String,
-        type: TypeArticles = TypeArticles.FavoriteNews
+        typeArticles: TypeArticles
     )
 
     //Отчистка Новостей
@@ -60,17 +59,17 @@ interface NewsDao {
     @Query("select* from tableSources where typeSource = :type")
     suspend fun getSourcesData(type: TypeSource): List<SourcesDB>
 
-    @Query("select* from tableSources where typeSource = :type and idSource = :idSource")
-    fun getSourcesData(type: TypeSource, idSource: Int): SourcesDB
+    @Query("select* from tableSources where typeSource = :type and name = :source")
+    fun getSourcesData(source: String, type: TypeSource): SourcesDB?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertSources(sources: SourcesDB)
+    suspend fun insertSources(sources: SourcesDB)
 
     @Delete
     fun deleteSources(sources: SourcesDB)
 
     @Query("delete from tableSources where name == :source and typeSource = :type")
-    fun deleteSources(source: String, type: TypeSource)
+    suspend fun deleteSources(source: String, type: TypeSource)
 
     @Query("delete from tableSources where typeSource = :type")
     fun clearSources(type: TypeSource)

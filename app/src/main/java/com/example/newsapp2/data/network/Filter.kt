@@ -2,7 +2,7 @@ package com.example.newsapp2.data.network
 
 data class Filter(
     val newsLanguage: String = "",
-    val newsQuery: String = "q",
+    val newsQuery: String = "a",
     val newsSortBy: String = "publishedAt",
     val searchIn: String = "",
     val newsFrom: String = "",
@@ -14,6 +14,7 @@ data class Filter(
 )
 
 object CurrentFilter{
+    var excludeDomains = ""
     var filterForNews = Filter()
     var newsDomains = ""
     var filterForFavorite = Filter(newsDomains = newsDomains)

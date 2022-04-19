@@ -33,7 +33,7 @@ class NewsRepository(
     }
 
     fun getFavoriteNews(): Flow<PagingData<ArticlesDB>> {
-        val pagingSourceFactory = {dataBase.newsListDao().getArticlesData(TypeArticles.NewsFromFavoriteSource)}
+        val pagingSourceFactory = {dataBase.newsListDao().getArticlesData(TypeArticles.FollowNews)}
 
         @OptIn(ExperimentalPagingApi::class)
         return Pager(
@@ -44,7 +44,7 @@ class NewsRepository(
             remoteMediator = NewsRemoteMediator(
                 retrofitService,
                 dataBase,
-                TypeArticles.NewsFromFavoriteSource
+                TypeArticles.FollowNews
             ),
             pagingSourceFactory = pagingSourceFactory
         ).flow

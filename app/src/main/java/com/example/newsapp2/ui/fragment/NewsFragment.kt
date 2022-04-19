@@ -27,7 +27,7 @@ class NewsFragment : Fragment() {
     private fun FragmentNewsBinding.bindViewPager(){
         val fragmentList = arrayListOf(
             RegularNewsFragment(),
-            FavoriteNewsFragment()
+            FollowNewsFragment()
         )
         val adapter =
             ViewPagerAdapter(fragmentList, childFragmentManager, lifecycle)

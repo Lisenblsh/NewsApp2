@@ -10,4 +10,20 @@
     <string name="news">News</string>
     <string name="home">Home</string>
     <string name="settings">Settings</string>
+    <string name="language">Language</string>
+    <string name="click_to_search">Click to search -></string>
+    <string name="search_in">Search in:</string>
+    <string name="sort_by">Sort by:</string>
+    <string name="from">from:</string>
+    <string name="to">to:</string>
+    <string name="set_time">Click to set the time</string>
+    <string name="apply">Apply</string>
+    <string name="reset">Reset</string>
+    <string name="quick_instruction">Additional search options:\n\"\" for exact match\n+ for words that should occur\n- for words that should not occur</string>
+    <string name="unblockSource">%1$s unbocked</string>
+    <string name="blockSource">%1$s bloked</string>
+    <string name="followSource">%1$s followed</string>
+    <string name="unfollowSource">%1$s unfollowed</string>
+    <string name="likedArticle">Article added to favorite</string>
+    <string name="unlikedArticle">Article removed from favorite</string>
 </resources>

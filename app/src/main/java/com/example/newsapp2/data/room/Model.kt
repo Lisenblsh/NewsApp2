@@ -18,8 +18,8 @@ data class ArticlesDB(
 
 enum class TypeArticles(val type: Int) {
     RegularNews(1),
-    FavoriteNews(2),
-    NewsFromFavoriteSource(3);
+    LikedNews(2),
+    FollowNews(3)
 }
 
 @Entity(tableName = "remote_keys")
@@ -43,8 +43,8 @@ data class SourcesDB(
 )
 
 enum class TypeSource(val typeId: Int, val typeName: String) {
-    FavoriteSource(1, "Избраные источники"),
-    RemovedSource(2, "Скрытые источники");
+    FollowSource(1, "Избраные источники"),
+    BlockSource(2, "Скрытые источники")
 }
 
 /*Типы:

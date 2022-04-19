@@ -38,10 +38,7 @@ class NewsRemoteMediator(
                 remoteKeys?.nextKey?.minus(1) ?: STARTING_PAGE_INDEX
             }
             LoadType.PREPEND -> {
-                val remoteKeys = getRemoteKeyForFirstItem(state)
-                val prevKey = remoteKeys?.prevKey
-                    ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
-                prevKey
+                return MediatorResult.Success(endOfPaginationReached = true)
             }
             LoadType.APPEND -> {
                 val remoteKeys = getRemoteKeyForLastItem(state)
@@ -53,8 +50,13 @@ class NewsRemoteMediator(
 
         try {
             val apiResponse = if (typeArticles == TypeArticles.RegularNews) {
+                CurrentFilter.excludeDomains = getExcludeDomains()
                 CurrentFilter.filterForNews =
-                    CurrentFilter.filterForNews.copy(page = page, pageSize = state.config.pageSize)
+                    CurrentFilter.filterForNews.copy(
+                        page = page,
+                        pageSize = state.config.pageSize,
+                        excludeDomains = CurrentFilter.excludeDomains
+                    )
                 getNews(CurrentFilter.filterForNews)
             } else {
                 CurrentFilter.newsDomains = getNewsDomains()
@@ -75,21 +77,18 @@ class NewsRemoteMediator(
                 }
                 val prevKey = if (page == STARTING_PAGE_INDEX) null else page - 1
                 val nextKey = if (endOfPaginationReached) null else page + 1
-                news.forEach {
-                    Log.e("nes", "${it.idArticles}")
 
-                }
                 newsDataBase.newsListDao().insertAllArticles(news)
                 val keys =
-                    newsDataBase.newsListDao().getArticlesData2(typeArticles).takeLast(state.config.pageSize).map {
-                        RemoteKeys(
-                            articleId = it.idArticles,
-                            prevKey = prevKey,
-                            nextKey = nextKey,
-                            typeArticles
-                        )
-                    }
-                Log.e("nes", "${keys.size}")
+                    newsDataBase.newsListDao().getArticlesData2(typeArticles)
+                        .takeLast(state.config.pageSize).map {
+                            RemoteKeys(
+                                articleId = it.idArticles,
+                                prevKey = prevKey,
+                                nextKey = nextKey,
+                                typeArticles
+                            )
+                        }
                 newsDataBase.newsListDao().insertAllKeys(keys)
             }
             return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
@@ -114,7 +113,11 @@ class NewsRemoteMediator(
     )
 
     private suspend fun getNewsDomains(): String =
-        newsDataBase.newsListDao().getSourcesData(TypeSource.FavoriteSource)
+        newsDataBase.newsListDao().getSourcesData(TypeSource.FollowSource)
+            .joinToString(",", transform = { it.name })
+
+    private suspend fun getExcludeDomains(): String =
+        newsDataBase.newsListDao().getSourcesData(TypeSource.BlockSource)
             .joinToString(",", transform = { it.name })
 
     private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, ArticlesDB>): RemoteKeys? {

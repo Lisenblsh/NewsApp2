@@ -1,10 +1,7 @@
 package com.example.newsapp2.ui.fragment
 
-import android.content.ContentValues
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,13 +9,24 @@ import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.ImageView
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
+import com.example.newsapp2.R
 import com.example.newsapp2.data.room.NewsDataBase
+import com.example.newsapp2.data.room.TypeSource
 import com.example.newsapp2.databinding.FragmentNewsWebViewBinding
 import com.example.newsapp2.tools.LogicForWebView
-import kotlinx.coroutines.*
+import kotlinx.coroutines.launch
+
 
 class NewsWebViewFragment : Fragment() {
+
+    private lateinit var binding: FragmentNewsWebViewBinding
+
+    private lateinit var logic: LogicForWebView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,29 +36,36 @@ class NewsWebViewFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentNewsWebViewBinding.inflate(inflater, container, false)
+        binding = FragmentNewsWebViewBinding.inflate(inflater, container, false)
         lifecycleScope.launch {
-            binding.bindWebView()
+            binding.initElement()
         }
         return binding.root
     }
 
-    private suspend fun FragmentNewsWebViewBinding.bindWebView() {
-        val args = NewsWebViewFragmentArgs.fromBundle(requireArguments())
-        val logic = LogicForWebView(NewsDataBase.getInstance(requireContext()))
-        val url = logic.getUrl(args.articleId)
-        showWebView(url, webView)
+    private fun FragmentNewsWebViewBinding.initElement() {
+        lifecycleScope.launch {
+            bindWebView()
+            initMenu()
+        }
+        initSwipeRefresh()
     }
 
-    private fun showWebView(url: String, webView: WebView) {
+    private suspend fun FragmentNewsWebViewBinding.bindWebView() {
+        val args = NewsWebViewFragmentArgs.fromBundle(requireArguments())
+        logic = LogicForWebView(NewsDataBase.getInstance(requireContext()), args.articleId)
+        val url = logic.getUrl()
+        initWebView(url, webView)
+    }
+
+    private fun FragmentNewsWebViewBinding.initWebView(url: String, webView: WebView) {
         webView.apply {
             webViewClient = object : WebViewClient() {
                 override fun shouldOverrideUrlLoading(
                     view: WebView?,
                     request: WebResourceRequest?
                 ): Boolean {
-                    val url: String = request?.url.toString()
-                    loadUrl(url)
+                    loadUrl(request?.url.toString())
                     return true
                 }
 
@@ -62,11 +77,11 @@ class NewsWebViewFragment : Fragment() {
             webChromeClient = object : WebChromeClient() {
                 override fun onProgressChanged(view: WebView?, newProgress: Int) {
                     super.onProgressChanged(view, newProgress)
-//                    Log.e(ContentValues.TAG, binding.progressBar.progress.toString())
-//                    binding.progressBar.progress = progress
-//                    if (progress == 100) {
-//                        binding.progressBar.visibility = View.GONE
-//                    }
+                    progressBar.visibility = View.VISIBLE
+                    progressBar.progress = progress
+                    if (progress == 100) {
+                        progressBar.visibility = View.GONE
+                    }
                 }
             }
             setOnKeyListener(object : View.OnKeyListener {
@@ -91,6 +106,89 @@ class NewsWebViewFragment : Fragment() {
         }
     }
 
+    private fun FragmentNewsWebViewBinding.initSwipeRefresh() {
+        swipeRefresh.setOnRefreshListener {
+            swipeRefresh.isRefreshing = true
+            webView.reload()
+            swipeRefresh.isRefreshing = false
+        }
+    }
 
+    private suspend fun FragmentNewsWebViewBinding.initMenu() {
 
+        menuButton.setOnClickListener {
+
+        }
+
+        var isLikedNews = logic.isLikedNews()
+        var isFollowedSource = logic.isFollowedSource()
+        var isBlockedSource = logic.isBlockedSource()
+
+        if (isLikedNews) setImage(R.drawable.ic_baseline_favorite_24, likeButton)
+        if (isFollowedSource) setImage(R.drawable.ic_baseline_add_circle_24, followButton)
+        if (isFollowedSource) setImage(R.drawable.ic_baseline_remove_circle_24, blockButton)
+
+        likeButton.setOnClickListener {
+            isLikedNews = if (isLikedNews) {
+                lifecycleScope.launch { logic.unlikeNews() }
+                setImage(R.drawable.ic_baseline_favorite_border_24, it)
+                showMessage(resources.getString(R.string.unlikedArticle))
+                false
+            } else {
+                lifecycleScope.launch { logic.likeNews() }
+                setImage(R.drawable.ic_baseline_favorite_24, it)
+                showMessage(resources.getString(R.string.likedArticle))
+                true
+            }
+        }
+
+        followButton.setOnClickListener {
+            if(!isBlockedSource){
+                isFollowedSource = if (isFollowedSource) {
+                    lifecycleScope.launch { logic.removeSource(TypeSource.FollowSource) }
+                    setImage(R.drawable.ic_baseline_add_circle_outline_24, it)
+                    showMessage(resources.getString(R.string.unfollowSource, logic.getDomain()))
+                    blockButton.alpha = 1f
+                    false
+                } else {
+                    lifecycleScope.launch { logic.saveSource(TypeSource.FollowSource) }
+                    setImage(R.drawable.ic_baseline_add_circle_24, it)
+                    showMessage(resources.getString(R.string.followSource, logic.getDomain()))
+                    blockButton.alpha = .5f
+                    true
+                }
+            }
+        }
+
+        blockButton.setOnClickListener {
+            if (!isFollowedSource) {
+                isBlockedSource = if (isBlockedSource) {
+                    lifecycleScope.launch { logic.removeSource(TypeSource.BlockSource) }
+                    setImage(R.drawable.ic_baseline_remove_circle_outline_24, it)
+                    showMessage(resources.getString(R.string.unblockSource, logic.getDomain()))
+                    followButton.alpha = 1f
+                    false
+                } else {
+                    lifecycleScope.launch { logic.saveSource(TypeSource.BlockSource) }
+                    setImage(R.drawable.ic_baseline_remove_circle_24, it)
+                    showMessage(resources.getString(R.string.blockSource, logic.getDomain()))
+                    followButton.alpha = .5f
+                    true
+                }
+            }
+        }
+    }
+    
+    private fun setImage(image: Int, view: View){
+        if(view is ImageView) {
+            Glide
+                .with(this@NewsWebViewFragment)
+                .load(image)
+                .into(view)
+        }
+    }
+
+    private fun showMessage(message: String){
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
 }

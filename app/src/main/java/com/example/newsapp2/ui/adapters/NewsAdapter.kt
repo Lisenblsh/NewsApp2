@@ -67,7 +67,6 @@ class NewsAdapter : PagingDataAdapter<ArticlesDB, RecyclerView.ViewHolder>(ARTIC
             itemView.setOnClickListener {
                 val id = news?.idArticles
                 clickListener.onItemClick(id)
-                Log.e("clic", "click")
             }
         }
 
