@@ -1,15 +1,11 @@
 package com.example.newsapp2.tools
 
-import android.util.Log
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.room.withTransaction
 import com.example.newsapp2.data.room.*
 import com.example.newsapp2.ui.fragment.MainFragmentDirections
-import kotlinx.coroutines.flow.asFlow
-import okhttp3.internal.wait
 
 class LogicForWebView(private val dataBase: NewsDataBase, private val articleId: Long) {
     private lateinit var article: ArticlesDB
@@ -80,7 +76,6 @@ class LogicForWebView(private val dataBase: NewsDataBase, private val articleId:
     }
 
     fun getDomain() = domain
-
 }
 
 fun showWebView(fragment: Fragment, articlesId: Long) {
@@ -90,3 +85,9 @@ fun showWebView(fragment: Fragment, articlesId: Long) {
     val navController = NavHostFragment.findNavController(fragment)
     navController.navigate(action)
 }//Показать выбранную новость в WebView
+
+suspend fun getLikedArticlesList(dataBase: NewsDataBase): List<ArticlesDB> {
+    return dataBase.withTransaction {
+        dataBase.newsListDao().getArticlesData2(TypeArticles.LikedNews)
+    }
+}

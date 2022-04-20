@@ -27,4 +27,6 @@
     <string name="likedArticle">Article added to favorite</string>
     <string name="unlikedArticle">Article removed from favorite</string>
     <string name="send">Send</string>
+    <string name="end_of_list">End of list</string>
+    <string name="fovorite_list_empty">You have not yet liked any articles</string>
 </resources>

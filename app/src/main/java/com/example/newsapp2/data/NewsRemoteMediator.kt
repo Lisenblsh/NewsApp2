@@ -94,6 +94,7 @@ class NewsRemoteMediator(
         } catch (e: IOException) {
             return MediatorResult.Error(e)
         } catch (e: HttpException) {
+            Log.e("errorMediator", "load: $e")
             return MediatorResult.Error(e)
         }
     }

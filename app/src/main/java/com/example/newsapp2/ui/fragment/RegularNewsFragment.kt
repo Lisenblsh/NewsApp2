@@ -6,7 +6,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -19,7 +21,7 @@ import com.example.newsapp2.data.network.Filter
 import com.example.newsapp2.databinding.FragmentRegularNewsBinding
 import com.example.newsapp2.di.Injection
 import com.example.newsapp2.tools.showWebView
-import com.example.newsapp2.ui.adapters.NewsAdapter
+import com.example.newsapp2.ui.adapters.NewsPagingAdapter
 import com.example.newsapp2.ui.adapters.NewsLoadStateAdapter
 import com.example.newsapp2.ui.viewModel.NewsViewModel
 import kotlinx.coroutines.flow.collect
@@ -32,7 +34,7 @@ class RegularNewsFragment : Fragment() {
     private lateinit var binding: FragmentRegularNewsBinding
     private lateinit var viewModel: NewsViewModel
 
-    private val newsAdapter = NewsAdapter()
+    private val newsAdapter = NewsPagingAdapter()
 
     private val pref = activity?.getSharedPreferences("appSettings", Context.MODE_PRIVATE)
 
@@ -53,13 +55,13 @@ class RegularNewsFragment : Fragment() {
                     requireActivity().applicationContext, this
                 )
             ).get(NewsViewModel::class.java)
+            binding.bindingElement()
         }
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.bindingElement()
     }
 
     private fun FragmentRegularNewsBinding.bindingElement() {
@@ -70,7 +72,7 @@ class RegularNewsFragment : Fragment() {
 
     private fun FragmentRegularNewsBinding.bindAdapter() {
         val header = NewsLoadStateAdapter { newsAdapter.retry() }
-        newsAdapter.setOnItemClickListener(object : NewsAdapter.OnItemClickListener {
+        newsAdapter.setOnItemClickListener(object : NewsPagingAdapter.OnItemClickListener {
             override fun onItemClick(id: Long?) {
                 if (id != null) {
                     showWebView(this@RegularNewsFragment, id)
@@ -88,15 +90,18 @@ class RegularNewsFragment : Fragment() {
 
         lifecycleScope.launch {
             newsAdapter.loadStateFlow.collect { loadState ->
+                Log.e("state", "$loadState")
                 header.loadState = loadState.mediator
                     ?.refresh
-                    ?.takeIf { it is LoadState.Error && newsAdapter.itemCount > 0 }
+                    ?.takeIf { it is LoadState.Error && newsAdapter.itemCount >= 0 }
                     ?: loadState.prepend
 
                 val errorState = loadState.source.append as? LoadState.Error
                     ?: loadState.source.prepend as? LoadState.Error
                     ?: loadState.append as? LoadState.Error
                     ?: loadState.prepend as? LoadState.Error
+                    ?: loadState.refresh as? LoadState.Error
+
                 errorState?.let {
                     if ((it.error as HttpException).code() != 426) {
                         Toast.makeText(
@@ -105,6 +110,7 @@ class RegularNewsFragment : Fragment() {
                             Toast.LENGTH_LONG
                         ).show()
                     }
+
                 }
             }
         }

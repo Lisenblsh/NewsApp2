@@ -11,10 +11,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.newsapp2.R
 import com.example.newsapp2.databinding.FragmentFollowNewsBinding
 import com.example.newsapp2.di.Injection
 import com.example.newsapp2.tools.showWebView
-import com.example.newsapp2.ui.adapters.NewsAdapter
+import com.example.newsapp2.ui.adapters.NewsPagingAdapter
 import com.example.newsapp2.ui.adapters.NewsLoadStateAdapter
 import com.example.newsapp2.ui.viewModel.NewsViewModel
 import kotlinx.coroutines.flow.collect
@@ -53,9 +54,9 @@ class FollowNewsFragment : Fragment() {
     }
 
     private fun FragmentFollowNewsBinding.bindingElement() {
-        val newsAdapter = NewsAdapter()
+        val newsAdapter = NewsPagingAdapter()
         val header = NewsLoadStateAdapter { newsAdapter.retry() }
-        newsAdapter.setOnItemClickListener(object : NewsAdapter.OnItemClickListener {
+        newsAdapter.setOnItemClickListener(object : NewsPagingAdapter.OnItemClickListener {
             override fun onItemClick(id: Long?) {
                 if (id != null) {
                     showWebView(this@FollowNewsFragment, id)

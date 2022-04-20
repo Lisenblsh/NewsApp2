@@ -26,4 +26,6 @@
     <string name="likedArticle">Новость добавлена в избранное</string>
     <string name="unlikedArticle">" удалена из избранного"</string>
     <string name="send">Отправленно</string>
+    <string name="end_of_list">Конец списка</string>
+    <string name="fovorite_list_empty">Вы пока еще не добавили ни одной новости в избранное</string>
 </resources>
