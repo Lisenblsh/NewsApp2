@@ -112,18 +112,11 @@ class NewsRemoteMediator(
 
     private suspend fun getNewsDomains(): String =
         newsDataBase.newsListDao().getSourcesData(TypeSource.FollowSource)
-            .joinToString(",", transform = { it.name })
+            .joinToString(",", transform = { it.name }).ifBlank { "0" }
 
     private suspend fun getExcludeDomains(): String =
         newsDataBase.newsListDao().getSourcesData(TypeSource.BlockSource)
             .joinToString(",", transform = { it.name })
-
-    private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, ArticlesDB>): RemoteKeys? {
-        return state.pages.firstOrNull() { it.data.isNotEmpty() }?.data?.firstOrNull()
-            ?.let { repo ->
-                newsDataBase.newsListDao().remoteKeysNewsId(repo.idArticles)
-            }
-    }
 
     private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, ArticlesDB>): RemoteKeys? {
         return state.pages.lastOrNull() { it.data.isNotEmpty() }?.data?.lastOrNull()

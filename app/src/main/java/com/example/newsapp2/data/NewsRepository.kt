@@ -21,7 +21,8 @@ class NewsRepository(
         return Pager(
             config = PagingConfig(
                 pageSize = NETWORK_PAGE_SIZE,
-                enablePlaceholders = false
+                enablePlaceholders = true,
+                initialLoadSize = INITIAL_LOAD_SIZE
             ),
             remoteMediator = NewsRemoteMediator(
                 retrofitService,
@@ -39,7 +40,8 @@ class NewsRepository(
         return Pager(
             config = PagingConfig(
                 pageSize = NETWORK_PAGE_SIZE,
-                enablePlaceholders = false
+                enablePlaceholders = true,
+                initialLoadSize = INITIAL_LOAD_SIZE
             ),
             remoteMediator = NewsRemoteMediator(
                 retrofitService,
@@ -52,6 +54,7 @@ class NewsRepository(
 
     companion object {
         const val NETWORK_PAGE_SIZE = 10
+        const val INITIAL_LOAD_SIZE = 2
     }
 
 }

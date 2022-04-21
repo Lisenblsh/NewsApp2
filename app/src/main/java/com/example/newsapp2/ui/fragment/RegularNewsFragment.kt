@@ -105,7 +105,7 @@ class RegularNewsFragment : Fragment() {
                     if ((it.error as? HttpException)?.code() != 426) {
                         Toast.makeText(
                             requireContext(),
-                            "Произошла ошибка: ${it.error.localizedMessage}",
+                            resources.getString(R.string.error_occurred, it.error.localizedMessage),
                             Toast.LENGTH_LONG
                         ).show()
                     }

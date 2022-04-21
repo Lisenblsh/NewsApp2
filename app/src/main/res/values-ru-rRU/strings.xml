@@ -27,7 +27,7 @@
     <string name="unlikedArticle">" удалена из избранного"</string>
     <string name="send">Отправленно</string>
     <string name="end_of_list">Конец списка</string>
-    <string name="fovorite_list_empty">Вы пока еще не добавили ни одной новости в избранное</string>
+    <string name="favorite_list_empty">Вы пока еще не добавили ни одной новости в избранное</string>
     <string name="themes">Темы</string>
     <string name="change_theme">Настройка темы приложения</string>
     <string name="follows_source">Подписки</string>
@@ -36,4 +36,5 @@
     <string name="blocks_source">Черный список</string>
     <string name="delete">Удалить</string>
     <string name="list_is_empty">Список пуст</string>
+    <string name="error_occurred">Произошла ошибка: %1$s</string>
 </resources>

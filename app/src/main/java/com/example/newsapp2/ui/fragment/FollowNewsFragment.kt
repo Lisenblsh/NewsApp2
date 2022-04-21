@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.newsapp2.R
 import com.example.newsapp2.databinding.FragmentFollowNewsBinding
 import com.example.newsapp2.di.Injection
 import com.example.newsapp2.tools.showWebView
@@ -27,12 +28,11 @@ class FollowNewsFragment : Fragment() {
     private lateinit var binding: FragmentFollowNewsBinding
     private lateinit var viewModel: NewsViewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private val newsAdapter = NewsPagingAdapter()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         if (!this::binding.isInitialized) {
@@ -43,17 +43,17 @@ class FollowNewsFragment : Fragment() {
                 )
             ).get(NewsViewModel::class.java)
         }
+        binding.bindingElement()
 
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.bindingElement()
+    private fun FragmentFollowNewsBinding.bindingElement() {
+        bindAdapter()
+        initSwipeRefresh()
     }
 
-    private fun FragmentFollowNewsBinding.bindingElement() {
-        val newsAdapter = NewsPagingAdapter()
+    private fun FragmentFollowNewsBinding.bindAdapter() {
         val header = NewsLoadStateAdapter { newsAdapter.retry() }
         newsAdapter.setOnItemClickListener(object : NewsPagingAdapter.OnItemClickListener {
             override fun onItemClick(id: Long?) {
@@ -61,6 +61,7 @@ class FollowNewsFragment : Fragment() {
                     showWebView(this@FollowNewsFragment, id)
                 }
             }
+
         })
         newsList.adapter = newsAdapter.withLoadStateHeaderAndFooter(
             header = header,
@@ -75,29 +76,33 @@ class FollowNewsFragment : Fragment() {
             newsAdapter.loadStateFlow.collect { loadState ->
                 header.loadState = loadState.mediator
                     ?.refresh
-                    ?.takeIf { it is LoadState.Error && newsAdapter.itemCount > 0 }
+                    ?.takeIf { it is LoadState.Error && newsAdapter.itemCount >= 0 }
                     ?: loadState.prepend
 
                 val errorState = loadState.source.append as? LoadState.Error
                     ?: loadState.source.prepend as? LoadState.Error
                     ?: loadState.append as? LoadState.Error
                     ?: loadState.prepend as? LoadState.Error
+                    ?: loadState.refresh as? LoadState.Error
+
                 errorState?.let {
                     if ((it.error as? HttpException)?.code() != 426) {
                         Toast.makeText(
                             requireContext(),
-                            "Произошла ошибка: ${it.error}",
+                            resources.getString(R.string.error_occurred, it.error.localizedMessage),
                             Toast.LENGTH_LONG
                         ).show()
                     }
                 }
-
             }
         }
 
-        binding.swipeRefresh.setOnRefreshListener {
+    }
+
+    private fun FragmentFollowNewsBinding.initSwipeRefresh() {
+        swipeRefresh.setOnRefreshListener {
             newsAdapter.refresh()
-            binding.swipeRefresh.isRefreshing = false
+            swipeRefresh.isRefreshing = false
         }
     }
 }
