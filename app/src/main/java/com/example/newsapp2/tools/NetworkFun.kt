@@ -85,9 +85,3 @@ fun showWebView(fragment: Fragment, articlesId: Long) {
     val navController = NavHostFragment.findNavController(fragment)
     navController.navigate(action)
 }//Показать выбранную новость в WebView
-
-suspend fun getLikedArticlesList(dataBase: NewsDataBase): List<ArticlesDB> {
-    return dataBase.withTransaction {
-        dataBase.newsListDao().getArticlesData2(TypeArticles.LikedNews)
-    }
-}

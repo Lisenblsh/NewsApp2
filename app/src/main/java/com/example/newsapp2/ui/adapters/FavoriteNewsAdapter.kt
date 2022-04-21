@@ -1,6 +1,5 @@
 package com.example.newsapp2.ui.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.newsapp2.R
 import com.example.newsapp2.data.room.ArticlesDB
-import org.w3c.dom.Text
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -156,11 +154,7 @@ class FavoriteNewsAdapter :
         }
 
         fun bind() {
-            textView.text = if(itemCount > 1){
-                itemView.resources.getString(R.string.end_of_list)
-            } else {
-                itemView.resources.getString(R.string.fovorite_list_empty)
-            }
+            textView.text = itemView.resources.getString(R.string.end_of_list)
         }
     }
 }

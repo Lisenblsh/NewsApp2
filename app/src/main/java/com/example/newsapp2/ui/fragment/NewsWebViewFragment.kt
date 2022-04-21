@@ -182,13 +182,13 @@ class NewsWebViewFragment : Fragment() {
                 isFollowedSource = if (isFollowedSource) {
                     lifecycleScope.launch { logic.removeSource(TypeSource.FollowSource) }
                     setImage(R.drawable.ic_baseline_add_circle_outline_24, it)
-                    showMessage(resources.getString(R.string.unfollowSource, logic.getDomain()))
+                    showMessage(resources.getString(R.string.unfollow_source, logic.getDomain()))
                     blockButton.alpha = 1f
                     false
                 } else {
                     lifecycleScope.launch { logic.saveSource(TypeSource.FollowSource) }
                     setImage(R.drawable.ic_baseline_add_circle_24, it)
-                    showMessage(resources.getString(R.string.followSource, logic.getDomain()))
+                    showMessage(resources.getString(R.string.follow_source, logic.getDomain()))
                     blockButton.alpha = .5f
                     true
                 }
@@ -200,13 +200,13 @@ class NewsWebViewFragment : Fragment() {
                 isBlockedSource = if (isBlockedSource) {
                     lifecycleScope.launch { logic.removeSource(TypeSource.BlockSource) }
                     setImage(R.drawable.ic_baseline_remove_circle_outline_24, it)
-                    showMessage(resources.getString(R.string.unblockSource, logic.getDomain()))
+                    showMessage(resources.getString(R.string.unblock_source, logic.getDomain()))
                     followButton.alpha = 1f
                     false
                 } else {
                     lifecycleScope.launch { logic.saveSource(TypeSource.BlockSource) }
                     setImage(R.drawable.ic_baseline_remove_circle_24, it)
-                    showMessage(resources.getString(R.string.blockSource, logic.getDomain()))
+                    showMessage(resources.getString(R.string.block_source, logic.getDomain()))
                     followButton.alpha = .5f
                     true
                 }

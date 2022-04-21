@@ -12,6 +12,9 @@
         <action
             android:id="@+id/action_mainFragment_to_newsWebViewFragment"
             app:destination="@id/newsWebViewFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_currentSettingFragment"
+            app:destination="@id/currentSettingFragment" />
     </fragment>
     <fragment
         android:id="@+id/newsWebViewFragment"
@@ -21,6 +24,14 @@
         <argument
             android:name="articleId"
             app:argType="long" />
-
+    </fragment>
+    <fragment
+        android:id="@+id/currentSettingFragment"
+        android:name="com.example.newsapp2.ui.fragment.CurrentSettingFragment"
+        android:label="fragment_current_setting"
+        tools:layout="@layout/fragment_current_setting">
+        <argument
+            android:name="type_setting"
+            app:argType="com.example.newsapp2.tools.TypeSetting"/>
     </fragment>
 </navigation>

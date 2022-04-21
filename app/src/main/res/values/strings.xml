@@ -20,13 +20,21 @@
     <string name="apply">Apply</string>
     <string name="reset">Reset</string>
     <string name="quick_instruction">Additional search options:\n\"\" for exact match\n+ for words that should occur\n- for words that should not occur</string>
-    <string name="unblockSource">%1$s unbocked</string>
-    <string name="blockSource">%1$s bloked</string>
-    <string name="followSource">%1$s followed</string>
-    <string name="unfollowSource">%1$s unfollowed</string>
+    <string name="unblock_source">%1$s unbocked</string>
+    <string name="block_source">%1$s bloked</string>
+    <string name="follow_source">%1$s followed</string>
+    <string name="unfollow_source">%1$s unfollowed</string>
     <string name="likedArticle">Article added to favorite</string>
     <string name="unlikedArticle">Article removed from favorite</string>
     <string name="send">Send</string>
     <string name="end_of_list">End of list</string>
     <string name="fovorite_list_empty">You have not yet liked any articles</string>
+    <string name="themes">Themes</string>
+    <string name="change_theme">Сhange theme</string>
+    <string name="follows_source">Follows</string>
+    <string name="config_follow_source">Setting up follows</string>
+    <string name="config_block_source">Setting up blocks</string>
+    <string name="blocks_source">Blacklist</string>
+    <string name="delete">Delete</string>
+    <string name="list_is_empty">List is empty</string>
 </resources>

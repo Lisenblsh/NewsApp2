@@ -11,12 +11,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.newsapp2.R
 import com.example.newsapp2.databinding.FragmentFollowNewsBinding
 import com.example.newsapp2.di.Injection
 import com.example.newsapp2.tools.showWebView
-import com.example.newsapp2.ui.adapters.NewsPagingAdapter
 import com.example.newsapp2.ui.adapters.NewsLoadStateAdapter
+import com.example.newsapp2.ui.adapters.NewsPagingAdapter
 import com.example.newsapp2.ui.viewModel.NewsViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest

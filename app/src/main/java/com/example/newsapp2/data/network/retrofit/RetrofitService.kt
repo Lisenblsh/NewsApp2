@@ -24,6 +24,8 @@ interface RetrofitService {
 
     companion object {
         private const val key = "c8556aedf85d4a5b80ad98ac35763a7a"
+        private const val keySecond = "e0d13fadfa5741fc899b72692b956672"
+
         private const val BASE_URL = "https://newsapi.org/v2/"
 
         fun create(): RetrofitService {
@@ -48,9 +50,6 @@ interface RetrofitService {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(RetrofitService::class.java)
-
         }
-
-
     }
 }

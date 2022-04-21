@@ -18,6 +18,7 @@
             shortEdges <!-- default, shortEdges, or never -->
         </item>
         <item name="android:textColor">@color/black</item>
+        <item name="checkMarkTint">@color/black</item>
 
     </style>
 
@@ -27,6 +28,7 @@
 
     <style name="Tint" parent="Theme.NewsApp2">
         <item name="tint">@color/black</item>
+        <item name="drawableTint">@color/black</item>
     </style>
     <style name="foregroundGradient" parent="Theme.NewsApp2">
         <item name="android:foreground">@drawable/gradient</item>

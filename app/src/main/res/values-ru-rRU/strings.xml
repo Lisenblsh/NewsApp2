@@ -19,13 +19,21 @@
     <string name="apply">Применить</string>
     <string name="reset">Сбросить</string>
     <string name="quick_instruction">Дополнительные параметры поиска:\n\"\" для точного совпадения\n+ к словам, которые должны встречатся\n - к словам, которые не должны встречаться</string>
-    <string name="unblockSource">%1$s разблокирован</string>
-    <string name="blockSource">%1$s заблокирован</string>
-    <string name="followSource">%1$s отслеживается</string>
-    <string name="unfollowSource">%1$s перестал отслеживаться</string>
+    <string name="unblock_source">%1$s разблокирован</string>
+    <string name="block_source">%1$s заблокирован</string>
+    <string name="follow_source">%1$s отслеживается</string>
+    <string name="unfollow_source">%1$s перестал отслеживаться</string>
     <string name="likedArticle">Новость добавлена в избранное</string>
     <string name="unlikedArticle">" удалена из избранного"</string>
     <string name="send">Отправленно</string>
     <string name="end_of_list">Конец списка</string>
     <string name="fovorite_list_empty">Вы пока еще не добавили ни одной новости в избранное</string>
+    <string name="themes">Темы</string>
+    <string name="change_theme">Настройка темы приложения</string>
+    <string name="follows_source">Подписки</string>
+    <string name="config_follow_source">Настройка подписок</string>
+    <string name="config_block_source">Настройка черного списка</string>
+    <string name="blocks_source">Черный список</string>
+    <string name="delete">Удалить</string>
+    <string name="list_is_empty">Список пуст</string>
 </resources>

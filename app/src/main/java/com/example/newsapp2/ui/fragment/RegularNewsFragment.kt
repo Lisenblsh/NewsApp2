@@ -21,8 +21,8 @@ import com.example.newsapp2.data.network.Filter
 import com.example.newsapp2.databinding.FragmentRegularNewsBinding
 import com.example.newsapp2.di.Injection
 import com.example.newsapp2.tools.showWebView
-import com.example.newsapp2.ui.adapters.NewsPagingAdapter
 import com.example.newsapp2.ui.adapters.NewsLoadStateAdapter
+import com.example.newsapp2.ui.adapters.NewsPagingAdapter
 import com.example.newsapp2.ui.viewModel.NewsViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
@@ -90,7 +90,6 @@ class RegularNewsFragment : Fragment() {
 
         lifecycleScope.launch {
             newsAdapter.loadStateFlow.collect { loadState ->
-                Log.e("state", "$loadState")
                 header.loadState = loadState.mediator
                     ?.refresh
                     ?.takeIf { it is LoadState.Error && newsAdapter.itemCount >= 0 }
@@ -103,14 +102,13 @@ class RegularNewsFragment : Fragment() {
                     ?: loadState.refresh as? LoadState.Error
 
                 errorState?.let {
-                    if ((it.error as HttpException).code() != 426) {
+                    if ((it.error as? HttpException)?.code() != 426) {
                         Toast.makeText(
                             requireContext(),
-                            "Произошла ошибка: ${it.error}",
+                            "Произошла ошибка: ${it.error.localizedMessage}",
                             Toast.LENGTH_LONG
                         ).show()
                     }
-
                 }
             }
         }
@@ -145,13 +143,13 @@ class RegularNewsFragment : Fragment() {
         menuCard.setOnClickListener {
             menuLayout.layoutParams.width = FrameLayout.LayoutParams.MATCH_PARENT
             menuLayout.requestLayout()
-            /**Это надо заменить на анимации*/
+            /*Это надо заменить на анимации*/
         }//Для открытия меню
 
         forCloseMenu.setOnClickListener {
             menuLayout.layoutParams.width = 0
             menuLayout.requestLayout()
-            /**Это надо заменить на анимации*/
+            /*Это надо заменить на анимации*/
         }//Для закрытия меню
 
         resetButton.setOnClickListener {
@@ -164,7 +162,7 @@ class RegularNewsFragment : Fragment() {
                 isIconified = true
             }
             whereSearchSpinner.setSelection(0)
-            sortBySpinner.setSelection(2)
+            sortBySpinner.setSelection(0)
 
             clearDateFrom.visibility = View.GONE
             dateFrom.text = "Нажмите чтобы задать"

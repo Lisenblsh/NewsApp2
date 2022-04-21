@@ -1,6 +1,5 @@
 package com.example.newsapp2.data
 
-import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -94,7 +93,6 @@ class NewsRemoteMediator(
         } catch (e: IOException) {
             return MediatorResult.Error(e)
         } catch (e: HttpException) {
-            Log.e("errorMediator", "load: $e")
             return MediatorResult.Error(e)
         }
     }
