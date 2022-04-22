@@ -16,7 +16,7 @@
     <string name="sort_by">Sort by:</string>
     <string name="from">from:</string>
     <string name="to">to:</string>
-    <string name="set_time">Click to set the time</string>
+    <string name="set_date">Set date period</string>
     <string name="apply">Apply</string>
     <string name="reset">Reset</string>
     <string name="quick_instruction">Additional search options:\n\"\" for exact match\n+ for words that should occur\n- for words that should not occur</string>

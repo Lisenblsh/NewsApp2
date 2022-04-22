@@ -2,7 +2,6 @@ package com.example.newsapp2.ui.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,10 +19,13 @@ import com.example.newsapp2.data.network.CurrentFilter
 import com.example.newsapp2.data.network.Filter
 import com.example.newsapp2.databinding.FragmentRegularNewsBinding
 import com.example.newsapp2.di.Injection
+import com.example.newsapp2.tools.convertToAPIDate
+import com.example.newsapp2.tools.convertToDeviceDate
 import com.example.newsapp2.tools.showWebView
 import com.example.newsapp2.ui.adapters.NewsLoadStateAdapter
 import com.example.newsapp2.ui.adapters.NewsPagingAdapter
 import com.example.newsapp2.ui.viewModel.NewsViewModel
+import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -121,6 +123,9 @@ class RegularNewsFragment : Fragment() {
         }
     }
 
+    var dateFromText = ""
+    var dateToText = ""
+
     private fun FragmentRegularNewsBinding.initMenu() {
         languageSpinner.adapter = ArrayAdapter.createFromResource(
             requireContext(),
@@ -139,6 +144,25 @@ class RegularNewsFragment : Fragment() {
             R.array.news_sort_by,
             android.R.layout.simple_spinner_item
         )//Адаптер для спинера сортировки
+
+        dateButton.setOnClickListener {
+            val builder = MaterialDatePicker.Builder.dateRangePicker()
+                .setSelection(
+                    androidx.core.util.Pair(
+                        MaterialDatePicker.thisMonthInUtcMilliseconds(),
+                        MaterialDatePicker.todayInUtcMilliseconds()
+                    )
+                )
+                .setTheme(R.style.MyDatePickerStyle)
+            val picker = builder.build()
+            picker.show(activity?.supportFragmentManager!!, picker.toString())
+            picker.addOnPositiveButtonClickListener {
+                dateFromText = convertToAPIDate(it.first)
+                dateToText = convertToAPIDate(it.second)
+                dateText.text =
+                    "${convertToDeviceDate(it.first)} - ${convertToDeviceDate(it.second)}"
+            }
+        }
 
         menuCard.setOnClickListener {
             menuLayout.layoutParams.width = FrameLayout.LayoutParams.MATCH_PARENT
@@ -164,10 +188,8 @@ class RegularNewsFragment : Fragment() {
             whereSearchSpinner.setSelection(0)
             sortBySpinner.setSelection(0)
 
-            clearDateFrom.visibility = View.GONE
-            dateFrom.text = "Нажмите чтобы задать"
-            clearDateTo.visibility = View.GONE
-            dateTo.text = "Нажмите чтобы задать"
+            val setDate = resources.getString(R.string.set_date)
+            dateText.text = ""
             newsList.scrollToPosition(0)
             newsAdapter.refresh()
         }//Для отмены фильтров
@@ -179,27 +201,22 @@ class RegularNewsFragment : Fragment() {
 
             val lang = languageArray[languageSpinner.selectedItemPosition]
 
-            Log.e("lang", lang)
-
-
             CurrentFilter.filterForNews =
                 CurrentFilter.filterForNews.copy(
                     newsLanguage = lang,
-                    newsQuery = if ("${searchBar.query}" == "") "a" else "${searchBar.query}",
+                    newsQuery = "${searchBar.query}".ifBlank { "a" },
                     newsSortBy = sortByArray[sortBySpinner.selectedItemPosition],
                     searchIn = searchInArray[whereSearchSpinner.selectedItemPosition],
-                    newsFrom = "",
-                    newsTo = ""
+                    newsFrom = dateFromText,
+                    newsTo = dateToText
                 )
             newsList.scrollToPosition(0)
             newsAdapter.refresh()
-        }//ДЛя применения фильтров
-
-
+        }//Для применения фильтров
     }
 
     private fun createSharedPreference() {
-        if(pref != null){
+        if (pref != null) {
             if (!pref.contains("LANGUAGE")) {
                 with(pref.edit()) {
                     putString("LANGUAGE", "")
@@ -215,5 +232,4 @@ class RegularNewsFragment : Fragment() {
         }
 
     }//Вытаскиваю сохраненный язык из настроек
-
 }

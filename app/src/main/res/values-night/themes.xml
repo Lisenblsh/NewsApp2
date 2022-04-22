@@ -19,6 +19,8 @@
         <!-- Customize your theme here. -->
         <item name="android:textColor">@color/white</item>
         <item name="checkMarkTint">@color/white</item>
+        <item name="rangeFillColor">@color/red</item>
+
     </style>
 
     <style name="FAB" parent="Theme.NewsApp2">
@@ -46,11 +48,7 @@
         <item name="android:background">@color/darkGray</item>
     </style>
 
-    <style name="MyDatePickerStyle" parent="Theme.AppCompat.DayNight.Dialog">
-        <item name="colorAccent">@color/accent_night</item>
-        <item name="colorControlActivated">@color/accent_night</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:windowBackground">@color/background_night</item>
+    <style name="MyDatePickerStyle" parent="ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen">
+        <item name="colorPrimary">@color/button_night</item>
     </style>
 </resources>
