@@ -38,12 +38,6 @@ class RegularNewsFragment : Fragment() {
 
     private val newsAdapter = NewsPagingAdapter()
 
-    private val pref = activity?.getSharedPreferences("appSettings", Context.MODE_PRIVATE)
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -60,10 +54,6 @@ class RegularNewsFragment : Fragment() {
             binding.bindingElement()
         }
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
     }
 
     private fun FragmentRegularNewsBinding.bindingElement() {
@@ -188,7 +178,6 @@ class RegularNewsFragment : Fragment() {
             whereSearchSpinner.setSelection(0)
             sortBySpinner.setSelection(0)
 
-            val setDate = resources.getString(R.string.set_date)
             dateText.text = ""
             newsList.scrollToPosition(0)
             newsAdapter.refresh()
@@ -200,6 +189,14 @@ class RegularNewsFragment : Fragment() {
             val languageArray = resources.getStringArray(R.array.news_lang_code_array)
 
             val lang = languageArray[languageSpinner.selectedItemPosition]
+            val pref = activity?.getSharedPreferences("appSettings", Context.MODE_PRIVATE)
+
+            if (pref != null) {
+                with(pref.edit()) {
+                    putString("LANGUAGE", lang)
+                    apply()
+                }
+            }
 
             CurrentFilter.filterForNews =
                 CurrentFilter.filterForNews.copy(
@@ -216,6 +213,8 @@ class RegularNewsFragment : Fragment() {
     }
 
     private fun createSharedPreference() {
+        val pref = activity?.getSharedPreferences("appSettings", Context.MODE_PRIVATE)
+
         if (pref != null) {
             if (!pref.contains("LANGUAGE")) {
                 with(pref.edit()) {
@@ -230,6 +229,5 @@ class RegularNewsFragment : Fragment() {
                 landCodeArray.indexOf(pref.getString("LANGUAGE", ""))
             )
         }
-
     }//Вытаскиваю сохраненный язык из настроек
 }

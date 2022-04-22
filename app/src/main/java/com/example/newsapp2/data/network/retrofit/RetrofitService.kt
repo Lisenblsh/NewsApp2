@@ -1,5 +1,6 @@
 package com.example.newsapp2.data.network.retrofit
 
+import com.example.newsapp2.BuildConfig
 import com.example.newsapp2.data.network.NewsModel
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -23,9 +24,6 @@ interface RetrofitService {
     ): NewsModel
 
     companion object {
-        private const val key = "c8556aedf85d4a5b80ad98ac35763a7a"
-        private const val keySecond = "e0d13fadfa5741fc899b72692b956672"
-
         private const val BASE_URL = "https://newsapi.org/v2/"
 
         fun create(): RetrofitService {
@@ -34,7 +32,7 @@ interface RetrofitService {
                     val original = chain.request()
 
                     val requestBuilder = original.newBuilder()
-                        .addHeader("X-Api-Key", key)
+                        .addHeader("X-Api-Key", BuildConfig.API_KEY)
                         .method(original.method, original.body)
 
                     val request = requestBuilder.build()

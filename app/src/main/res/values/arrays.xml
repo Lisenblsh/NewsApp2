@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="app_theme_array">
-        <item>Системная</item>
-        <item>Светлая</item>
-        <item>Темная</item>
+        <item>System</item>
+        <item>Light</item>
+        <item>Dark</item>
     </string-array>
 
     <string-array name="news_lang_name_array">
         <item>Все языки</item>
-        <item>Английский(English)</item>
-        <item>Русский</item>
-        <item>Арабский(العربية)</item>
-        <item>Немецкий(Deutsch)</item>
-        <item>Испанский(Español)</item>
-        <item>Французский(Français)</item>
-        <item>Иврит(עִבְרִית)</item>
-        <item>Итальянский(Italiano)</item>
-        <item>Нидерландский(Nederlands)</item>
-        <item>Норвежский(Norsk)</item>
-        <item>Португальский(Português)</item>
-        <item>Северносаамский(Davvisámegiella)</item>
-        <item>Китайский(中文)</item>
+        <item>English</item>
+        <item>Russian(Русский)</item>
+        <item>Arabic(العربية)</item>
+        <item>German(Deutsch)</item>
+        <item>Spanish(Español)</item>
+        <item>French(Français)</item>
+        <item>Hebrew(עִבְרִית)</item>
+        <item>Italian(Italiano)</item>
+        <item>Dutch(Nederlands)</item>
+        <item>Norwegian(Norsk)</item>
+        <item>Portuguese(Português)</item>
+        <item>North Saami(Davvisámegiella)</item>
+        <item>Chinese(中文)</item>
     </string-array>
     <string-array name="news_lang_code_array">
         <item></item>
@@ -45,9 +45,9 @@
         <item>popularity</item>
     </string-array>
     <string-array name="news_sort_by">
-        <item>Времени публикации</item>
-        <item>Релевантности</item>
-        <item>Популярности</item>
+        <item>Published at</item>
+        <item>Relevancy</item>
+        <item>Popularity</item>
     </string-array>
 
     <string-array name="news_search_in_for_api">
@@ -57,9 +57,9 @@
         <item>content</item>
     </string-array>
     <string-array name="news_search_in">
-        <item>Везде</item>
-        <item>Заголовке</item>
-        <item>Описании</item>
-        <item>Содержании</item>
+        <item>All</item>
+        <item>Title</item>
+        <item>Description</item>
+        <item>Content</item>
     </string-array>
 </resources>

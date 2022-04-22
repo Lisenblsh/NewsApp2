@@ -1,10 +1,13 @@
 package com.example.newsapp2.data
 
+import android.provider.Contacts.SettingsColumns.KEY
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
+import com.example.newsapp2.BuildConfig
 import com.example.newsapp2.data.network.CurrentFilter
 import com.example.newsapp2.data.network.Filter
 import com.example.newsapp2.data.network.retrofit.RetrofitService
@@ -65,7 +68,6 @@ class NewsRemoteMediator(
                 )
                 getNews(CurrentFilter.filterForFavorite)
             }
-
             val news = apiResponse.articles.map { it.toArticlesDto(typeArticles) }
             val endOfPaginationReached = news.isEmpty()
             newsDataBase.withTransaction {

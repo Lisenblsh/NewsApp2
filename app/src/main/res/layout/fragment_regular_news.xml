@@ -55,7 +55,7 @@
 
     <LinearLayout
         android:id="@+id/menu_layout"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="end"
         android:elevation="10dp"
