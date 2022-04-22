@@ -19,14 +19,10 @@ class HomeFragment : Fragment() {
 
     private val newsAdapter = FavoriteNewsAdapter()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val binding = FragmentHomeBinding.inflate(inflater, container, false)
         binding.bindAdapter()
         return binding.root

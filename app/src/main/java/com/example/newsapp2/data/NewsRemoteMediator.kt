@@ -1,13 +1,10 @@
 package com.example.newsapp2.data
 
-import android.provider.Contacts.SettingsColumns.KEY
-import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
-import com.example.newsapp2.BuildConfig
 import com.example.newsapp2.data.network.CurrentFilter
 import com.example.newsapp2.data.network.Filter
 import com.example.newsapp2.data.network.retrofit.RetrofitService
@@ -16,7 +13,6 @@ import retrofit2.HttpException
 import java.io.IOException
 
 private const val STARTING_PAGE_INDEX = 1
-
 
 @OptIn(ExperimentalPagingApi::class)
 class NewsRemoteMediator(
@@ -121,7 +117,7 @@ class NewsRemoteMediator(
             .joinToString(",", transform = { it.name })
 
     private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, ArticlesDB>): RemoteKeys? {
-        return state.pages.lastOrNull() { it.data.isNotEmpty() }?.data?.lastOrNull()
+        return state.pages.lastOrNull { it.data.isNotEmpty() }?.data?.lastOrNull()
             ?.let { repo ->
                 newsDataBase.newsListDao().remoteKeysNewsId(repo.idArticles)
             }

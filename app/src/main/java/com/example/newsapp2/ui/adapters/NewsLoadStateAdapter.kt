@@ -40,7 +40,8 @@ class NewsLoadStateAdapter(private val retry: () -> Unit) :
                 if (loadState is LoadState.Error) (loadState.error as? HttpException)?.code() else 0
             if (loadState is LoadState.Error) {
                 binding.errorMsg.text =
-                    if (code == 426) "Вы достигли конца" else loadState.error.localizedMessage
+                    if (code == 426) binding.root.resources.getString(R.string.end_of_list)
+                    else loadState.error.localizedMessage
             }
             binding.progressBar.isVisible = loadState is LoadState.Loading
             if (code != 426) {

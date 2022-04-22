@@ -29,14 +29,10 @@ class CurrentSettingFragment : Fragment() {
 
     private lateinit var binding: FragmentCurrentSettingBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentCurrentSettingBinding.inflate(inflater, container, false)
         val args = CurrentSettingFragmentArgs.fromBundle(requireArguments())
 

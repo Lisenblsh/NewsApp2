@@ -41,7 +41,7 @@ class RegularNewsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         if (!this::binding.isInitialized) {
             binding = FragmentRegularNewsBinding.inflate(inflater, container, false)
@@ -60,6 +60,7 @@ class RegularNewsFragment : Fragment() {
         bindAdapter()
         initSwipeRefresh()
         initMenu()
+        initGoToUpBtn()
     }
 
     private fun FragmentRegularNewsBinding.bindAdapter() {
@@ -113,8 +114,8 @@ class RegularNewsFragment : Fragment() {
         }
     }
 
-    var dateFromText = ""
-    var dateToText = ""
+    private var dateFromText = ""
+    private var dateToText = ""
 
     private fun FragmentRegularNewsBinding.initMenu() {
         languageSpinner.adapter = ArrayAdapter.createFromResource(
@@ -149,20 +150,21 @@ class RegularNewsFragment : Fragment() {
             picker.addOnPositiveButtonClickListener {
                 dateFromText = convertToAPIDate(it.first)
                 dateToText = convertToAPIDate(it.second)
-                dateText.text =
-                    "${convertToDeviceDate(it.first)} - ${convertToDeviceDate(it.second)}"
+                dateText.text = resources.getString(
+                    R.string.date_text,
+                    convertToDeviceDate(it.first),
+                    convertToDeviceDate(it.second)
+                )
             }
         }
 
         menuCard.setOnClickListener {
-            menuLayout.layoutParams.width = FrameLayout.LayoutParams.MATCH_PARENT
-            menuLayout.requestLayout()
+            menuLayout.visibility = View.VISIBLE
             /*Это надо заменить на анимации*/
         }//Для открытия меню
 
         forCloseMenu.setOnClickListener {
-            menuLayout.layoutParams.width = 0
-            menuLayout.requestLayout()
+            menuLayout.visibility = View.GONE
             /*Это надо заменить на анимации*/
         }//Для закрытия меню
 
@@ -212,6 +214,11 @@ class RegularNewsFragment : Fragment() {
         }//Для применения фильтров
     }
 
+    private fun FragmentRegularNewsBinding.initGoToUpBtn() {
+        goToUpButton.setOnClickListener {
+            newsList.smoothScrollToPosition(0)
+        }
+    }
     private fun createSharedPreference() {
         val pref = activity?.getSharedPreferences("appSettings", Context.MODE_PRIVATE)
 

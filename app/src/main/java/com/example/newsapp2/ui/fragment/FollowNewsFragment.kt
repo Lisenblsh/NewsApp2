@@ -34,7 +34,7 @@ class FollowNewsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         if (!this::binding.isInitialized) {
             binding = FragmentFollowNewsBinding.inflate(inflater, container, false)
             viewModel = ViewModelProvider(

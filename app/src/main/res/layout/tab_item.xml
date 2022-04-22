@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tab_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:theme="@style/Tint">
+    android:theme="@style/Tint"
+    tools:ignore="UseCompoundDrawables">
 
     <ImageView
         android:layout_marginTop="10dp"
-        android:id="@+id/tabImg"
+        android:id="@+id/tab_img"
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:layout_gravity="center_horizontal" />
 
     <TextView
-        android:id="@+id/tabText"
+        android:id="@+id/tab_text"
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:layout_gravity="center_horizontal"

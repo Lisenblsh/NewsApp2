@@ -19,17 +19,6 @@ internal fun Articles.toArticlesDto(typeArticles: TypeArticles): ArticlesDB {
     )
 }//Преобразования данных из модели API в модель БД
 
-internal fun ArticlesDB.toArticles(): Articles {
-    return Articles(
-        author,
-        title,
-        description,
-        url,
-        urlToImage,
-        publishedAt
-    )
-}//Преобразования данных из модели БД в модель API
-
 private fun getDomain(url: String): String {
     var domain = "${url.toUri().host}"
     if (domain.subSequence(0, 4) == "www.") {

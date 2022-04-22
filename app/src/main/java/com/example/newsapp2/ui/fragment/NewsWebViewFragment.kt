@@ -33,14 +33,10 @@ class NewsWebViewFragment : Fragment() {
 
     private var isMenuClosed = true
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentNewsWebViewBinding.inflate(inflater, container, false)
         lifecycleScope.launch {
             binding.initElement()

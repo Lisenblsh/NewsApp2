@@ -42,9 +42,9 @@ data class SourcesDB(
     val typeSource: TypeSource
 )
 
-enum class TypeSource(val typeId: Int, val typeName: String) {
-    FollowSource(1, "Избраные источники"),
-    BlockSource(2, "Скрытые источники")
+enum class TypeSource {
+    FollowSource,
+    BlockSource
 }
 
 /*Типы:

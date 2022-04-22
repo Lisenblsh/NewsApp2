@@ -2,13 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="orange">#FFD096</color>
-    <color name="panel">#FFE8DE</color>
     <color name="transparent">#00000000</color>
-    <color name="transparent_gray">#41BCBCBC</color>
-    <color name="transparent_dark_gray">#A17E7E7E</color>
-    <color name="gray">#DFDFDF</color>
-    <color name="darkGray">#8A8A8A</color>
     <color name="red">#FF0000</color>
 
     <color name="accent_light">#9CB5D3</color>
@@ -16,21 +10,9 @@
 
     <color name="taskBar_night">#303030</color>
 
-    <color name="actionbar_light">#0B49E4</color>
-    <color name="actionbar_night">#8b8b8b</color>
-
-    <color name="background_light">#FFFFFFFF</color>
-    <color name="background_night">#1B1B1B</color>
-
-    <color name="card_light">#FFFFFFFF</color>
-    <color name="card_night">#AFAFAF</color>
-
-    <color name="icon_light">#131313</color>
-    <color name="icon_night">#ECECEC</color>
-
-    <color name="text_light">#131313</color>
-    <color name="text_night">#ECECEC</color>
-
     <color name="button_light">#A5BEF4</color>
     <color name="button_night">#b8b8b8</color>
+
+    <color name="gray">#DFDFDF</color>
+    <color name="darkGray">#8A8A8A</color>
 </resources>

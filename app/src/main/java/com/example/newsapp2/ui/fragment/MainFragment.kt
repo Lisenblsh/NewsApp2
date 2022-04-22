@@ -16,14 +16,10 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 class MainFragment : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val binding = FragmentMainBinding.inflate(inflater, container, false)
         binding.bindViewPager()
         return binding.root
@@ -42,8 +38,8 @@ class MainFragment : Fragment() {
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             val tabCustom = LayoutInflater.from(requireContext())
                 .inflate(R.layout.tab_item, null) as LinearLayout
-            val tabImg = tabCustom.findViewById<ImageView>(R.id.tabImg)
-            val tabText = tabCustom.findViewById<TextView>(R.id.tabText)
+            val tabImg = tabCustom.findViewById<ImageView>(R.id.tab_img)
+            val tabText = tabCustom.findViewById<TextView>(R.id.tab_text)
             when (position) {
                 0 -> {
                     tabText.text = resources.getString(R.string.news)
