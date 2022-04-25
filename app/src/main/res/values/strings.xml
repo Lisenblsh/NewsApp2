@@ -39,4 +39,5 @@
     <string name="list_is_empty">List is empty</string>
     <string name="error_occurred">An error occurred: %1$s</string>
     <string name="date_text" translatable="false">%1$s - %2$s</string>
+    <string name="version">version 2.2.12</string>
 </resources>

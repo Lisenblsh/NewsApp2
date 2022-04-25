@@ -17,6 +17,12 @@ class DatabaseFun(private val dataBase: NewsDataBase) {
         }
     }
 
+    suspend fun deleteLikedArticle(article: ArticlesDB){
+        dataBase.withTransaction {
+            dataBase.newsListDao().deleteLikedArticle(article)
+        }
+    }
+
     suspend fun getSource(typeSource: TypeSource): List<String> {
         return dataBase.withTransaction {
             val list = dataBase.newsListDao().getSourcesData(typeSource)

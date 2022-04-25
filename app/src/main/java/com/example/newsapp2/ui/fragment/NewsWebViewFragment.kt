@@ -13,6 +13,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
@@ -23,6 +24,7 @@ import com.example.newsapp2.data.room.TypeSource
 import com.example.newsapp2.databinding.FragmentNewsWebViewBinding
 import com.example.newsapp2.tools.LogicForWebView
 import kotlinx.coroutines.launch
+import java.net.URL
 
 
 class NewsWebViewFragment : Fragment() {
@@ -145,8 +147,6 @@ class NewsWebViewFragment : Fragment() {
         var isLikedNews = logic.isLikedNews()
         var isFollowedSource = logic.isFollowedSource()
         var isBlockedSource = logic.isBlockedSource()
-
-        Log.e("is", "initMenu:$isLikedNews, $isBlockedSource, $isFollowedSource")
 
         if (isLikedNews) setImage(R.drawable.ic_baseline_favorite_24, likeButton)
         if (isFollowedSource) {

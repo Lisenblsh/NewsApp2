@@ -37,5 +37,4 @@ class NewsRepository(
         const val NETWORK_PAGE_SIZE = 10
         const val INITIAL_LOAD_SIZE = 2
     }
-
 }

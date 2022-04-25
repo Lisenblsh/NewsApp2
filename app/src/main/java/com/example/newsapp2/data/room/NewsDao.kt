@@ -40,12 +40,15 @@ interface NewsDao {
     //Удалить одну новость из списка избраных
     @Query("delete from articles where :source = source and :url = url " +
             "and :publishedAt = publishedAt and :typeArticles = typeArticles")
-    suspend fun deleteLikedArticles(
+    suspend fun deleteLikedArticle(
         source: String,
         url: String,
         publishedAt: String,
         typeArticles: TypeArticles
     )
+
+    @Delete
+    suspend fun deleteLikedArticle(article: ArticlesDB)
 
     //Отчистка Новостей
     @Query("delete from articles where typeArticles = :type")

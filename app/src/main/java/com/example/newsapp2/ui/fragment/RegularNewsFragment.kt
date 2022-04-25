@@ -1,12 +1,13 @@
 package com.example.newsapp2.ui.fragment
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -35,6 +36,7 @@ class RegularNewsFragment : Fragment() {
 
     private lateinit var binding: FragmentRegularNewsBinding
     private lateinit var viewModel: NewsViewModel
+    private lateinit var pref: SharedPreferences
 
     private val newsAdapter = NewsPagingAdapter()
 
@@ -45,13 +47,13 @@ class RegularNewsFragment : Fragment() {
         // Inflate the layout for this fragment
         if (!this::binding.isInitialized) {
             binding = FragmentRegularNewsBinding.inflate(inflater, container, false)
-            createSharedPreference()
             viewModel = ViewModelProvider(
                 this, Injection.provideViewModelFactory(
                     requireActivity().applicationContext, this
                 )
             ).get(NewsViewModel::class.java)
             binding.bindingElement()
+            createSharedPreference()
         }
         return binding.root
     }
@@ -118,6 +120,7 @@ class RegularNewsFragment : Fragment() {
     private var dateToText = ""
 
     private fun FragmentRegularNewsBinding.initMenu() {
+        pref = requireActivity().getSharedPreferences("appSettings", Context.MODE_PRIVATE)
         languageSpinner.adapter = ArrayAdapter.createFromResource(
             requireContext(),
             R.array.news_lang_name_array,
@@ -191,13 +194,10 @@ class RegularNewsFragment : Fragment() {
             val languageArray = resources.getStringArray(R.array.news_lang_code_array)
 
             val lang = languageArray[languageSpinner.selectedItemPosition]
-            val pref = activity?.getSharedPreferences("appSettings", Context.MODE_PRIVATE)
 
-            if (pref != null) {
-                with(pref.edit()) {
-                    putString("LANGUAGE", lang)
-                    apply()
-                }
+            with(pref.edit()) {
+                putString("LANGUAGE", lang)
+                apply()
             }
 
             CurrentFilter.filterForNews =
@@ -220,21 +220,18 @@ class RegularNewsFragment : Fragment() {
         }
     }
     private fun createSharedPreference() {
-        val pref = activity?.getSharedPreferences("appSettings", Context.MODE_PRIVATE)
-
-        if (pref != null) {
-            if (!pref.contains("LANGUAGE")) {
-                with(pref.edit()) {
-                    putString("LANGUAGE", "")
-                    apply()
-                }
-            }//проверка на наличия дефолтного языка
-            CurrentFilter.filterForNews =
-                Filter(newsLanguage = pref.getString("LANGUAGE", "")!!)//передача во вью модель
-            val landCodeArray = resources.getStringArray(R.array.news_lang_code_array)
-            binding.languageSpinner.setSelection(
-                landCodeArray.indexOf(pref.getString("LANGUAGE", ""))
-            )
-        }
+        if (!pref.contains("LANGUAGE")) {
+            with(pref.edit()) {
+                putString("LANGUAGE", "")
+                apply()
+            }
+        }//проверка на наличия дефолтного языка
+        CurrentFilter.filterForNews =
+            Filter(newsLanguage = pref.getString("LANGUAGE", "")!!)//передача во вью модель
+        val landCodeArray = resources.getStringArray(R.array.news_lang_code_array)
+        Log.e("lang", "${pref.getString(" LANGUAGE ", "")}, ${landCodeArray.indexOf(pref.getString("LANGUAGE", ""))}")
+        binding.languageSpinner.setSelection(
+            landCodeArray.indexOf(pref.getString("LANGUAGE", ""))
+        )
     }//Вытаскиваю сохраненный язык из настроек
 }

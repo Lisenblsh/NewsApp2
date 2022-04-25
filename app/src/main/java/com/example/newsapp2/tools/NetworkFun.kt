@@ -47,7 +47,7 @@ class LogicForWebView(private val dataBase: NewsDataBase, private val articleId:
     }
 
     suspend fun unlikeNews() {
-        dataBase.newsListDao().deleteLikedArticles(
+        dataBase.newsListDao().deleteLikedArticle(
             article.source,
             article.url,
             article.publishedAt,

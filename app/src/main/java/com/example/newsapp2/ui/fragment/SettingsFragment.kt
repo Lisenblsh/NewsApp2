@@ -36,5 +36,4 @@ class SettingsFragment : Fragment() {
 
     private fun getAction(typeSetting: TypeSetting) =
         MainFragmentDirections.actionMainFragmentToCurrentSettingFragment(typeSetting)
-
 }
