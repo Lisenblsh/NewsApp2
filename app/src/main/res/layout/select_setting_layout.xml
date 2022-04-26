@@ -30,7 +30,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
-        android:id="@+id/theme_list"
+        android:id="@+id/select_list"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:divider="@color/transparent"

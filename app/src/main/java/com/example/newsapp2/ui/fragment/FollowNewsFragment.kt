@@ -12,6 +12,7 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapp2.R
+import com.example.newsapp2.data.network.TypeNewsUrl
 import com.example.newsapp2.databinding.FragmentFollowNewsBinding
 import com.example.newsapp2.di.Injection
 import com.example.newsapp2.tools.showWebView
@@ -39,7 +40,7 @@ class FollowNewsFragment : Fragment() {
             binding = FragmentFollowNewsBinding.inflate(inflater, container, false)
             viewModel = ViewModelProvider(
                 this, Injection.provideViewModelFactory(
-                    requireActivity().applicationContext, this
+                    requireActivity().applicationContext, this, TypeNewsUrl.NewsApi
                 )
             ).get(NewsViewModel::class.java)
         }
@@ -90,7 +91,7 @@ class FollowNewsFragment : Fragment() {
                         Toast.makeText(
                             requireContext(),
                             resources.getString(R.string.error_occurred, it.error.localizedMessage),
-                            Toast.LENGTH_LONG
+                            Toast.LENGTH_SHORT
                         ).show()
                     }
                 }

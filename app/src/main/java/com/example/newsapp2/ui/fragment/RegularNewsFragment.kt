@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
@@ -17,7 +18,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapp2.R
 import com.example.newsapp2.data.network.CurrentFilter
-import com.example.newsapp2.data.network.Filter
+import com.example.newsapp2.data.network.FilterForNewsApi
+import com.example.newsapp2.data.network.TypeNewsUrl
 import com.example.newsapp2.databinding.FragmentRegularNewsBinding
 import com.example.newsapp2.di.Injection
 import com.example.newsapp2.tools.convertToAPIDate
@@ -37,8 +39,9 @@ class RegularNewsFragment : Fragment() {
     private lateinit var binding: FragmentRegularNewsBinding
     private lateinit var viewModel: NewsViewModel
     private lateinit var pref: SharedPreferences
+    private lateinit var typeNewsUrl: TypeNewsUrl
 
-    private val newsAdapter = NewsPagingAdapter()
+    private lateinit var newsAdapter: NewsPagingAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,13 +50,13 @@ class RegularNewsFragment : Fragment() {
         // Inflate the layout for this fragment
         if (!this::binding.isInitialized) {
             binding = FragmentRegularNewsBinding.inflate(inflater, container, false)
+            createSharedPreference()
             viewModel = ViewModelProvider(
                 this, Injection.provideViewModelFactory(
-                    requireActivity().applicationContext, this
-                )
+                    requireActivity().applicationContext, this, typeNewsUrl
+                ) // Крч при смене API надо очищять адаптер иначе старые новости остаются
             ).get(NewsViewModel::class.java)
             binding.bindingElement()
-            createSharedPreference()
         }
         return binding.root
     }
@@ -66,6 +69,7 @@ class RegularNewsFragment : Fragment() {
     }
 
     private fun FragmentRegularNewsBinding.bindAdapter() {
+        newsAdapter = NewsPagingAdapter()
         val header = NewsLoadStateAdapter { newsAdapter.retry() }
         newsAdapter.setOnItemClickListener(object : NewsPagingAdapter.OnItemClickListener {
             override fun onItemClick(id: Long?) {
@@ -101,7 +105,7 @@ class RegularNewsFragment : Fragment() {
                         Toast.makeText(
                             requireContext(),
                             resources.getString(R.string.error_occurred, it.error.localizedMessage),
-                            Toast.LENGTH_LONG
+                            Toast.LENGTH_SHORT
                         ).show()
                     }
                 }
@@ -116,16 +120,22 @@ class RegularNewsFragment : Fragment() {
         }
     }
 
-    private var dateFromText = ""
-    private var dateToText = ""
+    private var dateFrom = ""
+    private var dateTo = ""
 
     private fun FragmentRegularNewsBinding.initMenu() {
-        pref = requireActivity().getSharedPreferences("appSettings", Context.MODE_PRIVATE)
+        val sortByArray = resources.getStringArray(R.array.news_sort_by_for_api)
+        val searchInArray = resources.getStringArray(R.array.news_search_in_for_api)
+        val languageArray = resources.getStringArray(R.array.news_lang_code_array)
+
         languageSpinner.adapter = ArrayAdapter.createFromResource(
             requireContext(),
             R.array.news_lang_name_array,
             android.R.layout.simple_spinner_item
         )// Адаптер для спинера языка
+        languageSpinner.setSelection(
+            languageArray.indexOf(pref.getString("LANGUAGE", ""))
+        )
 
         whereSearchSpinner.adapter = ArrayAdapter.createFromResource(
             requireContext(),
@@ -151,12 +161,12 @@ class RegularNewsFragment : Fragment() {
             val picker = builder.build()
             picker.show(activity?.supportFragmentManager!!, picker.toString())
             picker.addOnPositiveButtonClickListener {
-                dateFromText = convertToAPIDate(it.first)
-                dateToText = convertToAPIDate(it.second)
+                dateFrom = convertToAPIDate(it.first)
+                dateTo = convertToAPIDate(it.second)
                 dateText.text = resources.getString(
                     R.string.date_text,
-                    convertToDeviceDate(it.first),
-                    convertToDeviceDate(it.second)
+                    convertToDeviceDate(it.first, 0),
+                    convertToDeviceDate(it.second, 0)
                 )
             }
         }
@@ -172,8 +182,8 @@ class RegularNewsFragment : Fragment() {
         }//Для закрытия меню
 
         resetButton.setOnClickListener {
-            CurrentFilter.filterForNews = Filter(
-                newsLanguage = CurrentFilter.filterForNews.newsLanguage,
+            CurrentFilter.filterForNewsApi = FilterForNewsApi(
+                language = CurrentFilter.filterForNewsApi.language,
                 excludeDomains = CurrentFilter.excludeDomains
             )
             searchBar.apply {
@@ -189,9 +199,7 @@ class RegularNewsFragment : Fragment() {
         }//Для отмены фильтров
 
         confirmButton.setOnClickListener {
-            val sortByArray = resources.getStringArray(R.array.news_sort_by_for_api)
-            val searchInArray = resources.getStringArray(R.array.news_search_in_for_api)
-            val languageArray = resources.getStringArray(R.array.news_lang_code_array)
+
 
             val lang = languageArray[languageSpinner.selectedItemPosition]
 
@@ -200,14 +208,14 @@ class RegularNewsFragment : Fragment() {
                 apply()
             }
 
-            CurrentFilter.filterForNews =
-                CurrentFilter.filterForNews.copy(
-                    newsLanguage = lang,
-                    newsQuery = "${searchBar.query}".ifBlank { "a" },
-                    newsSortBy = sortByArray[sortBySpinner.selectedItemPosition],
+            CurrentFilter.filterForNewsApi =
+                CurrentFilter.filterForNewsApi.copy(
+                    language = lang,
+                    query = "${searchBar.query}".ifBlank { "a" },
+                    sortBy = sortByArray[sortBySpinner.selectedItemPosition],
                     searchIn = searchInArray[whereSearchSpinner.selectedItemPosition],
-                    newsFrom = dateFromText,
-                    newsTo = dateToText
+                    from = dateFrom,
+                    to = dateTo
                 )
             newsList.scrollToPosition(0)
             newsAdapter.refresh()
@@ -216,22 +224,29 @@ class RegularNewsFragment : Fragment() {
 
     private fun FragmentRegularNewsBinding.initGoToUpBtn() {
         goToUpButton.setOnClickListener {
+            if (newsAdapter.itemCount >= 10) newsList.scrollToPosition(10)
             newsList.smoothScrollToPosition(0)
         }
     }
+
     private fun createSharedPreference() {
+        pref = requireActivity().getSharedPreferences("appSettings", Context.MODE_PRIVATE)
         if (!pref.contains("LANGUAGE")) {
             with(pref.edit()) {
                 putString("LANGUAGE", "")
                 apply()
             }
         }//проверка на наличия дефолтного языка
-        CurrentFilter.filterForNews =
-            Filter(newsLanguage = pref.getString("LANGUAGE", "")!!)//передача во вью модель
-        val landCodeArray = resources.getStringArray(R.array.news_lang_code_array)
-        Log.e("lang", "${pref.getString(" LANGUAGE ", "")}, ${landCodeArray.indexOf(pref.getString("LANGUAGE", ""))}")
-        binding.languageSpinner.setSelection(
-            landCodeArray.indexOf(pref.getString("LANGUAGE", ""))
-        )
+        CurrentFilter.filterForNewsApi =
+            FilterForNewsApi(language = pref.getString("LANGUAGE", "")!!)
+        typeNewsUrl = TypeNewsUrl.values()[pref.getInt("TYPE_NEWS_URL", 1)]
+
     }//Вытаскиваю сохраненный язык из настроек
+
+    override fun onResume() {
+        super.onResume()
+        pref = requireActivity().getSharedPreferences("appSettings", Context.MODE_PRIVATE)
+        val prefType = pref.getInt("TYPE_NEWS_URL", 1)
+        Log.e("type", prefType.toString())
+    }
 }

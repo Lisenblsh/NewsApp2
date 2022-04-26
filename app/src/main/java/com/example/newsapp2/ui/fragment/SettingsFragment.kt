@@ -31,6 +31,10 @@ class SettingsFragment : Fragment() {
             navController.navigate(getAction(TypeSetting.BlockSource))
         }
 
+        binding.selectApiCard.setOnClickListener {
+            navController.navigate(getAction(TypeSetting.ApiSource))
+        }
+
         return binding.root
     }
 

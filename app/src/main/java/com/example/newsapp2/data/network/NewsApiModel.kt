@@ -1,6 +1,6 @@
 package com.example.newsapp2.data.network
 
-data class NewsModel(
+data class NewsApiModel(
     val status: String,
     val totalResults: Int,
     val articles: MutableList<Articles>

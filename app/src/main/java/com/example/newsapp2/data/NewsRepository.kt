@@ -4,6 +4,7 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.example.newsapp2.data.network.TypeNewsUrl
 import com.example.newsapp2.data.network.retrofit.RetrofitService
 import com.example.newsapp2.data.room.ArticlesDB
 import com.example.newsapp2.data.room.NewsDataBase
@@ -14,8 +15,8 @@ class NewsRepository(
     private val retrofitService: RetrofitService,
     private val dataBase: NewsDataBase
 ) {
-    fun getNews(typeArticles: TypeArticles): Flow<PagingData<ArticlesDB>> {
-        val pagingSourceFactory = {dataBase.newsListDao().getArticlesData(typeArticles)}
+    fun getNews(typeArticles: TypeArticles, typeNewsUrl: TypeNewsUrl): Flow<PagingData<ArticlesDB>> {
+        val pagingSourceFactory = {dataBase.newsListDao().getArticlesData(typeArticles, typeNewsUrl)}
 
         @OptIn(ExperimentalPagingApi::class)
         return Pager(
@@ -27,7 +28,8 @@ class NewsRepository(
             remoteMediator = NewsRemoteMediator(
                 retrofitService,
                 dataBase,
-                typeArticles
+                typeArticles,
+                typeNewsUrl
             ),
             pagingSourceFactory = pagingSourceFactory
         ).flow

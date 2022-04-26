@@ -40,10 +40,11 @@
         android:elevation="5dp"
         app:constraint_referenced_ids="setting_icon1, settings_title1,settings_description1,
         setting_icon2, settings_title2,settings_description2,
-        setting_icon3, settings_title3,settings_description3" />
+        setting_icon3, settings_title3,settings_description3,
+        setting_icon4, settings_title4,settings_description4" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/themeCard"
+        android:id="@+id/theme_card"
         android:layout_width="0dp"
         android:layout_height="80dp"
         android:layout_marginVertical="3dp"
@@ -61,8 +62,8 @@
         android:layout_margin="10dp"
         android:padding="10dp"
         android:src="@drawable/ic_baseline_color_lens_24"
-        app:layout_constraintStart_toStartOf="@id/themeCard"
-        app:layout_constraintTop_toTopOf="@id/themeCard" />
+        app:layout_constraintStart_toStartOf="@id/theme_card"
+        app:layout_constraintTop_toTopOf="@id/theme_card" />
 
     <TextView
         android:id="@+id/settings_title1"
@@ -84,7 +85,7 @@
         app:layout_constraintTop_toBottomOf="@id/settings_title1" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/followSourceCard"
+        android:id="@+id/follow_source_card"
         android:layout_width="0dp"
         android:layout_height="80dp"
         android:layout_marginVertical="3dp"
@@ -93,7 +94,7 @@
         app:cardElevation="5dp"
         app:layout_constraintEnd_toEndOf="@id/guideline_end"
         app:layout_constraintStart_toStartOf="@id/guideline_begin"
-        app:layout_constraintTop_toBottomOf="@id/themeCard" />
+        app:layout_constraintTop_toBottomOf="@id/theme_card" />
 
     <ImageView
         android:id="@+id/setting_icon2"
@@ -102,8 +103,8 @@
         android:layout_margin="10dp"
         android:padding="10dp"
         android:src="@drawable/ic_baseline_star_border_24"
-        app:layout_constraintStart_toStartOf="@id/followSourceCard"
-        app:layout_constraintTop_toTopOf="@id/followSourceCard" />
+        app:layout_constraintStart_toStartOf="@id/follow_source_card"
+        app:layout_constraintTop_toTopOf="@id/follow_source_card" />
 
     <TextView
         android:id="@+id/settings_title2"
@@ -125,7 +126,7 @@
         app:layout_constraintTop_toBottomOf="@id/settings_title2" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/blockSourceCard"
+        android:id="@+id/block_source_card"
         android:layout_width="0dp"
         android:layout_height="80dp"
         android:layout_marginVertical="3dp"
@@ -134,7 +135,7 @@
         app:cardElevation="5dp"
         app:layout_constraintEnd_toEndOf="@id/guideline_end"
         app:layout_constraintStart_toStartOf="@id/guideline_begin"
-        app:layout_constraintTop_toBottomOf="@id/followSourceCard" />
+        app:layout_constraintTop_toBottomOf="@id/follow_source_card" />
 
     <ImageView
         android:id="@+id/setting_icon3"
@@ -143,8 +144,8 @@
         android:layout_margin="10dp"
         android:padding="10dp"
         android:src="@drawable/ic_baseline_block_24"
-        app:layout_constraintStart_toStartOf="@id/blockSourceCard"
-        app:layout_constraintTop_toTopOf="@id/blockSourceCard" />
+        app:layout_constraintStart_toStartOf="@id/block_source_card"
+        app:layout_constraintTop_toTopOf="@id/block_source_card" />
 
     <TextView
         android:id="@+id/settings_title3"
@@ -165,14 +166,54 @@
         app:layout_constraintStart_toEndOf="@id/setting_icon3"
         app:layout_constraintTop_toBottomOf="@id/settings_title3" />
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/select_api_card"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:layout_marginVertical="3dp"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:cardElevation="5dp"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintStart_toStartOf="@id/guideline_begin"
+        app:layout_constraintTop_toBottomOf="@id/block_source_card" />
+
+    <ImageView
+        android:id="@+id/setting_icon4"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        android:src="@drawable/ic_baseline_backup_table_24"
+        app:layout_constraintStart_toStartOf="@id/select_api_card"
+        app:layout_constraintTop_toTopOf="@id/select_api_card" />
+
+    <TextView
+        android:id="@+id/settings_title4"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/api_source"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@id/setting_icon4"
+        app:layout_constraintTop_toTopOf="@id/setting_icon4" />
+
+    <TextView
+        android:id="@+id/settings_description4"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:alpha=".8"
+        android:text="@string/config_api_source"
+        app:layout_constraintStart_toEndOf="@id/setting_icon4"
+        app:layout_constraintTop_toBottomOf="@id/settings_title4" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@id/guideline_begin"
         android:text="@string/version"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/guideline_end"
-        />
+        app:layout_constraintStart_toStartOf="@id/guideline_begin" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

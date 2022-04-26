@@ -10,7 +10,7 @@ import com.example.newsapp2.data.room.TypeSource
 class DatabaseFun(private val dataBase: NewsDataBase) {
     suspend fun getLikedArticlesList(): List<ArticlesDB> {
         return dataBase.withTransaction {
-            dataBase.newsListDao().getArticlesData2(TypeArticles.LikedNews).ifEmpty {
+            dataBase.newsListDao().getArticlesDataLiked(TypeArticles.LikedNews).ifEmpty {
                 Log.e("empty", "isEmpty")
                 emptyList()
             }

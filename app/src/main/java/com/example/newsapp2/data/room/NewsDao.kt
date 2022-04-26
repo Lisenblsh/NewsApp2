@@ -2,6 +2,7 @@ package com.example.newsapp2.data.room
 
 import androidx.paging.PagingSource
 import androidx.room.*
+import com.example.newsapp2.data.network.TypeNewsUrl
 
 @Dao
 interface NewsDao {
@@ -14,12 +15,15 @@ interface NewsDao {
     suspend fun insertArticle(article: ArticlesDB)
 
     //ПОлучить список новостей
-    @Query("select* from articles where typeArticles = :type")
-    fun getArticlesData(type: TypeArticles): PagingSource<Int, ArticlesDB>
+    @Query("select* from articles where typeArticles = :type and typeNewsUrl = :typeNewsUrl")
+    fun getArticlesData(type: TypeArticles, typeNewsUrl: TypeNewsUrl): PagingSource<Int, ArticlesDB>
 
     //ПОлучить список новостей
+    @Query("select* from articles where typeArticles = :type and typeNewsUrl = :typeNewsUrl")
+    fun getArticlesData2(type: TypeArticles, typeNewsUrl: TypeNewsUrl): List<ArticlesDB>
+
     @Query("select* from articles where typeArticles = :type")
-    fun getArticlesData2(type: TypeArticles): List<ArticlesDB>
+    fun getArticlesDataLiked(type: TypeArticles): List<ArticlesDB>
 
     //Получить новость по ID
     @Query("select* from articles where typeArticles = :type and idArticles = :idArticles")
@@ -33,7 +37,7 @@ interface NewsDao {
     suspend fun getArticlesData(
         source: String,
         url: String,
-        publishedAt: String,
+        publishedAt: kotlin.Long,
         typeArticles: TypeArticles
     ): ArticlesDB?
 
@@ -43,7 +47,7 @@ interface NewsDao {
     suspend fun deleteLikedArticle(
         source: String,
         url: String,
-        publishedAt: String,
+        publishedAt: kotlin.Long,
         typeArticles: TypeArticles
     )
 
@@ -51,8 +55,8 @@ interface NewsDao {
     suspend fun deleteLikedArticle(article: ArticlesDB)
 
     //Отчистка Новостей
-    @Query("delete from articles where typeArticles = :type")
-    suspend fun clearArticles(type: TypeArticles)
+    @Query("delete from articles where typeArticles = :type and typeNewsUrl = :typeNewsUrl")
+    suspend fun clearArticles(type: TypeArticles, typeNewsUrl: TypeNewsUrl)
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -61,8 +65,8 @@ interface NewsDao {
     @Query("SELECT * FROM remote_keys WHERE articleId = :newsId")
     suspend fun remoteKeysNewsId(newsId: Long): RemoteKeys?
 
-    @Query("DELETE FROM remote_keys where typeArticles = :type")
-    suspend fun clearRemoteKeys(type: TypeArticles)
+    @Query("DELETE FROM remote_keys where typeArticles = :type and typeNewsUrl = :typeNewsUrl")
+    suspend fun clearRemoteKeys(type: TypeArticles, typeNewsUrl: TypeNewsUrl)
 
 
 

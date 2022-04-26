@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.newsapp2.R
 import com.example.newsapp2.data.room.ArticlesDB
+import com.example.newsapp2.tools.convertToDeviceDate
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -109,17 +110,6 @@ class NewsPagingAdapter : PagingDataAdapter<ArticlesDB, RecyclerView.ViewHolder>
                 .with(itemView)
                 .load(url)
                 .into(image)
-        }
-
-        private fun convertToDeviceDate(date: String): String {
-            val dateString = SimpleDateFormat("d MMMM, HH:mm", Locale("ru"))
-            val defaultDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
-            val currentTimeZone = GregorianCalendar().timeZone.rawOffset
-            return try {
-                dateString.format(Date(defaultDate.parse(date).time + currentTimeZone))
-            } catch (e: Exception) {
-                ""
-            }
         }
     }
 }

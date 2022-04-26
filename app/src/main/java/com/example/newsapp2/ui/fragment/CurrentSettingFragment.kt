@@ -1,6 +1,7 @@
 package com.example.newsapp2.ui.fragment
 
 import android.content.Context
+import android.content.Intent.getIntent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -35,7 +36,6 @@ class CurrentSettingFragment : Fragment() {
     ): View {
         binding = FragmentCurrentSettingBinding.inflate(inflater, container, false)
         val args = CurrentSettingFragmentArgs.fromBundle(requireArguments())
-
         lifecycleScope.launch {
             binding.showSetting(args.typeSetting)
         }
@@ -47,8 +47,13 @@ class CurrentSettingFragment : Fragment() {
         when (typeSetting) {
             TypeSetting.Theme -> {
                 val view = LayoutInflater.from(context)
-                    .inflate(R.layout.theme_setting_layout, root, false)
-                ThemeViewHolder(view).bind()
+                    .inflate(R.layout.select_setting_layout, root, false)
+                SelectViewHolder(view, typeSetting).bind()
+            }
+            TypeSetting.ApiSource -> {
+                val view = LayoutInflater.from(context)
+                    .inflate(R.layout.select_setting_layout, root, false)
+                SelectViewHolder(view, typeSetting).bind()
             }
             TypeSetting.Follow -> {
                 val view = LayoutInflater.from(context)
@@ -58,48 +63,80 @@ class CurrentSettingFragment : Fragment() {
             TypeSetting.BlockSource -> {
                 val view = LayoutInflater.from(context)
                     .inflate(R.layout.source_setting_layout, root, false)
-                SourceViewHolder(view,TypeSource.BlockSource).bind()
+                SourceViewHolder(view, TypeSource.BlockSource).bind()
             }
         }
     }
 
-    inner class ThemeViewHolder(private val itemView: View) {
+    inner class SelectViewHolder(private val itemView: View, private val type: TypeSetting) {
 
-        private val listView: ListView = itemView.findViewById(R.id.theme_list)
+        private val listView: ListView = itemView.findViewById(R.id.select_list)
+        private val title: TextView = itemView.findViewById(R.id.title)
 
-        private val pref = activity?.getSharedPreferences("appSettings", Context.MODE_PRIVATE)
+        private val pref =
+            requireActivity().getSharedPreferences("appSettings", Context.MODE_PRIVATE)
 
         fun bind() {
+
+            val array: Int
+            val key: String
+
+            when (type) {
+                TypeSetting.Theme -> {
+                    array = R.array.app_theme_array
+                    key = "THEME_ID"
+                    title.text = resources.getString(R.string.themes)
+                }
+                TypeSetting.ApiSource -> {
+                    array = R.array.api_source
+                    key = "TYPE_NEWS_URL"
+                    title.text = resources.getString(R.string.sources)
+                }
+                else -> return
+            }
+
             listView.adapter = ArrayAdapter.createFromResource(
                 requireContext(),
-                R.array.app_theme_array,
+                array,
                 android.R.layout.simple_list_item_single_choice
             )
             listView.choiceMode = ListView.CHOICE_MODE_SINGLE
 
             listView.setOnItemClickListener { _, _, position, _ ->
-                when (position) {
-                    0 -> {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-                    }
-                    1 -> {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                    }
-                    2 -> {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                    }
-                }
-                if (pref != null) {
-                    with(pref.edit()) {
-                        putInt("THEME_ID", position)
-                        apply()
-                    }
-                }
+                if (type == TypeSetting.Theme) forTheme(key, position)
+                else if (type == TypeSetting.ApiSource) forAPI(key, position)
             }
-            if (pref != null) {
-                listView.setItemChecked(pref.getInt("THEME_ID", 0), true)
-            }
+            listView.setItemChecked(pref.getInt(key, 0), true)
             binding.root.addView(itemView)
+        }
+
+        private fun forTheme(key: String, position: Int) {
+            when (position) {
+                0 -> {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                }
+                1 -> {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                }
+                2 -> {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                }
+            }
+            savePref(key, position)
+        }
+
+        private fun forAPI(key: String, position: Int) {
+            savePref(key, position)
+            val intent = requireActivity().intent
+            requireActivity().finish()
+            startActivity(intent)
+        }
+
+        private fun savePref(key: String, position: Int) {
+            with(pref.edit()) {
+                putInt(key, position)
+                apply()
+            }
         }
     }
 

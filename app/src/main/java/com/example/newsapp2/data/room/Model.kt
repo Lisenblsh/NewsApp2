@@ -2,6 +2,7 @@ package com.example.newsapp2.data.room
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.newsapp2.data.network.TypeNewsUrl
 
 @Entity(tableName = "articles")
 data class ArticlesDB(
@@ -12,8 +13,9 @@ data class ArticlesDB(
     val description: String?,
     val url: String,
     val urlToImage: String?,
-    val publishedAt: String,
-    val typeArticles: TypeArticles
+    val publishedAt: Long,
+    val typeArticles: TypeArticles,
+    val typeNewsUrl: TypeNewsUrl?
 )
 
 enum class TypeArticles(val type: Int) {
@@ -27,7 +29,8 @@ data class RemoteKeys(
     @PrimaryKey val articleId: Long,
     val prevKey: Int?,
     val nextKey: Int?,
-    val typeArticles: TypeArticles
+    val typeArticles: TypeArticles,
+    val typeNewsUrl: TypeNewsUrl
 )
 
 /*Типы:
