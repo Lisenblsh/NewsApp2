@@ -23,6 +23,7 @@ import com.example.newsapp2.databinding.FragmentRegularNewsBinding
 import com.example.newsapp2.di.Injection
 import com.example.newsapp2.tools.convertToAPIDate
 import com.example.newsapp2.tools.convertToDeviceDate
+import com.example.newsapp2.tools.convertToDeviceDateFilter
 import com.example.newsapp2.tools.showWebView
 import com.example.newsapp2.ui.adapters.NewsLoadStateAdapter
 import com.example.newsapp2.ui.adapters.NewsPagingAdapter
@@ -164,8 +165,8 @@ class RegularNewsFragment : Fragment() {
                 dateTo = convertToAPIDate(it.second)
                 dateText.text = resources.getString(
                     R.string.date_text,
-                    convertToDeviceDate(it.first, 0),
-                    convertToDeviceDate(it.second, 0)
+                    convertToDeviceDateFilter(it.first),
+                    convertToDeviceDateFilter(it.second)
                 )
             }
         }

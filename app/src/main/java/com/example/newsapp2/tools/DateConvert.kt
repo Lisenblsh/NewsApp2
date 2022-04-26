@@ -13,9 +13,14 @@ val defaultDate3 = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT)
 val currentTimeZone = GregorianCalendar().timeZone.rawOffset
 
 
-fun convertToDeviceDate(date: Long, timeZone: Int = currentTimeZone): String {
-    return deviceFullDateFormat.format(date.plus(timeZone))
+fun convertToDeviceDate(date: Long): String {
+    return deviceFullDateFormat.format(date)
 }
+
+fun convertToDeviceDateFilter(date: Long):String {
+    return deviceDateFormat.format(date)
+}
+
 fun convertToAPIDate(date: Long): String {
     return apiDateFormat.format(date)+"T00:00:01"
 }
