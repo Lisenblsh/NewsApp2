@@ -1,7 +1,6 @@
 package com.example.newsapp2.tools
 
 import com.example.newsapp2.data.network.TypeNewsUrl
-import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
 

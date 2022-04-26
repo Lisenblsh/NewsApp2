@@ -12,8 +12,6 @@ import com.bumptech.glide.Glide
 import com.example.newsapp2.R
 import com.example.newsapp2.data.room.ArticlesDB
 import com.example.newsapp2.tools.convertToDeviceDate
-import java.text.SimpleDateFormat
-import java.util.*
 
 class NewsPagingAdapter : PagingDataAdapter<ArticlesDB, RecyclerView.ViewHolder>(ARTICLES_COMPARATOR) {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

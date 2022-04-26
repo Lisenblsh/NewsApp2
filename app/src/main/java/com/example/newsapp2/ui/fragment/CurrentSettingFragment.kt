@@ -1,7 +1,6 @@
 package com.example.newsapp2.ui.fragment
 
 import android.content.Context
-import android.content.Intent.getIntent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater

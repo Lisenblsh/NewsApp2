@@ -1,6 +1,5 @@
 package com.example.newsapp2.data.network.retrofit
 
-import android.util.Log
 import com.example.newsapp2.BuildConfig
 import com.example.newsapp2.data.network.NewsApiModel
 import com.example.newsapp2.data.network.NewsBingModel
@@ -11,7 +10,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
-import java.lang.StringBuilder
 
 interface RetrofitService {
     @GET("everything?")
@@ -51,7 +49,6 @@ interface RetrofitService {
         private const val BASE_URL_NEWSCATHER = "https://newscatcher.p.rapidapi.com/v1/"
 
         fun create(typeNewsUrl: TypeNewsUrl): RetrofitService {
-            Log.e("service", "$typeNewsUrl")
             var headerName = ""
             var apiKey = ""
             val baseUrl = when (typeNewsUrl) {

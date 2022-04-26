@@ -6,7 +6,8 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
-import com.example.newsapp2.data.network.*
+import com.example.newsapp2.data.network.CurrentFilter
+import com.example.newsapp2.data.network.TypeNewsUrl
 import com.example.newsapp2.data.room.*
 import com.example.newsapp2.tools.convertDateToMillis
 import retrofit2.HttpException
@@ -83,10 +84,10 @@ class NewsRemoteMediator(
         page: Int,
         state: PagingState<Int, ArticlesDB>
     ): Pair<List<ArticlesDB>, Boolean> {
-        val news = when(typeNewsUrl){
+        val news = when (typeNewsUrl) {
             TypeNewsUrl.NewsApi -> {
-                val responseNewsApi = when(typeArticles) {
-                    TypeArticles.RegularNews ->{
+                val responseNewsApi = when (typeArticles) {
+                    TypeArticles.RegularNews -> {
                         CurrentFilter.excludeDomains = getExcludeDomains()
                         CurrentFilter.filterForNewsApi =
                             CurrentFilter.filterForNewsApi.copy(
@@ -98,11 +99,12 @@ class NewsRemoteMediator(
                     }
                     else -> {
                         CurrentFilter.newsDomains = getNewsDomains()
-                        CurrentFilter.filterForFavoriteNewsApi = CurrentFilter.filterForFavoriteNewsApi.copy(
-                            page = page,
-                            pageSize = state.config.pageSize,
-                            domains = CurrentFilter.newsDomains
-                        )
+                        CurrentFilter.filterForFavoriteNewsApi =
+                            CurrentFilter.filterForFavoriteNewsApi.copy(
+                                page = page,
+                                pageSize = state.config.pageSize,
+                                domains = CurrentFilter.newsDomains
+                            )
                         repository.getNewsApiResponse(CurrentFilter.filterForFavoriteNewsApi)
                     }
                 }
@@ -188,9 +190,7 @@ class NewsRemoteMediator(
             }
     }
 
-    private suspend fun getRemoteKeyClosestToCurrentPosition(
-        state: PagingState<Int, ArticlesDB>
-    ): RemoteKeys? {
+    private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, ArticlesDB>): RemoteKeys? {
         return state.anchorPosition?.let { position ->
             state.closestItemToPosition(position)?.idArticles?.let { newsId ->
                 newsDataBase.newsListDao().remoteKeysNewsId(newsId)
