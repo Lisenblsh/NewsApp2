@@ -37,7 +37,7 @@ interface NewsDao {
     suspend fun getArticlesData(
         source: String,
         url: String,
-        publishedAt: kotlin.Long,
+        publishedAt: Long,
         typeArticles: TypeArticles
     ): ArticlesDB?
 

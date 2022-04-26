@@ -7,7 +7,6 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.example.newsapp2.data.network.*
-import com.example.newsapp2.data.network.retrofit.RetrofitService
 import com.example.newsapp2.data.room.*
 import com.example.newsapp2.tools.convertDateToMillis
 import retrofit2.HttpException
@@ -17,7 +16,7 @@ private const val STARTING_PAGE_INDEX = 1
 
 @OptIn(ExperimentalPagingApi::class)
 class NewsRemoteMediator(
-    private val retrofitService: RetrofitService,
+    private val repository: NewsRepository,
     private val newsDataBase: NewsDataBase,
     private val typeArticles: TypeArticles,
     private val typeNewsUrl: TypeNewsUrl
@@ -95,7 +94,7 @@ class NewsRemoteMediator(
                                 pageSize = state.config.pageSize,
                                 excludeDomains = CurrentFilter.excludeDomains
                             )
-                        getNewsApiResponse(CurrentFilter.filterForNewsApi)
+                        repository.getNewsApiResponse(CurrentFilter.filterForNewsApi)
                     }
                     else -> {
                         CurrentFilter.newsDomains = getNewsDomains()
@@ -104,7 +103,7 @@ class NewsRemoteMediator(
                             pageSize = state.config.pageSize,
                             domains = CurrentFilter.newsDomains
                         )
-                        getNewsApiResponse(CurrentFilter.filterForFavoriteNewsApi)
+                        repository.getNewsApiResponse(CurrentFilter.filterForFavoriteNewsApi)
                     }
                 }
                 responseNewsApi.articles.map {
@@ -126,7 +125,7 @@ class NewsRemoteMediator(
                 CurrentFilter.filterForBingNews = CurrentFilter.filterForBingNews.copy(
                     offset = page * CurrentFilter.filterForBingNews.count
                 )
-                getBingNewsResponse(CurrentFilter.filterForBingNews).value.map {
+                repository.getBingNewsResponse(CurrentFilter.filterForBingNews).value.map {
                     ArticlesDB(
                         0,
                         getDomainFromUrl(it.url),
@@ -146,7 +145,7 @@ class NewsRemoteMediator(
                     page = page,
                     pageSize = state.config.pageSize
                 )
-                getNewscatcherResponse(CurrentFilter.filterForNewscatcher).articles.map {
+                repository.getNewscatcherResponse(CurrentFilter.filterForNewscatcher).articles.map {
                     ArticlesDB(
                         0,
                         it.clean_url,
@@ -165,34 +164,6 @@ class NewsRemoteMediator(
         val endOfPaginationReached = news.isEmpty()
         return Pair(news, endOfPaginationReached)
     }
-
-    private suspend fun getNewsApiResponse(filter: FilterForNewsApi) = retrofitService.getNewsApiResponse(
-        filter.query,
-        filter.sortBy,
-        filter.searchIn,
-        filter.from,
-        filter.to,
-        filter.domains,
-        filter.language,
-        filter.page,
-        filter.pageSize,
-        filter.excludeDomains
-    )
-
-    private suspend fun getBingNewsResponse(filter: FilterForBingNews) = retrofitService.getBingNewsResponse(
-        filter.query,
-        filter.count,
-        filter.offset,
-        filter.language,
-        filter.sortBy
-    )
-
-    private suspend fun getNewscatcherResponse(filter: FilterForNewscather) = retrofitService.getNewscatcherResponse(
-        filter.query,
-        filter.language,
-        filter.page,
-        filter.pageSize
-    )
 
     private fun getDomainFromUrl(url: String): String {
         var domain = "${url.toUri().host}"
