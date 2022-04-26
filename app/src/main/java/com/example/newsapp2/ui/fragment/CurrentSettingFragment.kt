@@ -79,20 +79,25 @@ class CurrentSettingFragment : Fragment() {
 
             val array: Int
             val key: String
+            val selectedId: Int
 
             when (type) {
                 TypeSetting.Theme -> {
                     array = R.array.app_theme_array
                     key = "THEME_ID"
+                    selectedId = 0
                     title.text = resources.getString(R.string.themes)
                 }
                 TypeSetting.ApiSource -> {
                     array = R.array.api_source
                     key = "TYPE_NEWS_URL"
+                    selectedId = 1
                     title.text = resources.getString(R.string.sources)
                 }
                 else -> return
             }
+
+            Log.e("tag", "$selectedId")
 
             listView.adapter = ArrayAdapter.createFromResource(
                 requireContext(),
@@ -105,7 +110,7 @@ class CurrentSettingFragment : Fragment() {
                 if (type == TypeSetting.Theme) forTheme(key, position)
                 else if (type == TypeSetting.ApiSource) forAPI(key, position)
             }
-            listView.setItemChecked(pref.getInt(key, 0), true)
+            listView.setItemChecked(pref.getInt(key, selectedId), true)
             binding.root.addView(itemView)
         }
 

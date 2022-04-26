@@ -43,6 +43,7 @@
     <style name="AppTabLayout" parent="Widget.Design.TabLayout">
         <item name="tabIndicatorColor">@color/accent_night</item>
         <item name="tabSelectedTextColor">@color/accent_night</item>
+        <item name="tabTextColor">@color/white</item>
     </style>
     <style name="BackgroundTextView" parent="Theme.NewsApp2">
         <item name="android:background">@color/darkGray</item>

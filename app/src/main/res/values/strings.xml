@@ -39,7 +39,7 @@
     <string name="list_is_empty">List is empty</string>
     <string name="error_occurred">An error occurred: %1$s</string>
     <string name="date_text" translatable="false">%1$s - %2$s</string>
-    <string name="version">version 2.2.13</string>
+    <string name="version">version 2.2.14</string>
     <string name="api_source">News source</string>
     <string name="config_api_source">Selecting a news source</string>
     <string name="sources">Sources</string>

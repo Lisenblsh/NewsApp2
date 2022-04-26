@@ -37,7 +37,7 @@
     <string name="delete">Удалить</string>
     <string name="list_is_empty">Список пуст</string>
     <string name="error_occurred">Произошла ошибка: %1$s</string>
-    <string name="version">версия 2.2.13</string>
+    <string name="version">версия 2.2.14</string>
     <string name="api_source">Источник новостей</string>
     <string name="config_api_source">Выбор источника новостей</string>
     <string name="sources">Источники</string>

@@ -241,11 +241,4 @@ class RegularNewsFragment : Fragment() {
         typeNewsUrl = TypeNewsUrl.values()[pref.getInt("TYPE_NEWS_URL", 1)]
 
     }//Вытаскиваю сохраненный язык из настроек
-
-    override fun onResume() {
-        super.onResume()
-        pref = requireActivity().getSharedPreferences("appSettings", Context.MODE_PRIVATE)
-        val prefType = pref.getInt("TYPE_NEWS_URL", 1)
-        Log.e("type", prefType.toString())
-    }
 }
