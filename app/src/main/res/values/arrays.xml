@@ -13,7 +13,7 @@
     </string-array>
 
     <string-array name="news_lang_name_array">
-        <item>Все языки</item>
+        <item>All languages</item>
         <item>English</item>
         <item>Russian(Русский)</item>
         <item>Arabic(العربية)</item>
@@ -67,5 +67,27 @@
         <item>Title</item>
         <item>Description</item>
         <item>Content</item>
+    </string-array>
+
+    <string-array name="safe_search_for_api">
+        <item>Off</item>
+        <item>Moderate</item>
+        <item>Strict</item>
+    </string-array>
+    <string-array name="safe_search">
+        <item>Off</item>
+        <item>Moderate</item>
+        <item>Strict</item>
+    </string-array>
+
+    <string-array name="freshness_for_api">
+        <item>Day</item>
+        <item>Week</item>
+        <item>Month</item>
+    </string-array>
+    <string-array name="freshness">
+        <item>Day</item>
+        <item>Week</item>
+        <item>Month</item>
     </string-array>
 </resources>

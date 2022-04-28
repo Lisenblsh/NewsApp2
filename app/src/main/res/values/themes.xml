@@ -47,10 +47,6 @@
         <item name="tabTextColor">@color/black</item>
     </style>
 
-    <style name="BackgroundTextView" parent="Theme.NewsApp2">
-        <item name="android:background">@color/gray</item>
-    </style>
-
     <style name="MyDatePickerStyle" parent="ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen">
         <item name="colorPrimary">@color/button_light</item>
     </style>

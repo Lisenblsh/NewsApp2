@@ -43,4 +43,6 @@
     <string name="api_source">News source</string>
     <string name="config_api_source">Selecting a news source</string>
     <string name="sources">Sources</string>
+    <string name="freshness">Freshness</string>
+    <string name="safe_search">The safe search filter:</string>
 </resources>

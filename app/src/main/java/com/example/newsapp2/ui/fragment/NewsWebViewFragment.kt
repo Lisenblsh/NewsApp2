@@ -2,6 +2,7 @@ package com.example.newsapp2.ui.fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +22,12 @@ import com.example.newsapp2.data.room.NewsDataBase
 import com.example.newsapp2.data.room.TypeSource
 import com.example.newsapp2.databinding.FragmentNewsWebViewBinding
 import com.example.newsapp2.tools.LogicForWebView
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
+import org.jsoup.select.Elements
 
 
 class NewsWebViewFragment : Fragment() {
@@ -54,12 +60,36 @@ class NewsWebViewFragment : Fragment() {
         val args = NewsWebViewFragmentArgs.fromBundle(requireArguments())
         logic = LogicForWebView(NewsDataBase.getInstance(requireContext()), args.articleId)
         val url = logic.getUrl()
-        if(url == "") {
+        if (url == "") {
             NavHostFragment.findNavController(this@NewsWebViewFragment).popBackStack()
             return
         }
+
+
+
+        withContext(Dispatchers.IO) {
+            asdas(url)
+        }
+
+
         initWebView(url, webView)
         initMenu()
+    }
+
+    suspend fun asdas(url: String) {
+        Log.e("url", url)
+
+        val doc: Document = Jsoup.connect(url).get()
+
+        val asd = doc
+
+        val images: Elements = doc.select("img[src~=(?i)]")
+
+        //Log.e("img", images.toString())
+
+        for (image in images) {
+            Log.e("Asd","Image Source: " + image.attr("src"))
+        }
     }
 
     private fun FragmentNewsWebViewBinding.initWebView(url: String, webView: WebView) {
@@ -116,6 +146,7 @@ class NewsWebViewFragment : Fragment() {
             loadUrl(url)
         }
     }
+
     private fun FragmentNewsWebViewBinding.initSwipeRefresh() {
         swipeRefresh.setOnRefreshListener {
             swipeRefresh.isRefreshing = true

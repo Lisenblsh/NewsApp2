@@ -41,4 +41,6 @@
     <string name="api_source">Источник новостей</string>
     <string name="config_api_source">Выбор источника новостей</string>
     <string name="sources">Источники</string>
+    <string name="freshness">Новости за:</string>
+    <string name="safe_search">Фильтр безопасного поиска:</string>
 </resources>

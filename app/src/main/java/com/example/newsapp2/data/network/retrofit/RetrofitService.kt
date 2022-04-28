@@ -1,10 +1,7 @@
 package com.example.newsapp2.data.network.retrofit
 
 import com.example.newsapp2.BuildConfig
-import com.example.newsapp2.data.network.NewsApiModel
-import com.example.newsapp2.data.network.NewsBingModel
-import com.example.newsapp2.data.network.NewscatcherModel
-import com.example.newsapp2.data.network.TypeNewsUrl
+import com.example.newsapp2.data.network.*
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -32,7 +29,9 @@ interface RetrofitService {
         @Query("count") count: Int,
         @Query("offset") offset: Int,
         @Query("setLang") setLang: String,
-        @Query("sortBy") sortBy: String
+        @Query("sortBy") sortBy: String,
+        @Query("safeSearch") safeSearch: SafeSearch,
+        @Query("freshness") freshness: Freshness
     ): NewsBingModel
 
     @GET("search_free?media=true")

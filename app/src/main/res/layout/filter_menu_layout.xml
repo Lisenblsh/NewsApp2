@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/menu_card"
+        android:layout_width="30dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="3dp"
+        android:layout_marginBottom="190dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="0dp"
+        android:elevation="10dp"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:src="@drawable/ic_baseline_more_vert_24"
+        android:theme="@style/Tint"
+        app:layout_constraintBottom_toBottomOf="@id/menu_card"
+        app:layout_constraintEnd_toEndOf="@id/menu_card"
+        app:layout_constraintStart_toStartOf="@id/menu_card"
+        app:layout_constraintTop_toTopOf="@id/menu_card" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/menu_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="20dp"
+        android:visibility="gone">
+
+        <View
+            android:id="@+id/for_close_menu"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintWidth_percent=".2" />
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            app:cardElevation="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/for_close_menu" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="5dp"
+            android:elevation="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/for_close_menu"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/language_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/language"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Spinner
+                android:id="@+id/language_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_margin="5dp"
+                app:layout_constraintTop_toBottomOf="@id/language_title" />
+
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/search_bar"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_margin="5dp"
+                android:imeOptions="actionSearch"
+                android:inputType="textNoSuggestions"
+                android:queryHint="Введите запрос для поиска"
+                app:iconifiedByDefault="false"
+                app:layout_constraintTop_toBottomOf="@id/language_spinner" />
+
+
+            <TextView
+                android:id="@+id/where_search_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/search_in"
+                app:layout_constraintTop_toBottomOf="@id/search_bar" />
+
+            <Spinner
+                android:id="@+id/where_search_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_margin="5dp"
+                app:layout_constraintTop_toBottomOf="@id/where_search_title" />
+
+
+            <TextView
+                android:id="@+id/sort_by_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sort_by"
+                app:layout_constraintTop_toBottomOf="@id/where_search_spinner" />
+
+            <Spinner
+                android:id="@+id/sort_by_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_margin="5dp"
+                app:layout_constraintTop_toBottomOf="@id/sort_by_title" />
+
+            <TextView
+                android:id="@+id/date_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                app:layout_constraintTop_toBottomOf="@id/sort_by_spinner" />
+
+            <Button
+                android:id="@+id/date_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/set_date"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/date_text" />
+
+            <TextView
+                android:id="@+id/freshness_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/freshness"
+                app:layout_constraintTop_toBottomOf="@id/date_button" />
+
+            <Spinner
+                android:id="@+id/freshness_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_margin="5dp"
+                app:layout_constraintTop_toBottomOf="@id/freshness_title" />
+
+            <TextView
+                android:id="@+id/safe_search_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/safe_search"
+                app:layout_constraintTop_toBottomOf="@id/freshness_spinner" />
+
+            <Spinner
+                android:id="@+id/safe_search_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_margin="5dp"
+                app:layout_constraintTop_toBottomOf="@id/safe_search_title" />
+
+            <Button
+                android:id="@+id/confirm_button"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginHorizontal="5dp"
+                android:text="@string/apply"
+                app:layout_constraintBottom_toTopOf="@id/reset_button" />
+
+            <Button
+                android:id="@+id/reset_button"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginHorizontal="5dp"
+                android:text="@string/reset"
+                app:layout_constraintBottom_toTopOf="@id/instruction" />
+
+            <TextView
+                android:id="@+id/instruction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="@string/quick_instruction"
+                app:layout_constraintBottom_toBottomOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

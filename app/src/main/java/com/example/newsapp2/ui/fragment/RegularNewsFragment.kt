@@ -7,9 +7,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
@@ -21,14 +21,11 @@ import com.example.newsapp2.data.network.FilterForNewsApi
 import com.example.newsapp2.data.network.TypeNewsUrl
 import com.example.newsapp2.databinding.FragmentRegularNewsBinding
 import com.example.newsapp2.di.Injection
-import com.example.newsapp2.tools.convertToAPIDate
-import com.example.newsapp2.tools.convertToDeviceDate
-import com.example.newsapp2.tools.convertToDeviceDateFilter
 import com.example.newsapp2.tools.showWebView
+import com.example.newsapp2.ui.adapters.FilterViewHolder
 import com.example.newsapp2.ui.adapters.NewsLoadStateAdapter
 import com.example.newsapp2.ui.adapters.NewsPagingAdapter
 import com.example.newsapp2.ui.viewModel.NewsViewModel
-import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -120,106 +117,9 @@ class RegularNewsFragment : Fragment() {
         }
     }
 
-    private var dateFrom = ""
-    private var dateTo = ""
 
     private fun FragmentRegularNewsBinding.initMenu() {
-        val sortByArray = resources.getStringArray(R.array.news_sort_by_for_api)
-        val searchInArray = resources.getStringArray(R.array.news_search_in_for_api)
-        val languageArray = resources.getStringArray(R.array.news_lang_code_array)
-
-        languageSpinner.adapter = ArrayAdapter.createFromResource(
-            requireContext(),
-            R.array.news_lang_name_array,
-            android.R.layout.simple_spinner_item
-        )// Адаптер для спинера языка
-        languageSpinner.setSelection(
-            languageArray.indexOf(pref.getString("LANGUAGE", ""))
-        )
-
-        whereSearchSpinner.adapter = ArrayAdapter.createFromResource(
-            requireContext(),
-            R.array.news_search_in,
-            android.R.layout.simple_spinner_item
-        )//Адаптер для спинера с выбором где искать
-
-        sortBySpinner.adapter = ArrayAdapter.createFromResource(
-            requireContext(),
-            R.array.news_sort_by,
-            android.R.layout.simple_spinner_item
-        )//Адаптер для спинера сортировки
-
-        dateButton.setOnClickListener {
-            val builder = MaterialDatePicker.Builder.dateRangePicker()
-                .setSelection(
-                    androidx.core.util.Pair(
-                        MaterialDatePicker.thisMonthInUtcMilliseconds(),
-                        MaterialDatePicker.todayInUtcMilliseconds()
-                    )
-                )
-                .setTheme(R.style.MyDatePickerStyle)
-            val picker = builder.build()
-            picker.show(activity?.supportFragmentManager!!, picker.toString())
-            picker.addOnPositiveButtonClickListener {
-                dateFrom = convertToAPIDate(it.first)
-                dateTo = convertToAPIDate(it.second)
-                dateText.text = resources.getString(
-                    R.string.date_text,
-                    convertToDeviceDateFilter(it.first),
-                    convertToDeviceDateFilter(it.second)
-                )
-            }
-        }
-
-        menuCard.setOnClickListener {
-            menuLayout.visibility = View.VISIBLE
-            /*Это надо заменить на анимации*/
-        }//Для открытия меню
-
-        forCloseMenu.setOnClickListener {
-            menuLayout.visibility = View.GONE
-            /*Это надо заменить на анимации*/
-        }//Для закрытия меню
-
-        resetButton.setOnClickListener {
-            CurrentFilter.filterForNewsApi = FilterForNewsApi(
-                language = CurrentFilter.filterForNewsApi.language,
-                excludeDomains = CurrentFilter.excludeDomains
-            )
-            searchBar.apply {
-                setQuery("", true)
-                isIconified = true
-            }
-            whereSearchSpinner.setSelection(0)
-            sortBySpinner.setSelection(0)
-
-            dateText.text = ""
-            newsList.scrollToPosition(0)
-            newsAdapter.refresh()
-        }//Для отмены фильтров
-
-        confirmButton.setOnClickListener {
-
-
-            val lang = languageArray[languageSpinner.selectedItemPosition]
-
-            with(pref.edit()) {
-                putString("LANGUAGE", lang)
-                apply()
-            }
-
-            CurrentFilter.filterForNewsApi =
-                CurrentFilter.filterForNewsApi.copy(
-                    language = lang,
-                    query = "${searchBar.query}".ifBlank { "a" },
-                    sortBy = sortByArray[sortBySpinner.selectedItemPosition],
-                    searchIn = searchInArray[whereSearchSpinner.selectedItemPosition],
-                    from = dateFrom,
-                    to = dateTo
-                )
-            newsList.scrollToPosition(0)
-            newsAdapter.refresh()
-        }//Для применения фильтров
+        showFilter()
     }
 
     private fun FragmentRegularNewsBinding.initGoToUpBtn() {
@@ -242,4 +142,54 @@ class RegularNewsFragment : Fragment() {
         typeNewsUrl = TypeNewsUrl.values()[pref.getInt("TYPE_NEWS_URL", 1)]
 
     }//Вытаскиваю сохраненный язык из настроек
+
+    private fun acceptFilter() {
+        when (typeNewsUrl) {
+            TypeNewsUrl.NewsApi -> {
+
+            }
+            TypeNewsUrl.BingNews -> {
+
+            }
+            TypeNewsUrl.Newscatcher -> {
+
+            }
+        }
+    }
+
+    private fun resetFilter() {
+        when (typeNewsUrl) {
+            TypeNewsUrl.NewsApi -> {
+
+            }
+            TypeNewsUrl.BingNews -> {
+
+            }
+            TypeNewsUrl.Newscatcher -> {
+
+            }
+        }
+    }
+
+    private fun FragmentRegularNewsBinding.showFilter() {
+        val view = LayoutInflater.from(context)
+            .inflate(R.layout.filter_menu_layout, root, false)
+        Log.e("pref1", "$pref")
+
+        object : FilterViewHolder(view, typeNewsUrl){
+
+            override fun preferences(): SharedPreferences {
+                return pref
+            }
+
+            override fun updateList() {
+                newsList.scrollToPosition(0)
+                newsAdapter.refresh()
+            }
+
+            override val fragmentManager = requireActivity().supportFragmentManager
+        }
+        root.addView(view)
+    }
+
 }

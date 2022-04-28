@@ -25,7 +25,9 @@ class NewsRepository(private val retrofitService: RetrofitService) {
         filter.count,
         filter.offset,
         filter.language,
-        filter.sortBy
+        filter.sortBy,
+        filter.safeSearch,
+        filter.freshness
     )
 
     suspend fun getNewscatcherResponse(filter: FilterForNewscather) = retrofitService.getNewscatcherResponse(

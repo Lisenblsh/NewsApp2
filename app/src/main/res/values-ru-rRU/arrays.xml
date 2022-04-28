@@ -35,4 +35,16 @@
         <item>Описании</item>
         <item>Содержании</item>
     </string-array>
+
+    <string-array name="safe_search">
+        <item>Выключен</item>
+        <item>Умеренный</item>
+        <item>Строгий</item>
+    </string-array>
+
+    <string-array name="freshness">
+        <item>День</item>
+        <item>Неделю</item>
+        <item>Месяц</item>
+    </string-array>
 </resources>

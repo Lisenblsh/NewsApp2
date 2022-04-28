@@ -1,5 +1,6 @@
 package com.example.newsapp2.data
 
+import android.util.Log
 import androidx.core.net.toUri
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
@@ -46,6 +47,8 @@ class NewsRemoteMediator(
                 nextKey
             }
         }
+
+        Log.e("page", "$page")
 
         try {
             val (news, endOfPaginationReached) = getNewsList(page, state)
@@ -127,6 +130,7 @@ class NewsRemoteMediator(
                 CurrentFilter.filterForBingNews = CurrentFilter.filterForBingNews.copy(
                     offset = page * CurrentFilter.filterForBingNews.count
                 )
+                Log.e("offcet", "${CurrentFilter.filterForBingNews.offset}")
                 repository.getBingNewsResponse(CurrentFilter.filterForBingNews).value.map {
                     ArticlesDB(
                         0,

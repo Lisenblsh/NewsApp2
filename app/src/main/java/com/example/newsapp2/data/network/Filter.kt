@@ -18,8 +18,18 @@ data class FilterForBingNews(
     val count: Int = 10,
     val offset: Int = 0,
     val language: String = "",
-    val sortBy: String = "Date" //Date/Relevance
+    val sortBy: String = "Date", //Date/Relevance
+    val safeSearch: SafeSearch = SafeSearch.Off,
+    val freshness: Freshness = Freshness.Day
 )
+
+enum class Freshness {
+    Day, Week, Month
+}
+
+enum class SafeSearch {
+    Off, Moderate, Strict
+}
 
 data class FilterForNewscather(
     val query: String = "a",
@@ -28,7 +38,7 @@ data class FilterForNewscather(
     val pageSize: Int = 10
 )
 
-object CurrentFilter{
+object CurrentFilter {
     var excludeDomains = ""
     var filterForNewsApi = FilterForNewsApi()
     var newsDomains = ""
