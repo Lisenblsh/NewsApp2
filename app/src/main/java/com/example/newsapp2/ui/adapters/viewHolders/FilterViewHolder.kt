@@ -1,4 +1,4 @@
-package com.example.newsapp2.ui.adapters
+package com.example.newsapp2.ui.adapters.viewHolders
 
 import android.content.SharedPreferences
 import android.util.Log
@@ -52,9 +52,9 @@ abstract class FilterViewHolder(private val itemVew: View, private val type: Typ
         }
 
         languageSpinner.adapter = getSpinnerAdapter(R.array.news_lang_name_array)
-        Log.e("pref", "${preferences()}")
+        Log.e("pref", "${getPreferences()}")
         languageSpinner.setSelection(
-            languageArray.indexOf(preferences().getString("LANGUAGE", ""))
+            languageArray.indexOf(getPreferences().getString("LANGUAGE", ""))
         )
         when (type) {
             TypeNewsUrl.NewsApi -> {
@@ -104,7 +104,7 @@ abstract class FilterViewHolder(private val itemVew: View, private val type: Typ
 
         resetButton.setOnClickListener {
             CurrentFilter.filterForNewsApi = FilterForNewsApi(
-                language = preferences().getString("LANGUAGE", "")!!,
+                language = getPreferences().getString("LANGUAGE", "")!!,
                 excludeDomains = CurrentFilter.excludeDomains
             )
             searchBar.setQuery("",true)
@@ -119,7 +119,7 @@ abstract class FilterViewHolder(private val itemVew: View, private val type: Typ
         confirmButton.setOnClickListener {
             val lang = languageArray[languageSpinner.selectedItemPosition]
 
-            with(preferences().edit()) {
+            with(getPreferences().edit()) {
                 putString("LANGUAGE", lang)
                 apply()
             }
@@ -150,7 +150,7 @@ abstract class FilterViewHolder(private val itemVew: View, private val type: Typ
 
         resetButton.setOnClickListener {
             CurrentFilter.filterForBingNews = FilterForBingNews(
-                language = preferences().getString("LANGUAGE", "")!!
+                language = getPreferences().getString("LANGUAGE", "")!!
             )
             searchBar.setQuery("", true)
             sortBySpinner.setSelection(0)
@@ -165,7 +165,7 @@ abstract class FilterViewHolder(private val itemVew: View, private val type: Typ
             val lang = languageArray[languageSpinner.selectedItemPosition]
             val sortBy = if(sortBySpinner.selectedItemPosition == 0) "Date" else ""
 
-            with(preferences().edit()) {
+            with(getPreferences().edit()) {
                 putString("LANGUAGE", lang)
                 apply()
             }
@@ -187,7 +187,7 @@ abstract class FilterViewHolder(private val itemVew: View, private val type: Typ
     private fun initNewscather() {
         resetButton.setOnClickListener {
             CurrentFilter.filterForNewscatcher = FilterForNewscather(
-                language = preferences().getString("LANGUAGE", "")!!
+                language = getPreferences().getString("LANGUAGE", "")!!
             )
             searchBar.setQuery("",true)
             updateList()
@@ -197,7 +197,7 @@ abstract class FilterViewHolder(private val itemVew: View, private val type: Typ
         confirmButton.setOnClickListener {
             val lang = languageArray[languageSpinner.selectedItemPosition]
 
-            with(preferences().edit()){
+            with(getPreferences().edit()){
                 putString("LANGUAGE", lang)
                 apply()
             }
@@ -250,7 +250,7 @@ abstract class FilterViewHolder(private val itemVew: View, private val type: Typ
         return itemVew.findViewById(res)
     }
 
-    abstract fun preferences(): SharedPreferences
+    abstract fun getPreferences(): SharedPreferences
 
     abstract fun updateList()
 

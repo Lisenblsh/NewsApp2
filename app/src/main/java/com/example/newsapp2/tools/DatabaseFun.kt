@@ -6,6 +6,9 @@ import com.example.newsapp2.data.room.ArticlesDB
 import com.example.newsapp2.data.room.NewsDataBase
 import com.example.newsapp2.data.room.TypeArticles
 import com.example.newsapp2.data.room.TypeSource
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.coroutineContext
 
 class DatabaseFun(private val dataBase: NewsDataBase) {
     suspend fun getLikedArticlesList(): List<ArticlesDB> {
@@ -32,9 +35,11 @@ class DatabaseFun(private val dataBase: NewsDataBase) {
     }
 
     suspend fun deleteSource(type: TypeSource, list: List<String>) {
-        dataBase.withTransaction {
-            list.forEach {
-                dataBase.newsListDao().deleteSources(it, type)
+        withContext(Dispatchers.IO){
+            dataBase.withTransaction {
+                list.forEach {
+                    dataBase.newsListDao().deleteSources(it, type)
+                }
             }
         }
     }

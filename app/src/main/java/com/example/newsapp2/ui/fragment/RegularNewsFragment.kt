@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
@@ -22,7 +21,7 @@ import com.example.newsapp2.data.network.TypeNewsUrl
 import com.example.newsapp2.databinding.FragmentRegularNewsBinding
 import com.example.newsapp2.di.Injection
 import com.example.newsapp2.tools.showWebView
-import com.example.newsapp2.ui.adapters.FilterViewHolder
+import com.example.newsapp2.ui.adapters.viewHolders.FilterViewHolder
 import com.example.newsapp2.ui.adapters.NewsLoadStateAdapter
 import com.example.newsapp2.ui.adapters.NewsPagingAdapter
 import com.example.newsapp2.ui.viewModel.NewsViewModel
@@ -178,7 +177,7 @@ class RegularNewsFragment : Fragment() {
 
         object : FilterViewHolder(view, typeNewsUrl){
 
-            override fun preferences(): SharedPreferences {
+            override fun getPreferences(): SharedPreferences {
                 return pref
             }
 
