@@ -8,10 +8,10 @@ import android.widget.TextView
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.newsapp2.R
 import com.example.newsapp2.data.room.ArticlesDB
 import com.example.newsapp2.tools.convertToDeviceDate
+import com.squareup.picasso.Picasso
 
 class NewsPagingAdapter : PagingDataAdapter<ArticlesDB, RecyclerView.ViewHolder>(ARTICLES_COMPARATOR) {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -104,10 +104,10 @@ class NewsPagingAdapter : PagingDataAdapter<ArticlesDB, RecyclerView.ViewHolder>
         }
 
         private fun setImage(url: String) {
-            Glide
-                .with(itemView)
+            Picasso.get()
                 .load(url)
                 .into(image)
+
         }
     }
 }

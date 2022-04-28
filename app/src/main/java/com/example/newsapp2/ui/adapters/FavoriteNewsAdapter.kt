@@ -8,10 +8,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.newsapp2.R
 import com.example.newsapp2.data.room.ArticlesDB
 import com.example.newsapp2.tools.convertToDeviceDate
+import com.squareup.picasso.Picasso
 
 class FavoriteNewsAdapter :
     ListAdapter<ArticlesDB, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
@@ -123,8 +123,7 @@ class FavoriteNewsAdapter :
         }
 
         private fun setImage(url: String) {
-            Glide
-                .with(itemView)
+            Picasso.get()
                 .load(url)
                 .into(image)
         }

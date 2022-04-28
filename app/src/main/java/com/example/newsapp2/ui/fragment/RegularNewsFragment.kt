@@ -7,7 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -21,9 +21,9 @@ import com.example.newsapp2.data.network.TypeNewsUrl
 import com.example.newsapp2.databinding.FragmentRegularNewsBinding
 import com.example.newsapp2.di.Injection
 import com.example.newsapp2.tools.showWebView
-import com.example.newsapp2.ui.adapters.viewHolders.FilterViewHolder
 import com.example.newsapp2.ui.adapters.NewsLoadStateAdapter
 import com.example.newsapp2.ui.adapters.NewsPagingAdapter
+import com.example.newsapp2.ui.adapters.viewHolders.FilterViewHolder
 import com.example.newsapp2.ui.viewModel.NewsViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
@@ -141,34 +141,6 @@ class RegularNewsFragment : Fragment() {
         typeNewsUrl = TypeNewsUrl.values()[pref.getInt("TYPE_NEWS_URL", 1)]
 
     }//Вытаскиваю сохраненный язык из настроек
-
-    private fun acceptFilter() {
-        when (typeNewsUrl) {
-            TypeNewsUrl.NewsApi -> {
-
-            }
-            TypeNewsUrl.BingNews -> {
-
-            }
-            TypeNewsUrl.Newscatcher -> {
-
-            }
-        }
-    }
-
-    private fun resetFilter() {
-        when (typeNewsUrl) {
-            TypeNewsUrl.NewsApi -> {
-
-            }
-            TypeNewsUrl.BingNews -> {
-
-            }
-            TypeNewsUrl.Newscatcher -> {
-
-            }
-        }
-    }
 
     private fun FragmentRegularNewsBinding.showFilter() {
         val view = LayoutInflater.from(context)

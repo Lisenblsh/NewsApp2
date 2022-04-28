@@ -8,11 +8,11 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
 import com.example.newsapp2.R
 import com.example.newsapp2.databinding.FragmentMainBinding
 import com.example.newsapp2.ui.adapters.ViewPagerAdapter
 import com.google.android.material.tabs.TabLayoutMediator
+import com.squareup.picasso.Picasso
 
 class MainFragment : Fragment() {
 
@@ -61,8 +61,7 @@ class MainFragment : Fragment() {
     }
 
     private fun setIcon(icon: Int, imageView: ImageView){
-        Glide
-            .with(this)
+        Picasso.get()
             .load(icon)
             .into(imageView)
     }

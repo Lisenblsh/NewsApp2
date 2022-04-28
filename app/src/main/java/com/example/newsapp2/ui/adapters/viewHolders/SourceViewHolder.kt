@@ -9,13 +9,13 @@ import android.widget.TextView
 import androidx.core.util.forEach
 import androidx.core.util.isNotEmpty
 import androidx.core.view.isVisible
-import androidx.lifecycle.lifecycleScope
 import com.example.newsapp2.R
 import com.example.newsapp2.data.room.NewsDataBase
 import com.example.newsapp2.data.room.TypeSource
 import com.example.newsapp2.tools.DatabaseFun
-import kotlinx.coroutines.*
-import kotlin.coroutines.suspendCoroutine
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class SourceViewHolder(private val itemView: View, private val type: TypeSource) {
     private val databaseFun = DatabaseFun(NewsDataBase.getInstance(itemView.context))

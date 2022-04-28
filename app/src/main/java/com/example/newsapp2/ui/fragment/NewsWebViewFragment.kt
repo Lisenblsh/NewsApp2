@@ -16,12 +16,12 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
-import com.bumptech.glide.Glide
 import com.example.newsapp2.R
 import com.example.newsapp2.data.room.NewsDataBase
 import com.example.newsapp2.data.room.TypeSource
 import com.example.newsapp2.databinding.FragmentNewsWebViewBinding
 import com.example.newsapp2.tools.LogicForWebView
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -88,7 +88,7 @@ class NewsWebViewFragment : Fragment() {
         //Log.e("img", images.toString())
 
         for (image in images) {
-            Log.e("Asd","Image Source: " + image.attr("src"))
+            Log.e("Asd", "Image Source: " + image.attr("src"))
         }
     }
 
@@ -248,9 +248,9 @@ class NewsWebViewFragment : Fragment() {
 
     private fun setImage(image: Int, view: View) {
         if (view is ImageView) {
-            Glide
-                .with(this@NewsWebViewFragment)
+            Picasso.get()
                 .load(image)
+                .placeholder(image)
                 .into(view)
         }
     }

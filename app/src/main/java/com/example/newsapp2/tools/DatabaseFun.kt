@@ -8,7 +8,6 @@ import com.example.newsapp2.data.room.TypeArticles
 import com.example.newsapp2.data.room.TypeSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlin.coroutines.coroutineContext
 
 class DatabaseFun(private val dataBase: NewsDataBase) {
     suspend fun getLikedArticlesList(): List<ArticlesDB> {
