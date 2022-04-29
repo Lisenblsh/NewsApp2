@@ -35,60 +35,54 @@ class CurrentSettingFragment : Fragment() {
     }
 
     private suspend fun FragmentCurrentSettingBinding.showSetting(typeSetting: TypeSetting) {
-        when (typeSetting) {
+        val view = when (typeSetting) {
             TypeSetting.Theme -> {
-                val view = LayoutInflater.from(context)
+                val itemView = LayoutInflater.from(context)
                     .inflate(R.layout.select_setting_layout, root, false)
-                object : SelectViewHolder(view, typeSetting) {
-                    override fun getPreferences(): SharedPreferences {
-                        return requireActivity().getSharedPreferences(
-                            "appSettings",
-                            Context.MODE_PRIVATE
-                        )
-                    }
-
-                    override fun forRestartActivity() {
-                        val intent = requireActivity().intent
-                        requireActivity().finish()
-                        startActivity(intent)
-                    }
-
-                }.bind()
-                root.addView(view)
+                selectViewHolder(itemView, typeSetting)
+                itemView
             }
             TypeSetting.ApiSource -> {
-                val view = LayoutInflater.from(context)
+                val itemView = LayoutInflater.from(context)
                     .inflate(R.layout.select_setting_layout, root, false)
-                object : SelectViewHolder(view, typeSetting) {
-                    override fun getPreferences(): SharedPreferences {
-                        return requireActivity().getSharedPreferences(
-                            "appSettings",
-                            Context.MODE_PRIVATE
-                        )
-                    }
-
-                    override fun forRestartActivity() {
-                        val intent = requireActivity().intent
-                        requireActivity().finish()
-                        startActivity(intent)
-                    }
-
-                }.bind()
-                root.addView(view)
+                selectViewHolder(itemView, typeSetting)
+                itemView
             }
             TypeSetting.Follow -> {
-                val view = LayoutInflater.from(context)
+                val itemView = LayoutInflater.from(context)
                     .inflate(R.layout.source_setting_layout, root, false)
-                SourceViewHolder(view, TypeSource.FollowSource).bind()
-                root.addView(view)
+                SourceViewHolder(itemView, TypeSource.FollowSource).bind()
+                itemView
             }
             TypeSetting.BlockSource -> {
-                val view = LayoutInflater.from(context)
+                val itemView = LayoutInflater.from(context)
                     .inflate(R.layout.source_setting_layout, root, false)
-                SourceViewHolder(view, TypeSource.BlockSource).bind()
-                root.addView(view)
+                SourceViewHolder(itemView, TypeSource.BlockSource).bind()
+                itemView
             }
         }
+        root.addView(view)
+    }
+
+    private fun selectViewHolder(
+        view: View,
+        typeSetting: TypeSetting
+    ) {
+        object : SelectViewHolder(view, typeSetting) {
+            override fun getPreferences(): SharedPreferences {
+                return requireActivity().getSharedPreferences(
+                    "appSettings",
+                    Context.MODE_PRIVATE
+                )
+            }
+
+            override fun forRestartActivity() {
+                val intent = requireActivity().intent
+                requireActivity().finish()
+                startActivity(intent)
+            }
+
+        }.bind()
     }
 
 }

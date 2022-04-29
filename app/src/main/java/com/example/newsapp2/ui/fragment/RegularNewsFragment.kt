@@ -3,7 +3,6 @@ package com.example.newsapp2.ui.fragment
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,11 +46,7 @@ class RegularNewsFragment : Fragment() {
         if (!this::binding.isInitialized) {
             binding = FragmentRegularNewsBinding.inflate(inflater, container, false)
             createSharedPreference()
-            viewModel = ViewModelProvider(
-                this, Injection.provideViewModelFactory(
-                    requireActivity().applicationContext, this, typeNewsUrl
-                ) // Крч при смене API надо очищять адаптер иначе старые новости остаются
-            ).get(NewsViewModel::class.java)
+            viewModel = getViewModel()
             binding.bindingElement()
         }
         return binding.root
@@ -60,7 +55,7 @@ class RegularNewsFragment : Fragment() {
     private fun FragmentRegularNewsBinding.bindingElement() {
         bindAdapter()
         initSwipeRefresh()
-        initMenu()
+        initFilterMenu()
         initGoToUpBtn()
     }
 
@@ -79,6 +74,7 @@ class RegularNewsFragment : Fragment() {
             footer = NewsLoadStateAdapter { newsAdapter.retry() }
         )
         newsList.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+
         lifecycleScope.launch {
             viewModel.pagingDataRegularNewsFlow.collectLatest(newsAdapter::submitData)
         }
@@ -116,9 +112,23 @@ class RegularNewsFragment : Fragment() {
         }
     }
 
+    private fun FragmentRegularNewsBinding.initFilterMenu() {
+        val view = LayoutInflater.from(context)
+            .inflate(R.layout.filter_menu_layout, root, false)
+        object : FilterViewHolder(view, typeNewsUrl){
 
-    private fun FragmentRegularNewsBinding.initMenu() {
-        showFilter()
+            override fun getPreferences(): SharedPreferences {
+                return pref
+            }
+
+            override fun updateList() {
+                newsList.scrollToPosition(0)
+                newsAdapter.refresh()
+            }
+
+            override val fragmentManager = requireActivity().supportFragmentManager
+        }
+        root.addView(view)
     }
 
     private fun FragmentRegularNewsBinding.initGoToUpBtn() {
@@ -138,29 +148,15 @@ class RegularNewsFragment : Fragment() {
         }//проверка на наличия дефолтного языка
         CurrentFilter.filterForNewsApi =
             FilterForNewsApi(language = pref.getString("LANGUAGE", "")!!)
-        typeNewsUrl = TypeNewsUrl.values()[pref.getInt("TYPE_NEWS_URL", 1)]
+        typeNewsUrl = TypeNewsUrl.values()[pref.getInt("TYPE_NEWS_URL", 0)]
 
     }//Вытаскиваю сохраненный язык из настроек
 
-    private fun FragmentRegularNewsBinding.showFilter() {
-        val view = LayoutInflater.from(context)
-            .inflate(R.layout.filter_menu_layout, root, false)
-        Log.e("pref1", "$pref")
-
-        object : FilterViewHolder(view, typeNewsUrl){
-
-            override fun getPreferences(): SharedPreferences {
-                return pref
-            }
-
-            override fun updateList() {
-                newsList.scrollToPosition(0)
-                newsAdapter.refresh()
-            }
-
-            override val fragmentManager = requireActivity().supportFragmentManager
-        }
-        root.addView(view)
+    private fun getViewModel(): NewsViewModel {
+        return ViewModelProvider(
+            this, Injection.provideViewModelFactory(
+                requireActivity().applicationContext, this, typeNewsUrl
+            ) // Крч при смене API надо очищять адаптер иначе старые новости остаются
+        ).get(NewsViewModel::class.java)
     }
-
 }

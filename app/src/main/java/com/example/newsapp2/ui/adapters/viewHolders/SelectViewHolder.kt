@@ -16,28 +16,22 @@ abstract class SelectViewHolder(private val itemView: View, private val type: Ty
     private val title: TextView = itemView.findViewById(R.id.title)
 
     fun bind() {
-
         val array: Int
         val key: String
-        val selectedId: Int
 
         when (type) {
             TypeSetting.Theme -> {
                 array = R.array.app_theme_array
                 key = "THEME_ID"
-                selectedId = 0
                 title.text = itemView.resources.getString(R.string.themes)
             }
             TypeSetting.ApiSource -> {
                 array = R.array.api_source
                 key = "TYPE_NEWS_URL"
-                selectedId = 1
                 title.text = itemView.resources.getString(R.string.sources)
             }
             else -> return
         }
-
-        Log.e("tag", "$selectedId")
 
         listView.adapter = ArrayAdapter.createFromResource(
             itemView.context,
@@ -50,7 +44,7 @@ abstract class SelectViewHolder(private val itemView: View, private val type: Ty
             if (type == TypeSetting.Theme) forTheme(key, position)
             else if (type == TypeSetting.ApiSource) forAPI(key, position)
         }
-        listView.setItemChecked(getPreferences().getInt(key, selectedId), true)
+        listView.setItemChecked(getPreferences().getInt(key, 0), true)
     }
 
     private fun forTheme(key: String, position: Int) {
