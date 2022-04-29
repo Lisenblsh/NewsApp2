@@ -2,10 +2,15 @@ package com.example.newsapp2.data.network.retrofit
 
 import com.example.newsapp2.BuildConfig
 import com.example.newsapp2.data.network.*
+import com.example.newsapp2.data.network.apiModels.NewsApiModel
+import com.example.newsapp2.data.network.apiModels.NewsBingModel
+import com.example.newsapp2.data.network.apiModels.NewscatcherModel
+import com.example.newsapp2.data.network.apiModels.StopGameModel
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface RetrofitService {
@@ -42,10 +47,14 @@ interface RetrofitService {
         @Query("page_size") pageSize: Int
     ): NewscatcherModel
 
+    @GET("api.json")
+    suspend fun getStopGameResponse(@Query("rss_url") rssUrl: String): StopGameModel
+
     companion object {
         private const val BASE_URL_NEWSAPI = "https://newsapi.org/v2/"
         private const val BASE_URL_BING = "https://bing-news-search1.p.rapidapi.com/news/"
         private const val BASE_URL_NEWSCATHER = "https://newscatcher.p.rapidapi.com/v1/"
+        private const val BASE_URL_STOPGAME = "https://api.rss2json.com/v1/"
 
         fun create(typeNewsUrl: TypeNewsUrl): RetrofitService {
             var headerName = ""
@@ -65,6 +74,10 @@ interface RetrofitService {
                     headerName = "X-RapidAPI-Key"
                     apiKey = BuildConfig.API_KEY_BING
                     BASE_URL_NEWSCATHER
+                }
+                TypeNewsUrl.StopGame -> {
+                    headerName = "X-Api-Key"
+                    BASE_URL_STOPGAME
                 }
             }
 

@@ -38,6 +38,10 @@ data class FilterForNewscather(
     val pageSize: Int = 10
 )
 
+data class FilterForStopGame(
+    val path: String = "https://rss.stopgame.ru/rss_news.xml" //rss_news.xml
+)
+
 object CurrentFilter {
     var excludeDomains = ""
     var filterForNewsApi = FilterForNewsApi()
@@ -45,4 +49,5 @@ object CurrentFilter {
     var filterForFavoriteNewsApi = FilterForNewsApi(domains = newsDomains)
     var filterForBingNews = FilterForBingNews()
     var filterForNewscatcher = FilterForNewscather()
+    var filterForStopGame = FilterForStopGame()
 }

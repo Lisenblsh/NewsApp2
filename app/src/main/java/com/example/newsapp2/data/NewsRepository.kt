@@ -3,6 +3,7 @@ package com.example.newsapp2.data
 import com.example.newsapp2.data.network.FilterForBingNews
 import com.example.newsapp2.data.network.FilterForNewsApi
 import com.example.newsapp2.data.network.FilterForNewscather
+import com.example.newsapp2.data.network.FilterForStopGame
 import com.example.newsapp2.data.network.retrofit.RetrofitService
 
 class NewsRepository(private val retrofitService: RetrofitService) {
@@ -35,5 +36,9 @@ class NewsRepository(private val retrofitService: RetrofitService) {
         filter.language,
         filter.page,
         filter.pageSize
+    )
+
+    suspend fun getStopGameResponse(filter: FilterForStopGame) = retrofitService.getStopGameResponse(
+        filter.path
     )
 }

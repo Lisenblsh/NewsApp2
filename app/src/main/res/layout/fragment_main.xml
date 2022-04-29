@@ -23,5 +23,4 @@
         app:tabIndicatorAnimationDuration="800"
         app:tabIndicatorAnimationMode="elastic"
         app:tabIndicatorGravity="stretch" />
-
 </LinearLayout>

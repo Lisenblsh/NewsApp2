@@ -1,7 +1,7 @@
 package com.example.newsapp2.data
 
+import android.database.CursorIndexOutOfBoundsException
 import android.util.Log
-import androidx.core.net.toUri
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -9,8 +9,12 @@ import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.example.newsapp2.data.network.CurrentFilter
 import com.example.newsapp2.data.network.TypeNewsUrl
-import com.example.newsapp2.data.room.*
-import com.example.newsapp2.tools.convertDateToMillis
+import com.example.newsapp2.data.room.ArticlesDB
+import com.example.newsapp2.data.room.NewsDataBase
+import com.example.newsapp2.data.room.RemoteKeys
+import com.example.newsapp2.data.room.TypeArticles
+import com.example.newsapp2.tools.DatabaseFun
+import com.example.newsapp2.tools.Mapper
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -48,7 +52,7 @@ class NewsRemoteMediator(
             }
         }
 
-        Log.e("page", "$page")
+        Log.e("pageS", state.config.pageSize.toString())
 
         try {
             val (news, endOfPaginationReached) = getNewsList(page, state)
@@ -89,9 +93,10 @@ class NewsRemoteMediator(
     ): Pair<List<ArticlesDB>, Boolean> {
         val news = when (typeNewsUrl) {
             TypeNewsUrl.NewsApi -> {
+                val dbFun = DatabaseFun(newsDataBase)
                 val responseNewsApi = when (typeArticles) {
                     TypeArticles.RegularNews -> {
-                        CurrentFilter.excludeDomains = getExcludeDomains()
+                        CurrentFilter.excludeDomains = dbFun.getExcludeDomains()
                         CurrentFilter.filterForNewsApi =
                             CurrentFilter.filterForNewsApi.copy(
                                 page = page,
@@ -101,7 +106,7 @@ class NewsRemoteMediator(
                         repository.getNewsApiResponse(CurrentFilter.filterForNewsApi)
                     }
                     else -> {
-                        CurrentFilter.newsDomains = getNewsDomains()
+                        CurrentFilter.newsDomains = dbFun.getNewsDomains()
                         CurrentFilter.filterForFavoriteNewsApi =
                             CurrentFilter.filterForFavoriteNewsApi.copy(
                                 page = page,
@@ -111,39 +116,18 @@ class NewsRemoteMediator(
                         repository.getNewsApiResponse(CurrentFilter.filterForFavoriteNewsApi)
                     }
                 }
+                val mapper = Mapper(typeNewsUrl, typeArticles)
                 responseNewsApi.articles.map {
-                    ArticlesDB(
-                        0,
-                        getDomainFromUrl(it.url),
-                        it.author,
-                        it.title,
-                        it.description,
-                        it.url,
-                        it.urlToImage,
-                        convertDateToMillis(it.publishedAt, typeNewsUrl),
-                        typeArticles,
-                        typeNewsUrl
-                    )
+                    mapper.mapNewsApiToDB(it)
                 }
             }
             TypeNewsUrl.BingNews -> {
                 CurrentFilter.filterForBingNews = CurrentFilter.filterForBingNews.copy(
                     offset = page * CurrentFilter.filterForBingNews.count
                 )
-                Log.e("offcet", "${CurrentFilter.filterForBingNews.offset}")
+                val mapper = Mapper(typeNewsUrl)
                 repository.getBingNewsResponse(CurrentFilter.filterForBingNews).value.map {
-                    ArticlesDB(
-                        0,
-                        getDomainFromUrl(it.url),
-                        "",
-                        it.name,
-                        it.description,
-                        it.url,
-                        it.image?.contentUrl,
-                        convertDateToMillis(it.datePublished, typeNewsUrl),
-                        TypeArticles.RegularNews,
-                        typeNewsUrl
-                    )
+                    mapper.mapBingNewsToDB(it)
                 }
             }
             TypeNewsUrl.Newscatcher -> {
@@ -151,41 +135,22 @@ class NewsRemoteMediator(
                     page = page,
                     pageSize = state.config.pageSize
                 )
+                val mapper = Mapper(typeNewsUrl)
                 repository.getNewscatcherResponse(CurrentFilter.filterForNewscatcher).articles.map {
-                    ArticlesDB(
-                        0,
-                        it.clean_url,
-                        it.author,
-                        it.title,
-                        it.summary,
-                        it.link,
-                        it.media,
-                        convertDateToMillis(it.published_date, typeNewsUrl),
-                        TypeArticles.RegularNews,
-                        typeNewsUrl
-                    )
+                    mapper.mapNewscatcherToDB(it)
+                }
+            }
+            TypeNewsUrl.StopGame -> {
+                val mapper = Mapper(typeNewsUrl)
+                repository.getStopGameResponse(CurrentFilter.filterForStopGame).items.map {
+                    mapper.mapStopGameToDB(it)
                 }
             }
         }
-        val endOfPaginationReached = news.isEmpty()
+        val endOfPaginationReached =
+            if (typeNewsUrl == TypeNewsUrl.StopGame) true else news.isEmpty()
         return Pair(news, endOfPaginationReached)
     }
-
-    private fun getDomainFromUrl(url: String): String {
-        var domain = "${url.toUri().host}"
-        if (domain.subSequence(0, 4) == "www.") {
-            domain = domain.subSequence(4, domain.length).toString()
-        }
-        return domain
-    }
-
-    private suspend fun getNewsDomains(): String =
-        newsDataBase.newsListDao().getSourcesData(TypeSource.FollowSource)
-            .joinToString(",", transform = { it.name }).ifBlank { "0" }
-
-    private suspend fun getExcludeDomains(): String =
-        newsDataBase.newsListDao().getSourcesData(TypeSource.BlockSource)
-            .joinToString(",", transform = { it.name })
 
     private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, ArticlesDB>): RemoteKeys? {
         return state.pages.lastOrNull { it.data.isNotEmpty() }?.data?.lastOrNull()

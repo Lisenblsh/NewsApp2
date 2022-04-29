@@ -44,4 +44,5 @@
     <string name="freshness">Новости за:</string>
     <string name="safe_search">Фильтр безопасного поиска:</string>
     <string name="temp_not_work">Временно не работает</string>
+    <string name="newswire">Новостаня лента</string>
 </resources>

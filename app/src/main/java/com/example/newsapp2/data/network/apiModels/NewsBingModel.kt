@@ -1,10 +1,10 @@
-package com.example.newsapp2.data.network
+package com.example.newsapp2.data.network.apiModels
 
 data class NewsBingModel(
-    val value: List<Value>
+    val value: List<NewsBingArticle>
 )
 
-data class Value(
+data class NewsBingArticle(
     val datePublished: String,
     val description: String,
     val image: Image?,

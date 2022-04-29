@@ -1,12 +1,12 @@
-package com.example.newsapp2.data.network
+package com.example.newsapp2.data.network.apiModels
 
 data class NewsApiModel(
     val status: String,
     val totalResults: Int,
-    val articles: MutableList<Articles>
+    val articles: MutableList<NewsApiArticle>
 )
 
-data class Articles(
+data class NewsApiArticle(
     val author: String?,
     val title: String?,
     val description: String?,

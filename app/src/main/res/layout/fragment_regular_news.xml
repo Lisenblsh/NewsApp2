@@ -31,12 +31,10 @@
         android:layout_marginBottom="30dp"
         android:src="@drawable/ic_baseline_keyboard_arrow_up_24"
         android:theme="@style/FAB"
+        app:elevation="10dp"
         app:borderWidth="0dp"
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="ContentDescription" />
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

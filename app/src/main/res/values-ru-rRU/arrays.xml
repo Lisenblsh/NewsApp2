@@ -47,4 +47,9 @@
         <item>Неделю</item>
         <item>Месяц</item>
     </string-array>
+
+    <string-array name="stopgame_type_rss">
+        <item>Игровые новости</item>
+        <item>Статьи</item>
+    </string-array>
 </resources>

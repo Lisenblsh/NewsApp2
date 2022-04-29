@@ -1,7 +1,6 @@
 package com.example.newsapp2.ui.adapters.viewHolders
 
 import android.content.SharedPreferences
-import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ListView

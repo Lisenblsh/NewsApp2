@@ -10,6 +10,7 @@
         <item>Newsapi</item>
         <item>Bing News Search API (；′⌒`)</item>
         <item>Newscatcherapi</item>
+        <item>StopGame</item>
     </string-array>
 
     <string-array name="news_lang_name_array">
@@ -89,5 +90,14 @@
         <item>Day</item>
         <item>Week</item>
         <item>Month</item>
+    </string-array>
+    
+    <string-array name="stopgame_type_rss_api">
+        <item>rss_news.xml</item>
+        <item>articles.xml</item>
+    </string-array>
+    <string-array name="stopgame_type_rss">
+        <item>Gaming News</item>
+        <item>Articles</item>
     </string-array>
 </resources>

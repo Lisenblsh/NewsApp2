@@ -1,10 +1,10 @@
-package com.example.newsapp2.data.network
+package com.example.newsapp2.data.network.apiModels
 
 data class NewscatcherModel(
-    val articles: List<Article>
+    val articles: List<NewscatcherArticle>
 )
 
-data class Article(
+data class NewscatcherArticle(
     val author: String,
     val clean_url: String,
     val link: String,

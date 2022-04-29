@@ -46,4 +46,5 @@
     <string name="freshness">Freshness</string>
     <string name="safe_search">The safe search filter:</string>
     <string name="temp_not_work">Temporarily not working</string>
+    <string name="newswire">Newswire</string>
 </resources>

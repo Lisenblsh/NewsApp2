@@ -42,4 +42,12 @@ class DatabaseFun(private val dataBase: NewsDataBase) {
             }
         }
     }
+
+    suspend fun getNewsDomains(): String =
+        dataBase.newsListDao().getSourcesData(TypeSource.FollowSource)
+            .joinToString(",", transform = { it.name }).ifBlank { "0" }
+
+    suspend fun getExcludeDomains(): String =
+        dataBase.newsListDao().getSourcesData(TypeSource.BlockSource)
+            .joinToString(",", transform = { it.name })
 }

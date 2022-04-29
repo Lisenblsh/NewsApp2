@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:elevation="20dp"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent">
 
@@ -34,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:elevation="20dp"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <View
             android:id="@+id/for_close_menu"
@@ -42,7 +43,6 @@
             android:layout_height="match_parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintWidth_percent=".2" />
-
 
         <androidx.cardview.widget.CardView
             android:layout_width="0dp"
@@ -94,6 +94,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/search_in"
+                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@id/search_bar" />
 
             <Spinner
@@ -101,14 +102,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:layout_margin="5dp"
+                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@id/where_search_title" />
-
 
             <TextView
                 android:id="@+id/sort_by_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/sort_by"
+                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@id/where_search_spinner" />
 
             <Spinner
@@ -116,6 +118,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:layout_margin="5dp"
+                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@id/sort_by_title" />
 
             <TextView
@@ -123,6 +126,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@id/sort_by_spinner" />
 
             <Button
@@ -130,6 +134,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/set_date"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/date_text" />
@@ -139,6 +144,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/freshness"
+                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@id/date_button" />
 
             <Spinner
@@ -146,6 +152,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:layout_margin="5dp"
+                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@id/freshness_title" />
 
             <TextView
@@ -153,6 +160,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/safe_search"
+                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@id/freshness_spinner" />
 
             <Spinner
@@ -160,7 +168,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:layout_margin="5dp"
+                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@id/safe_search_title" />
+
+            <TextView
+                android:id="@+id/type_rss_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/newswire"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/safe_search_spinner" />
+
+            <Spinner
+                android:id="@+id/type_rss_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_margin="5dp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/type_rss_title" />
 
             <Button
                 android:id="@+id/confirm_button"
@@ -184,6 +209,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:text="@string/quick_instruction"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
