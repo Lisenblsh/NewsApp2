@@ -14,9 +14,7 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapp2.R
-import com.example.newsapp2.data.network.CurrentFilter
-import com.example.newsapp2.data.network.FilterForNewsApi
-import com.example.newsapp2.data.network.TypeNewsUrl
+import com.example.newsapp2.data.network.*
 import com.example.newsapp2.databinding.FragmentRegularNewsBinding
 import com.example.newsapp2.di.Injection
 import com.example.newsapp2.tools.showWebView
@@ -113,22 +111,24 @@ class RegularNewsFragment : Fragment() {
     }
 
     private fun FragmentRegularNewsBinding.initFilterMenu() {
-        val view = LayoutInflater.from(context)
-            .inflate(R.layout.filter_menu_layout, root, false)
-        object : FilterViewHolder(view, typeNewsUrl){
+        if (typeNewsUrl != TypeNewsUrl.WebSearch){
+            val view = LayoutInflater.from(context)
+                .inflate(R.layout.filter_menu_layout, root, false)
+            object : FilterViewHolder(view, typeNewsUrl){
 
-            override fun getPreferences(): SharedPreferences {
-                return pref
+                override fun getPreferences(): SharedPreferences {
+                    return pref
+                }
+
+                override fun updateList() {
+                    newsList.scrollToPosition(0)
+                    newsAdapter.refresh()
+                }
+
+                override val fragmentManager = requireActivity().supportFragmentManager
             }
-
-            override fun updateList() {
-                newsList.scrollToPosition(0)
-                newsAdapter.refresh()
-            }
-
-            override val fragmentManager = requireActivity().supportFragmentManager
+            root.addView(view)
         }
-        root.addView(view)
     }
 
     private fun FragmentRegularNewsBinding.initGoToUpBtn() {
@@ -146,8 +146,15 @@ class RegularNewsFragment : Fragment() {
                 apply()
             }
         }//проверка на наличия дефолтного языка
+        val lang = pref.getString("LANGUAGE", "")!!
         CurrentFilter.filterForNewsApi =
-            FilterForNewsApi(language = pref.getString("LANGUAGE", "")!!)
+            FilterForNewsApi(language = lang)
+        CurrentFilter.filterForBingNews =
+            FilterForBingNews(language = lang)
+        CurrentFilter.filterForNewscatcher =
+            FilterForNewscather(language = lang)
+        CurrentFilter.filterForNewsData =
+            FilterForNewsData(language = lang)
         typeNewsUrl = TypeNewsUrl.values()[pref.getInt("TYPE_NEWS_URL", 0)]
 
     }//Вытаскиваю сохраненный язык из настроек

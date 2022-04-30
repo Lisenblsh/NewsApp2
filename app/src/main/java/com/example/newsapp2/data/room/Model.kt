@@ -8,7 +8,6 @@ import com.example.newsapp2.data.network.TypeNewsUrl
 data class ArticlesDB(
     @PrimaryKey(autoGenerate = true) val idArticles: Long = 0,
     val source: String,
-    val author: String?,
     val title: String?,
     val description: String?,
     val url: String,

@@ -34,6 +34,8 @@ abstract class FilterViewHolder(private val itemVew: View, private val type: Typ
     private val safeSearchSpinner = getView(R.id.safe_search_spinner) as Spinner
     private val rssTypeTitle = getView(R.id.type_rss_title) as TextView
     private val rssTypeSpinner = getView(R.id.type_rss_spinner) as Spinner
+    private val categoryTitle = getView(R.id.category_title) as TextView
+    private val categorySpinner = getView(R.id.category_spinner) as Spinner
     private val confirmButton = getView(R.id.confirm_button) as Button
     private val resetButton = getView(R.id.reset_button) as Button
     private val instruction = getView(R.id.instruction) as TextView
@@ -78,7 +80,48 @@ abstract class FilterViewHolder(private val itemVew: View, private val type: Typ
                 initStopGame()
                 showStopGameFilter()
             }
+            TypeNewsUrl.NewsData -> {
+                initNewsData()
+                showNewsDataFilter()
+            }
+            else -> {
+
+            }
         }
+    }
+
+    private fun initNewsData() {
+        categorySpinner.adapter = getSpinnerAdapter(R.array.newsdata_category)
+
+        resetButton.setOnClickListener {
+            CurrentFilter.filterForNewsData =
+                FilterForNewsData(
+                    language = getPreferences().getString("LANGUAGE", "")!!
+                )
+            closeMenuAndUpdate()
+        }
+
+        confirmButton.setOnClickListener {
+            val lang = languageArray[languageSpinner.selectedItemPosition]
+            CurrentFilter.filterForNewsData =
+                CurrentFilter.filterForNewsData.copy(
+                    language = lang,
+                    category = Category.values()[categorySpinner.selectedItemPosition]
+                )
+
+            saveLanguage(lang)
+
+            Log.e("lang", "${CurrentFilter.filterForNewsData}")
+
+            closeMenuAndUpdate()
+        }
+    }
+
+    private fun showNewsDataFilter() {
+        searchBar.visibility = View.GONE
+
+        categoryTitle.isVisible = true
+        categorySpinner.isVisible = true
     }
 
     private var dateFrom = ""
@@ -122,16 +165,13 @@ abstract class FilterViewHolder(private val itemVew: View, private val type: Typ
             sortBySpinner.setSelection(0)
 
             dateText.text = ""
-            updateList()
+            closeMenuAndUpdate()
         }//Для отмены фильтров
 
         confirmButton.setOnClickListener {
             val lang = languageArray[languageSpinner.selectedItemPosition]
 
-            with(getPreferences().edit()) {
-                putString("LANGUAGE", lang)
-                apply()
-            }
+            saveLanguage(lang)
 
             CurrentFilter.filterForNewsApi =
                 CurrentFilter.filterForNewsApi.copy(
@@ -142,7 +182,7 @@ abstract class FilterViewHolder(private val itemVew: View, private val type: Typ
                     from = dateFrom,
                     to = dateTo
                 )
-            updateList()
+            closeMenuAndUpdate()
         }//Для применения фильтров
     }
 
@@ -177,17 +217,14 @@ abstract class FilterViewHolder(private val itemVew: View, private val type: Typ
             freshnessSpinner.setSelection(0)
             Log.e("filterR", "${CurrentFilter.filterForBingNews}")
             dateText.text = ""
-            updateList()
+            closeMenuAndUpdate()
         }//Для отмены фильтров
 
         confirmButton.setOnClickListener {
             val lang = languageArray[languageSpinner.selectedItemPosition]
             val sortBy = if (sortBySpinner.selectedItemPosition == 0) "Date" else ""
 
-            with(getPreferences().edit()) {
-                putString("LANGUAGE", lang)
-                apply()
-            }
+            saveLanguage(lang)
 
             CurrentFilter.filterForBingNews =
                 CurrentFilter.filterForBingNews.copy(
@@ -199,7 +236,7 @@ abstract class FilterViewHolder(private val itemVew: View, private val type: Typ
                 )
             Log.e("filterR", "${CurrentFilter.filterForBingNews}")
 
-            updateList()
+            closeMenuAndUpdate()
         }//Для применения фильтров
     }
 
@@ -218,24 +255,21 @@ abstract class FilterViewHolder(private val itemVew: View, private val type: Typ
                 language = getPreferences().getString("LANGUAGE", "")!!
             )
             searchBar.setQuery("", true)
-            updateList()
+            closeMenuAndUpdate()
 
         }
 
         confirmButton.setOnClickListener {
             val lang = languageArray[languageSpinner.selectedItemPosition]
 
-            with(getPreferences().edit()) {
-                putString("LANGUAGE", lang)
-                apply()
-            }
+            saveLanguage(lang)
 
             CurrentFilter.filterForNewscatcher =
                 CurrentFilter.filterForNewscatcher.copy(
                     query = "${searchBar.query}".ifBlank { "a" },
                     language = lang
                 )
-            updateList()
+            closeMenuAndUpdate()
         }
     }
 
@@ -250,7 +284,14 @@ abstract class FilterViewHolder(private val itemVew: View, private val type: Typ
 
             CurrentFilter.filterForStopGame =
                 FilterForStopGame(path = "https://rss.stopgame.ru/$type")
-            updateList()
+            closeMenuAndUpdate()
+        }
+    }
+
+    private fun saveLanguage(lang: String){
+        with(getPreferences().edit()) {
+            putString("LANGUAGE", lang)
+            apply()
         }
     }
 
@@ -274,6 +315,11 @@ abstract class FilterViewHolder(private val itemVew: View, private val type: Typ
 
     private fun getView(res: Int): View {
         return itemVew.findViewById(res)
+    }
+
+    private fun closeMenuAndUpdate(){
+        menu.visibility = View.GONE
+        updateList()
     }
 
     abstract fun getPreferences(): SharedPreferences

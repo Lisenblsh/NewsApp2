@@ -7,11 +7,11 @@ data class NewsBingModel(
 data class NewsBingArticle(
     val datePublished: String,
     val description: String,
-    val image: Image?,
+    val image: NewsBingImage?,
     val name: String,
     val url: String
 )
 
-data class Image(
+data class NewsBingImage(
     val contentUrl: String,
 )

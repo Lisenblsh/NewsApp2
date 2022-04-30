@@ -8,7 +8,6 @@ data class StopGameArticle (
     val title: String,
     val pubDate: String,
     val link: String,
-    val author: String,
     val description: String,
     val enclosure: Enclosure,
 )

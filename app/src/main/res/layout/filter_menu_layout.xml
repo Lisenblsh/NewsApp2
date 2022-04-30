@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:elevation="20dp"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <View
             android:id="@+id/for_close_menu"
@@ -186,6 +186,22 @@
                 android:layout_margin="5dp"
                 android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@id/type_rss_title" />
+
+            <TextView
+                android:id="@+id/category_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/category"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/type_rss_spinner" />
+
+            <Spinner
+                android:id="@+id/category_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_margin="5dp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/category_title" />
 
             <Button
                 android:id="@+id/confirm_button"

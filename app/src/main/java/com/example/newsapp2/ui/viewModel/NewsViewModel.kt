@@ -49,7 +49,7 @@ class NewsViewModel(
         @OptIn(ExperimentalPagingApi::class)
         return Pager(
             config = PagingConfig(
-                pageSize = NETWORK_PAGE_SIZE,
+                pageSize = if(typeNewsUrl == TypeNewsUrl.StopGame) 30 else NETWORK_PAGE_SIZE,
                 enablePlaceholders = true,
                 initialLoadSize = INITIAL_LOAD_SIZE
             ),
@@ -65,7 +65,7 @@ class NewsViewModel(
 
     companion object {
         const val NETWORK_PAGE_SIZE = 10
-        const val INITIAL_LOAD_SIZE = 2
+        const val INITIAL_LOAD_SIZE = 3
     }
 }
 

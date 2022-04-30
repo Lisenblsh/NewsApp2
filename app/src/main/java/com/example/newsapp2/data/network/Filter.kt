@@ -42,6 +42,21 @@ data class FilterForStopGame(
     val path: String = "https://rss.stopgame.ru/rss_news.xml" //rss_news.xml
 )
 
+data class FilterForNewsData(
+    val language: String = "en",
+    val category: Category = Category.Top,
+    val page: Int = 1
+)
+
+enum class Category {
+    Top, Business, Science, Technology, Sports, Health, Entertainment
+}
+
+data class FilterForWebSearch(
+    val page: Int = 1,
+    val pageSize: Int = 10
+)
+
 object CurrentFilter {
     var excludeDomains = ""
     var filterForNewsApi = FilterForNewsApi()
@@ -50,4 +65,6 @@ object CurrentFilter {
     var filterForBingNews = FilterForBingNews()
     var filterForNewscatcher = FilterForNewscather()
     var filterForStopGame = FilterForStopGame()
+    var filterForNewsData = FilterForNewsData()
+    var filterForWebSearch = FilterForWebSearch()
 }

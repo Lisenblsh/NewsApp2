@@ -1,10 +1,7 @@
 package com.example.newsapp2.tools
 
-import com.example.newsapp2.data.network.apiModels.NewscatcherArticle
-import com.example.newsapp2.data.network.apiModels.NewsApiArticle
 import com.example.newsapp2.data.network.TypeNewsUrl
-import com.example.newsapp2.data.network.apiModels.NewsBingArticle
-import com.example.newsapp2.data.network.apiModels.StopGameArticle
+import com.example.newsapp2.data.network.apiModels.*
 import com.example.newsapp2.data.room.ArticlesDB
 import com.example.newsapp2.data.room.TypeArticles
 import java.net.URL
@@ -14,7 +11,6 @@ class Mapper(private val typeNewsUrl: TypeNewsUrl, private val typeArticles: Typ
         ArticlesDB(
             0,
             article.clean_url,
-            article.author,
             article.title,
             article.summary,
             article.link,
@@ -28,7 +24,6 @@ class Mapper(private val typeNewsUrl: TypeNewsUrl, private val typeArticles: Typ
         ArticlesDB(
             0,
             getDomainFromUrl(article.url),
-            "",
             article.name,
             article.description,
             article.url,
@@ -42,7 +37,6 @@ class Mapper(private val typeNewsUrl: TypeNewsUrl, private val typeArticles: Typ
         ArticlesDB(
             0,
             getDomainFromUrl(article.url),
-            article.author,
             article.title,
             article.description,
             article.url,
@@ -55,12 +49,35 @@ class Mapper(private val typeNewsUrl: TypeNewsUrl, private val typeArticles: Typ
     fun mapStopGameToDB(article: StopGameArticle) = ArticlesDB(
         0,
         "stopgame.ru",
-        article.author,
         article.title,
         article.description,
         article.link,
         article.enclosure.link,
         convertDateToMillis(article.pubDate, typeNewsUrl),
+        typeArticles,
+        typeNewsUrl
+    )
+
+    fun mapNewsDataToDB(article: NewsdataArticle) = ArticlesDB(
+        0,
+        getDomainFromUrl(article.link),
+        article.title,
+        article.description,
+        article.link,
+        article.image_url,
+        convertDateToMillis(article.pubDate, typeNewsUrl),
+        typeArticles,
+        typeNewsUrl
+    )
+
+    fun mapWebSearchToDB(article: WebSearchArticle) = ArticlesDB(
+        0,
+        getDomainFromUrl(article.url),
+        article.title,
+        article.description,
+        article.url,
+        article.image.url,
+        convertDateToMillis(article.datePublished, typeNewsUrl),
         typeArticles,
         typeNewsUrl
     )

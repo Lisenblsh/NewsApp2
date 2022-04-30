@@ -7,7 +7,6 @@ data class NewsApiModel(
 )
 
 data class NewsApiArticle(
-    val author: String?,
     val title: String?,
     val description: String?,
     val url: String,

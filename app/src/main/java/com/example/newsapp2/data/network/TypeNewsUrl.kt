@@ -4,5 +4,7 @@ enum class TypeNewsUrl() {
     NewsApi,
     BingNews,
     Newscatcher,
-    StopGame
+    StopGame,
+    NewsData,
+    WebSearch
 }

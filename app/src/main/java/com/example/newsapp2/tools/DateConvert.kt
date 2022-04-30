@@ -10,6 +10,7 @@ val apiDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
 val dateFormat1 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ROOT)
 val dateFormat2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS'Z'", Locale.ROOT)
 val dateFormat3 = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT)
+val dateFormat4 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ROOT)
 val currentTimeZone = GregorianCalendar().timeZone.rawOffset
 
 
@@ -38,6 +39,12 @@ fun convertDateToMillis(date: String, typeNewsUrl: TypeNewsUrl): Long {
         }
         TypeNewsUrl.StopGame -> {
             dateFormat3.parse(date)?.time?.plus(currentTimeZone) ?: 0
+        }
+        TypeNewsUrl.NewsData -> {
+            dateFormat3.parse(date)?.time?.plus(currentTimeZone) ?: 0
+        }
+        TypeNewsUrl.WebSearch -> {
+            dateFormat4.parse(date)?.time?.plus(currentTimeZone) ?: 0
         }
     }
 }

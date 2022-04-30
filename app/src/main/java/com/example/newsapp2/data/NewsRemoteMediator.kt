@@ -91,6 +91,7 @@ class NewsRemoteMediator(
         page: Int,
         state: PagingState<Int, ArticlesDB>
     ): Pair<List<ArticlesDB>, Boolean> {
+        val mapper = Mapper(typeNewsUrl, typeArticles)
         val news = when (typeNewsUrl) {
             TypeNewsUrl.NewsApi -> {
                 val dbFun = DatabaseFun(newsDataBase)
@@ -116,7 +117,6 @@ class NewsRemoteMediator(
                         repository.getNewsApiResponse(CurrentFilter.filterForFavoriteNewsApi)
                     }
                 }
-                val mapper = Mapper(typeNewsUrl, typeArticles)
                 responseNewsApi.articles.map {
                     mapper.mapNewsApiToDB(it)
                 }
@@ -125,7 +125,6 @@ class NewsRemoteMediator(
                 CurrentFilter.filterForBingNews = CurrentFilter.filterForBingNews.copy(
                     offset = page * CurrentFilter.filterForBingNews.count
                 )
-                val mapper = Mapper(typeNewsUrl)
                 repository.getBingNewsResponse(CurrentFilter.filterForBingNews).value.map {
                     mapper.mapBingNewsToDB(it)
                 }
@@ -135,15 +134,30 @@ class NewsRemoteMediator(
                     page = page,
                     pageSize = state.config.pageSize
                 )
-                val mapper = Mapper(typeNewsUrl)
                 repository.getNewscatcherResponse(CurrentFilter.filterForNewscatcher).articles.map {
                     mapper.mapNewscatcherToDB(it)
                 }
             }
             TypeNewsUrl.StopGame -> {
-                val mapper = Mapper(typeNewsUrl)
                 repository.getStopGameResponse(CurrentFilter.filterForStopGame).items.map {
                     mapper.mapStopGameToDB(it)
+                }
+            }
+            TypeNewsUrl.NewsData -> {
+                CurrentFilter.filterForNewsData = CurrentFilter.filterForNewsData.copy(
+                    page = page
+                )
+                repository.getNewsdataResponse(CurrentFilter.filterForNewsData).results.map {
+                    mapper.mapNewsDataToDB(it)
+                }
+            }
+            TypeNewsUrl.WebSearch -> {
+                CurrentFilter.filterForWebSearch = CurrentFilter.filterForWebSearch.copy(
+                    page = page,
+                    pageSize = state.config.pageSize
+                )
+                repository.getWebSearchResponse(CurrentFilter.filterForWebSearch).value.map {
+                    mapper.mapWebSearchToDB(it)
                 }
             }
         }

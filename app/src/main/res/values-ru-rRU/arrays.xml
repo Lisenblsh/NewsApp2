@@ -52,4 +52,14 @@
         <item>Игровые новости</item>
         <item>Статьи</item>
     </string-array>
+
+    <string-array name="newsdata_category">
+        <item>Топ</item>
+        <item>Бизнес</item>
+        <item>Наука</item>
+        <item>Технологии</item>
+        <item>Спорт</item>
+        <item>Здоровье</item>
+        <item>Развлечения</item>
+    </string-array>
 </resources>

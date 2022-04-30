@@ -11,6 +11,8 @@
         <item>Bing News Search API (；′⌒`)</item>
         <item>Newscatcherapi</item>
         <item>StopGame</item>
+        <item>NewsData</item>
+        <item>WebSearch</item>
     </string-array>
 
     <string-array name="news_lang_name_array">
@@ -99,5 +101,15 @@
     <string-array name="stopgame_type_rss">
         <item>Gaming News</item>
         <item>Articles</item>
+    </string-array>
+
+    <string-array name="newsdata_category">
+        <item>Top</item>
+         <item>Business</item>
+         <item>Science</item>
+         <item>Technology</item>
+         <item>Sports</item>
+         <item>Health</item>
+         <item>Entertainment</item>
     </string-array>
 </resources>

@@ -5,7 +5,6 @@ data class NewscatcherModel(
 )
 
 data class NewscatcherArticle(
-    val author: String,
     val clean_url: String,
     val link: String,
     val media: String,
