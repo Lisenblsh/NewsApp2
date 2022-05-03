@@ -24,6 +24,7 @@ class MainFragment : Fragment() {
         binding.bindViewPager()
         return binding.root
     }
+
     private fun FragmentMainBinding.bindViewPager() {
         val fragmentList = arrayListOf(
             NewsFragment(),
@@ -60,7 +61,7 @@ class MainFragment : Fragment() {
         }.attach()
     }
 
-    private fun setIcon(icon: Int, imageView: ImageView){
+    private fun setIcon(icon: Int, imageView: ImageView) {
         Picasso.get()
             .load(icon)
             .into(imageView)

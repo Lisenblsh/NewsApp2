@@ -28,12 +28,15 @@ interface NewsDao {
     //Получить новость по ID
     @Query("select* from articles where typeArticles = :type and idArticles = :idArticles")
     fun getArticlesData(type: TypeArticles, idArticles: Long): ArticlesDB
+
     //Получить новость по ID
     @Query("select* from articles where idArticles = :idArticles")
     suspend fun getArticlesData(idArticles: Long): ArticlesDB
 
-    @Query("select* from articles where source = :source and :url = url " +
-            "and :publishedAt = publishedAt and :typeArticles = typeArticles")
+    @Query(
+        "select* from articles where source = :source and :url = url " +
+                "and :publishedAt = publishedAt and :typeArticles = typeArticles"
+    )
     suspend fun getArticlesData(
         source: String,
         url: String,
@@ -42,8 +45,10 @@ interface NewsDao {
     ): ArticlesDB?
 
     //Удалить одну новость из списка избраных
-    @Query("delete from articles where :source = source and :url = url " +
-            "and :publishedAt = publishedAt and :typeArticles = typeArticles")
+    @Query(
+        "delete from articles where :source = source and :url = url " +
+                "and :publishedAt = publishedAt and :typeArticles = typeArticles"
+    )
     suspend fun deleteLikedArticle(
         source: String,
         url: String,
@@ -67,8 +72,6 @@ interface NewsDao {
 
     @Query("DELETE FROM remote_keys where typeArticles = :type and typeNewsUrl = :typeNewsUrl")
     suspend fun clearRemoteKeys(type: TypeArticles, typeNewsUrl: TypeNewsUrl)
-
-
 
 
     //Sources

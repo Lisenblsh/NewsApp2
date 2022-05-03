@@ -111,10 +111,10 @@ class RegularNewsFragment : Fragment() {
     }
 
     private fun FragmentRegularNewsBinding.initFilterMenu() {
-        if (typeNewsUrl != TypeNewsUrl.WebSearch){
+        if (typeNewsUrl != TypeNewsUrl.WebSearch) {
             val view = LayoutInflater.from(context)
                 .inflate(R.layout.filter_menu_layout, root, false)
-            object : FilterViewHolder(view, typeNewsUrl){
+            object : FilterViewHolder(view, typeNewsUrl) {
 
                 override fun getPreferences(): SharedPreferences {
                     return pref

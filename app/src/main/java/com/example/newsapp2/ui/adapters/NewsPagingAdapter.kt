@@ -13,7 +13,8 @@ import com.example.newsapp2.data.room.ArticlesDB
 import com.example.newsapp2.tools.convertToDeviceDate
 import com.squareup.picasso.Picasso
 
-class NewsPagingAdapter : PagingDataAdapter<ArticlesDB, RecyclerView.ViewHolder>(ARTICLES_COMPARATOR) {
+class NewsPagingAdapter :
+    PagingDataAdapter<ArticlesDB, RecyclerView.ViewHolder>(ARTICLES_COMPARATOR) {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val news = getItem(position)
         (holder as NewsViewHolder).bind(news)

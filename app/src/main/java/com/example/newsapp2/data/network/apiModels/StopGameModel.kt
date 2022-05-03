@@ -4,7 +4,7 @@ data class StopGameModel(
     val items: List<StopGameArticle>
 )
 
-data class StopGameArticle (
+data class StopGameArticle(
     val title: String,
     val pubDate: String,
     val link: String,
@@ -12,6 +12,6 @@ data class StopGameArticle (
     val enclosure: Enclosure,
 )
 
-data class Enclosure (
+data class Enclosure(
     val link: String
 )

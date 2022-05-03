@@ -48,27 +48,27 @@ class HomeFragment : Fragment() {
         newsList.adapter = newsAdapter
         newsList.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-                override fun onMove(
-                    recyclerView: RecyclerView,
-                    viewHolder: RecyclerView.ViewHolder,
-                    target: RecyclerView.ViewHolder
-                ): Boolean {
-                    return false
-                }
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
 
-                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                    val position = viewHolder.adapterPosition
-                    when (direction) {
-                        ItemTouchHelper.LEFT -> {
-                            val deletedNews = newsAdapter.currentList[position]
-                            lifecycleScope.launch {
-                                databaseFun.deleteLikedArticle(deletedNews)
-                                addElementToAdapter()
-                            }
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                when (direction) {
+                    ItemTouchHelper.LEFT -> {
+                        val deletedNews = newsAdapter.currentList[position]
+                        lifecycleScope.launch {
+                            databaseFun.deleteLikedArticle(deletedNews)
+                            addElementToAdapter()
                         }
                     }
                 }
             }
+        }
         ).attachToRecyclerView(newsList)
         lifecycleScope.launch {
             addElementToAdapter()

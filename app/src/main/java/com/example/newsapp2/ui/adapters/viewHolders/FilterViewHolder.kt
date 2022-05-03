@@ -288,7 +288,7 @@ abstract class FilterViewHolder(private val itemVew: View, private val type: Typ
         }
     }
 
-    private fun saveLanguage(lang: String){
+    private fun saveLanguage(lang: String) {
         with(getPreferences().edit()) {
             putString("LANGUAGE", lang)
             apply()
@@ -317,7 +317,7 @@ abstract class FilterViewHolder(private val itemVew: View, private val type: Typ
         return itemVew.findViewById(res)
     }
 
-    private fun closeMenuAndUpdate(){
+    private fun closeMenuAndUpdate() {
         menu.visibility = View.GONE
         updateList()
     }

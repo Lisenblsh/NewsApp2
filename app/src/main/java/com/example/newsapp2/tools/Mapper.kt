@@ -6,7 +6,10 @@ import com.example.newsapp2.data.room.ArticlesDB
 import com.example.newsapp2.data.room.TypeArticles
 import java.net.URL
 
-class Mapper(private val typeNewsUrl: TypeNewsUrl, private val typeArticles: TypeArticles = TypeArticles.RegularNews) {
+class Mapper(
+    private val typeNewsUrl: TypeNewsUrl,
+    private val typeArticles: TypeArticles = TypeArticles.RegularNews
+) {
     fun mapNewscatcherToDB(article: NewscatcherArticle) =
         ArticlesDB(
             0,

@@ -19,7 +19,7 @@ class DatabaseFun(private val dataBase: NewsDataBase) {
         }
     }
 
-    suspend fun deleteLikedArticle(article: ArticlesDB){
+    suspend fun deleteLikedArticle(article: ArticlesDB) {
         dataBase.withTransaction {
             dataBase.newsListDao().deleteLikedArticle(article)
         }
@@ -34,7 +34,7 @@ class DatabaseFun(private val dataBase: NewsDataBase) {
     }
 
     suspend fun deleteSource(type: TypeSource, list: List<String>) {
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO) {
             dataBase.withTransaction {
                 list.forEach {
                     dataBase.newsListDao().deleteSources(it, type)

@@ -60,7 +60,7 @@ interface RetrofitService {
     suspend fun getWebSearchResponse(
         @Query("pageNumber") pageNumber: Int,
         @Query("pageSize") pageSize: Int
-    ) : WebSearchModel
+    ): WebSearchModel
 
     companion object {
         private const val BASE_URL_NEWSAPI = "https://newsapi.org/v2/"
@@ -68,7 +68,8 @@ interface RetrofitService {
         private const val BASE_URL_NEWSCATHER = "https://newscatcher.p.rapidapi.com/v1/"
         private const val BASE_URL_STOPGAME = "https://api.rss2json.com/v1/"
         private const val BASE_URL_NEWSDATA = "https://newsdata2.p.rapidapi.com/"
-        private const val BASE_URL_WEBSEARCH = "https://contextualwebsearch-websearch-v1.p.rapidapi.com/api/search/"
+        private const val BASE_URL_WEBSEARCH =
+            "https://contextualwebsearch-websearch-v1.p.rapidapi.com/api/search/"
 
         fun create(typeNewsUrl: TypeNewsUrl): RetrofitService {
             var headerName = "X-RapidAPI-Key"

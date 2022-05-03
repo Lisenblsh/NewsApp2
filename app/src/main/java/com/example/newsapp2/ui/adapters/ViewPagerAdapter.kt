@@ -6,7 +6,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
 
-class ViewPagerAdapter(list: ArrayList<Fragment>, fragmentManager: FragmentManager, lifecycle: Lifecycle) :
+class ViewPagerAdapter(
+    list: ArrayList<Fragment>,
+    fragmentManager: FragmentManager,
+    lifecycle: Lifecycle
+) :
     FragmentStateAdapter(fragmentManager, lifecycle) {
 
     private val fragmentList = list
