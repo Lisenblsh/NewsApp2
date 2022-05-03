@@ -2,7 +2,6 @@ package com.example.newsapp2.ui.fragment
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -22,11 +21,7 @@ import com.example.newsapp2.data.room.TypeSource
 import com.example.newsapp2.databinding.FragmentNewsWebViewBinding
 import com.example.newsapp2.tools.LogicForWebView
 import com.squareup.picasso.Picasso
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
 
 
 class NewsWebViewFragment : Fragment() {

@@ -1,13 +1,15 @@
 package com.example.newsapp2.data.network.retrofit
 
 import com.example.newsapp2.BuildConfig
-import com.example.newsapp2.data.network.*
+import com.example.newsapp2.data.network.Category
+import com.example.newsapp2.data.network.Freshness
+import com.example.newsapp2.data.network.SafeSearch
+import com.example.newsapp2.data.network.TypeNewsUrl
 import com.example.newsapp2.data.network.apiModels.*
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface RetrofitService {

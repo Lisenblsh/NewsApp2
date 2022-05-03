@@ -1,6 +1,5 @@
 package com.example.newsapp2.data
 
-import android.database.CursorIndexOutOfBoundsException
 import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
