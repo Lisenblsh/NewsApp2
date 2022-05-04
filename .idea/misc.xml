@@ -11,6 +11,7 @@
         <entry key="..\:/AndroidSProg/NewsApp22/app/src/main/res/drawable/ic_baseline_block_24.xml" value="0.1075" />
         <entry key="..\:/AndroidSProg/NewsApp22/app/src/main/res/drawable/ic_baseline_delete_outline_24.xml" value="0.1785" />
         <entry key="..\:/AndroidSProg/NewsApp22/app/src/main/res/drawable/ic_baseline_keyboard_arrow_up_24.xml" value="0.178" />
+        <entry key="..\:/AndroidSProg/NewsApp22/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.143" />
         <entry key="..\:/AndroidSProg/NewsApp22/app/src/main/res/drawable/tab_indicator.xml" value="0.1425" />
         <entry key="..\:/AndroidSProg/NewsApp22/app/src/main/res/layout/activity_main.xml" value="0.2708333333333333" />
         <entry key="..\:/AndroidSProg/NewsApp22/app/src/main/res/layout/filter_menu_layout.xml" value="0.264" />
@@ -32,6 +33,7 @@
         <entry key="..\:/AndroidSProg/NewsApp22/app/src/main/res/layout/tab_item.xml" value="0.27447916666666666" />
         <entry key="..\:/AndroidSProg/NewsApp22/app/src/main/res/layout/text_footer.xml" value="0.27447916666666666" />
         <entry key="..\:/AndroidSProg/NewsApp22/app/src/main/res/layout/theme_setting_layout.xml" value="0.27447916666666666" />
+        <entry key="..\:/AndroidSProg/NewsApp22/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.143" />
       </map>
     </option>
   </component>

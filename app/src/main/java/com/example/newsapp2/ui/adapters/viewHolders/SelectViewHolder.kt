@@ -7,6 +7,7 @@ import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.newsapp2.R
+import com.example.newsapp2.data.network.TypeNewsUrl
 import com.example.newsapp2.tools.TypeSetting
 
 abstract class SelectViewHolder(private val itemView: View, private val type: TypeSetting) {
@@ -15,27 +16,28 @@ abstract class SelectViewHolder(private val itemView: View, private val type: Ty
     private val title: TextView = itemView.findViewById(R.id.title)
 
     fun bind() {
-        val array: Int
+        val array: ArrayList<String> = arrayListOf()
         val key: String
 
         when (type) {
             TypeSetting.Theme -> {
-                array = R.array.app_theme_array
+                array.addAll(itemView.resources.getStringArray(R.array.app_theme_array))
                 key = "THEME_ID"
                 title.text = itemView.resources.getString(R.string.themes)
             }
             TypeSetting.ApiSource -> {
-                array = R.array.api_source
+                TypeNewsUrl.values().forEach {
+                    array.add(it.title) }
                 key = "TYPE_NEWS_URL"
                 title.text = itemView.resources.getString(R.string.sources)
             }
             else -> return
         }
 
-        listView.adapter = ArrayAdapter.createFromResource(
+        listView.adapter = ArrayAdapter(
             itemView.context,
-            array,
-            android.R.layout.simple_list_item_single_choice
+            android.R.layout.simple_list_item_single_choice,
+            array
         )
         listView.choiceMode = ListView.CHOICE_MODE_SINGLE
 

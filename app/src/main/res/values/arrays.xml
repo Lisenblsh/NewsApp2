@@ -6,15 +6,6 @@
         <item>Dark</item>
     </string-array>
 
-    <string-array name="api_source">
-        <item>Newsapi</item>
-        <item>Bing News Search API (；′⌒`)</item>
-        <item>Newscatcherapi</item>
-        <item>StopGame</item>
-        <item>NewsData</item>
-        <item>WebSearch</item>
-    </string-array>
-
     <string-array name="news_lang_name_array">
         <item>All languages</item>
         <item>English</item>
