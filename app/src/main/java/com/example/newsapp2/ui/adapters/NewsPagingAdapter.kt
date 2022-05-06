@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapp2.R
 import com.example.newsapp2.data.room.ArticlesDB
+import com.example.newsapp2.tools.ImageFun
 import com.example.newsapp2.tools.convertToDeviceDate
-import com.squareup.picasso.Picasso
 
 class NewsPagingAdapter :
     PagingDataAdapter<ArticlesDB, RecyclerView.ViewHolder>(ARTICLES_COMPARATOR) {
@@ -98,17 +98,10 @@ class NewsPagingAdapter :
 
             var imageVisibility = View.GONE
             if (news.urlToImage != null) {
-                setImage(news.urlToImage)
+                ImageFun().setImage(news.urlToImage, image)
                 imageVisibility = View.VISIBLE
             }
             image.visibility = imageVisibility
-        }
-
-        private fun setImage(url: String) {
-            Picasso.get()
-                .load(url)
-                .into(image)
-
         }
     }
 }
