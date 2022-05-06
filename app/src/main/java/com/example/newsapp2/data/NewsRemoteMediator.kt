@@ -1,6 +1,5 @@
 package com.example.newsapp2.data
 
-import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -13,7 +12,6 @@ import com.example.newsapp2.data.room.NewsDataBase
 import com.example.newsapp2.data.room.RemoteKeys
 import com.example.newsapp2.data.room.TypeArticles
 import com.example.newsapp2.tools.DatabaseFun
-import com.example.newsapp2.tools.Mapper
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -51,10 +49,8 @@ class NewsRemoteMediator(
             }
         }
 
-        Log.e("pageS", state.config.pageSize.toString())
-
         try {
-            val (news, endOfPaginationReached) = getNewsList(page, state)
+            val (news, endOfPaginationReached) = getNewsList(page, state.config.pageSize)
 
             newsDataBase.withTransaction {
                 if (loadType == LoadType.REFRESH) {
@@ -88,78 +84,30 @@ class NewsRemoteMediator(
 
     private suspend fun getNewsList(
         page: Int,
-        state: PagingState<Int, ArticlesDB>
+        pageSize: Int
     ): Pair<List<ArticlesDB>, Boolean> {
-        val mapper = Mapper(typeNewsUrl, typeArticles)
-        val news = when (typeNewsUrl) {
-            TypeNewsUrl.NewsApi -> {
-                val dbFun = DatabaseFun(newsDataBase)
-                val responseNewsApi = when (typeArticles) {
-                    TypeArticles.RegularNews -> {
-                        CurrentFilter.excludeDomains = dbFun.getExcludeDomains()
-                        CurrentFilter.filterForNewsApi =
-                            CurrentFilter.filterForNewsApi.copy(
-                                page = page,
-                                pageSize = state.config.pageSize,
-                                excludeDomains = CurrentFilter.excludeDomains
-                            )
-                        repository.getNewsApiResponse(CurrentFilter.filterForNewsApi)
-                    }
-                    else -> {
-                        CurrentFilter.newsDomains = dbFun.getNewsDomains()
-                        CurrentFilter.filterForFavoriteNewsApi =
-                            CurrentFilter.filterForFavoriteNewsApi.copy(
-                                page = page,
-                                pageSize = state.config.pageSize,
-                                domains = CurrentFilter.newsDomains
-                            )
-                        repository.getNewsApiResponse(CurrentFilter.filterForFavoriteNewsApi)
-                    }
-                }
-                responseNewsApi.articles.map {
-                    mapper.mapNewsApiToDB(it)
-                }
-            }
-            TypeNewsUrl.BingNews -> {
-                CurrentFilter.filterForBingNews = CurrentFilter.filterForBingNews.copy(
-                    offset = page * CurrentFilter.filterForBingNews.count
-                )
-                repository.getBingNewsResponse(CurrentFilter.filterForBingNews).value.map {
-                    mapper.mapBingNewsToDB(it)
-                }
-            }
-            TypeNewsUrl.Newscatcher -> {
-                CurrentFilter.filterForNewscatcher = CurrentFilter.filterForNewscatcher.copy(
+        val dbFun = DatabaseFun(newsDataBase)
+
+        val news = if (typeArticles == TypeArticles.RegularNews) {
+            val excludeDomain =
+                if (typeNewsUrl == TypeNewsUrl.NewsApi) dbFun.getExcludeDomains() else ""
+            CurrentFilter.filter =
+                CurrentFilter.filter.copy(
+                    excludeDomains = excludeDomain,
                     page = page,
-                    pageSize = state.config.pageSize
+                    pageSize = pageSize
                 )
-                repository.getNewscatcherResponse(CurrentFilter.filterForNewscatcher).articles.map {
-                    mapper.mapNewscatcherToDB(it)
-                }
-            }
-            TypeNewsUrl.StopGame -> {
-                repository.getStopGameResponse(CurrentFilter.filterForStopGame).items.map {
-                    mapper.mapStopGameToDB(it)
-                }
-            }
-            TypeNewsUrl.NewsData -> {
-                CurrentFilter.filterForNewsData = CurrentFilter.filterForNewsData.copy(
-                    page = page
-                )
-                repository.getNewsdataResponse(CurrentFilter.filterForNewsData).results.map {
-                    mapper.mapNewsDataToDB(it)
-                }
-            }
-            TypeNewsUrl.WebSearch -> {
-                CurrentFilter.filterForWebSearch = CurrentFilter.filterForWebSearch.copy(
+            repository.getNewsLisApi(CurrentFilter.filter)
+        } else {
+            CurrentFilter.filterFav =
+                CurrentFilter.filterFav.copy(
+                    domains = dbFun.getNewsDomains(),
                     page = page,
-                    pageSize = state.config.pageSize
+                    pageSize = pageSize
                 )
-                repository.getWebSearchResponse(CurrentFilter.filterForWebSearch).value.map {
-                    mapper.mapWebSearchToDB(it)
-                }
-            }
+            repository.getNewsLisApi(CurrentFilter.filterFav).map { it.copy(typeArticles = TypeArticles.FollowNews) }
         }
+
         val endOfPaginationReached =
             if (typeNewsUrl == TypeNewsUrl.StopGame) true else news.isEmpty()
         return Pair(news, endOfPaginationReached)

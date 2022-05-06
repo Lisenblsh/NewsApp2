@@ -90,7 +90,7 @@
 
 
             <TextView
-                android:id="@+id/where_search_title"
+                android:id="@+id/search_in_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/search_in"
@@ -98,12 +98,12 @@
                 app:layout_constraintTop_toBottomOf="@id/search_bar" />
 
             <Spinner
-                android:id="@+id/where_search_spinner"
+                android:id="@+id/search_in_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:layout_margin="5dp"
                 android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/where_search_title" />
+                app:layout_constraintTop_toBottomOf="@id/search_in_title" />
 
             <TextView
                 android:id="@+id/sort_by_title"
@@ -111,7 +111,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/sort_by"
                 android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/where_search_spinner" />
+                app:layout_constraintTop_toBottomOf="@id/search_in_spinner" />
 
             <Spinner
                 android:id="@+id/sort_by_spinner"

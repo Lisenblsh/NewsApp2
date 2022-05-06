@@ -48,7 +48,7 @@ class SourceViewHolder(private val itemView: View, private val type: TypeSource)
             }
 
             button.setOnClickListener {
-                CoroutineScope(Dispatchers.IO).launch {
+                CoroutineScope(Dispatchers.Main).launch {
                     val list2: ArrayList<String> = arrayListOf()
                     listView.checkedItemPositions.forEach { key, _ ->
                         list2.add(list[key])

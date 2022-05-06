@@ -27,7 +27,6 @@ import kotlinx.coroutines.launch
 class NewsWebViewFragment : Fragment() {
 
     private lateinit var binding: FragmentNewsWebViewBinding
-
     private lateinit var logic: LogicForWebView
 
     private var isMenuClosed = true

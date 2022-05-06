@@ -10,8 +10,8 @@ import com.example.newsapp2.data.room.NewsDataBase
 import com.example.newsapp2.ui.viewModel.NewsViewModelFactory
 
 object Injection {
-    private fun provideNewsRepository(typeNewsUrl: TypeNewsUrl): NewsRepository {
-        return NewsRepository(RetrofitService.create(typeNewsUrl))
+    private fun provideNewsRepository(): NewsRepository {
+        return NewsRepository(RetrofitService.create())
     }
 
     fun provideViewModelFactory(
@@ -21,7 +21,7 @@ object Injection {
     ): ViewModelProvider.Factory {
         return NewsViewModelFactory(
             owner,
-            provideNewsRepository(typeNewsUrl),
+            provideNewsRepository(),
             typeNewsUrl,
             NewsDataBase.getInstance(context)
         )

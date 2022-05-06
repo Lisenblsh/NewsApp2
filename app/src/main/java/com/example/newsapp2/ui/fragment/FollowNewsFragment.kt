@@ -25,7 +25,6 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 class FollowNewsFragment : Fragment() {
-
     private lateinit var binding: FragmentFollowNewsBinding
     private lateinit var viewModel: NewsViewModel
 

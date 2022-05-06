@@ -1,6 +1,5 @@
 package com.example.newsapp2.ui.viewModel
 
-import android.util.Log
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -19,27 +18,18 @@ import kotlinx.coroutines.flow.Flow
 
 class NewsViewModel(
     private val newsRepository: NewsRepository,
-    private val typeNewsUrl: TypeNewsUrl,
+    typeNewsUrl: TypeNewsUrl,
     private val dataBase: NewsDataBase
 ) : ViewModel() {
-    lateinit var pagingDataRegularNewsFlow: Flow<PagingData<ArticlesDB>>
+    val pagingDataRegularNewsFlow: Flow<PagingData<ArticlesDB>>
     val pagingDataFavoriteNewsFlow: Flow<PagingData<ArticlesDB>>
 
     init {
-        getCurrentNews()
-        pagingDataFavoriteNewsFlow = getFavoriteNews()
-    }
-
-
-    fun getCurrentNews() {
-        Log.e("type", "${typeNewsUrl}")
         pagingDataRegularNewsFlow = getNews(TypeArticles.RegularNews, typeNewsUrl)
+        pagingDataFavoriteNewsFlow = getNews(TypeArticles.FollowNews, TypeNewsUrl.NewsApi)
     }
 
-    private fun getFavoriteNews(): Flow<PagingData<ArticlesDB>> =
-        getNews(TypeArticles.FollowNews, TypeNewsUrl.NewsApi)
-
-    fun getNews(
+    private fun getNews(
         typeArticles: TypeArticles,
         typeNewsUrl: TypeNewsUrl
     ): Flow<PagingData<ArticlesDB>> {

@@ -14,7 +14,9 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapp2.R
-import com.example.newsapp2.data.network.*
+import com.example.newsapp2.data.network.CurrentFilter
+import com.example.newsapp2.data.network.Filter
+import com.example.newsapp2.data.network.TypeNewsUrl
 import com.example.newsapp2.databinding.FragmentRegularNewsBinding
 import com.example.newsapp2.di.Injection
 import com.example.newsapp2.tools.showWebView
@@ -147,15 +149,8 @@ class RegularNewsFragment : Fragment() {
             }
         }//проверка на наличия дефолтного языка
         val lang = pref.getString("LANGUAGE", "")!!
-        CurrentFilter.filterForNewsApi =
-            FilterForNewsApi(language = lang)
-        CurrentFilter.filterForBingNews =
-            FilterForBingNews(language = lang)
-        CurrentFilter.filterForNewscatcher =
-            FilterForNewscather(language = lang)
-        CurrentFilter.filterForNewsData =
-            FilterForNewsData(language = lang)
-        typeNewsUrl = TypeNewsUrl.values()[pref.getInt("TYPE_NEWS_URL", 0)]
+        typeNewsUrl = TypeNewsUrl.values()[pref.getInt("TYPE_NEWS_URL", 1)]
+        CurrentFilter.filter = Filter(apiName = typeNewsUrl, lang = lang)
 
     }//Вытаскиваю сохраненный язык из настроек
 

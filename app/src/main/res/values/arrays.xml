@@ -38,7 +38,7 @@
         <item>se</item>
         <item>zh</item>
     </string-array>
-    
+
     <string-array name="news_sort_by_for_api">
         <item>publishedAt</item>
         <item>relevancy</item>
@@ -84,7 +84,7 @@
         <item>Week</item>
         <item>Month</item>
     </string-array>
-    
+
     <string-array name="stopgame_type_rss_api">
         <item>rss_news.xml</item>
         <item>articles.xml</item>
@@ -96,11 +96,11 @@
 
     <string-array name="newsdata_category">
         <item>Top</item>
-         <item>Business</item>
-         <item>Science</item>
-         <item>Technology</item>
-         <item>Sports</item>
-         <item>Health</item>
-         <item>Entertainment</item>
+        <item>Business</item>
+        <item>Science</item>
+        <item>Technology</item>
+        <item>Sports</item>
+        <item>Health</item>
+        <item>Entertainment</item>
     </string-array>
 </resources>

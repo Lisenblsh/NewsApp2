@@ -1,6 +1,5 @@
 package com.example.newsapp2.tools
 
-import android.util.Log
 import androidx.room.withTransaction
 import com.example.newsapp2.data.room.ArticlesDB
 import com.example.newsapp2.data.room.NewsDataBase
@@ -13,7 +12,6 @@ class DatabaseFun(private val dataBase: NewsDataBase) {
     suspend fun getLikedArticlesList(): List<ArticlesDB> {
         return dataBase.withTransaction {
             dataBase.newsListDao().getArticlesDataLiked(TypeArticles.LikedNews).ifEmpty {
-                Log.e("empty", "isEmpty")
                 emptyList()
             }
         }

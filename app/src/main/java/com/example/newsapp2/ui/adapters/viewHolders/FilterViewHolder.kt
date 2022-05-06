@@ -22,8 +22,8 @@ abstract class FilterViewHolder(private val itemVew: View, private val type: Typ
     private val languageTitle = getView(R.id.language_title) as TextView
     private val languageSpinner = getView(R.id.language_spinner) as Spinner
     private val searchBar = getView(R.id.search_bar) as androidx.appcompat.widget.SearchView
-    private val whereSearchTitle = getView(R.id.where_search_title) as TextView
-    private val whereSearchSpinner = getView(R.id.where_search_spinner) as Spinner
+    private val searchInTitle = getView(R.id.search_in_title) as TextView
+    private val searchInSpinner = getView(R.id.search_in_spinner) as Spinner
     private val sortByTitle = getView(R.id.sort_by_title) as TextView
     private val sortBySpinner = getView(R.id.sort_by_spinner) as Spinner
     private val dateText = getView(R.id.date_text) as TextView
@@ -65,71 +65,78 @@ abstract class FilterViewHolder(private val itemVew: View, private val type: Typ
         )
         when (type) {
             TypeNewsUrl.NewsApi -> {
-                initNewsApi()
                 showNewsApiFilter()
             }
             TypeNewsUrl.BingNews -> {
-                initBingNews()
                 showBingNewsFilter()
             }
-            TypeNewsUrl.Newscatcher -> {
-                initNewscather()
-                showNewscatherFilter()
-            }
             TypeNewsUrl.StopGame -> {
-                initStopGame()
                 showStopGameFilter()
             }
             TypeNewsUrl.NewsData -> {
-                initNewsData()
                 showNewsDataFilter()
             }
             else -> {
 
             }
         }
-    }
-
-    private fun initNewsData() {
-        categorySpinner.adapter = getSpinnerAdapter(R.array.newsdata_category)
-
-        resetButton.setOnClickListener {
-            CurrentFilter.filterForNewsData =
-                FilterForNewsData(
-                    language = getPreferences().getString("LANGUAGE", "")!!
-                )
-            closeMenuAndUpdate()
-        }
-
         confirmButton.setOnClickListener {
+            saveFilter()
+            closeMenuAndUpdate()
+        }
+        resetButton.setOnClickListener {
             val lang = languageArray[languageSpinner.selectedItemPosition]
-            CurrentFilter.filterForNewsData =
-                CurrentFilter.filterForNewsData.copy(
-                    language = lang,
-                    category = Category.values()[categorySpinner.selectedItemPosition]
-                )
 
-            saveLanguage(lang)
-
-            Log.e("lang", "${CurrentFilter.filterForNewsData}")
-
+            CurrentFilter.filter = Filter(
+                apiName = CurrentFilter.filter.apiName,
+                lang = lang
+            )
             closeMenuAndUpdate()
         }
     }
 
-    private fun showNewsDataFilter() {
-        searchBar.visibility = View.GONE
+    private fun saveFilter() {
+        val safeSearchPosition = safeSearchSpinner.selectedItemPosition
+        val safeSearch =
+            if (safeSearchPosition == -1) SafeSearch.Off else SafeSearch.values()[safeSearchPosition]
+        val freshnessPosition = freshnessSpinner.selectedItemPosition
+        val freshness =
+            if (freshnessPosition == -1) Freshness.Day else Freshness.values()[freshnessPosition]
+        val categoryPosition = categorySpinner.selectedItemPosition
+        val category =
+            if (categoryPosition == -1) Category.Top else Category.values()[categoryPosition]
+        val rssTypePosition = rssTypeSpinner.selectedItemPosition
+        val rssType =
+            if(rssTypePosition == -1) "" else rssTypeArray[rssTypePosition]
 
-        categoryTitle.isVisible = true
-        categorySpinner.isVisible = true
+        val lang = languageArray[languageSpinner.selectedItemPosition]
+        saveLanguage(lang)
+
+        CurrentFilter.filter = Filter(
+            apiName = CurrentFilter.filter.apiName,
+            q = "${searchBar.query}",
+            lang = lang,
+            sortBy = ifNoInitSpinner(sortBySpinner.selectedItemPosition, sortByArray),
+            searchIn = ifNoInitSpinner(searchInSpinner.selectedItemPosition, searchInArray),
+            from = dateFrom,
+            to = dateTo,
+            excludeDomains = CurrentFilter.filter.excludeDomains,
+            safeSearch = safeSearch,
+            freshness = freshness,
+            category = category,
+            rssFeed = rssType
+        )
+    }
+
+    private fun ifNoInitSpinner(position: Int, array: Array<String>): String {
+        return if (position == -1) ""
+        else array[position]
     }
 
     private var dateFrom = ""
     private var dateTo = ""
-
-
-    private fun initNewsApi() {
-        whereSearchSpinner.adapter = getSpinnerAdapter(R.array.news_search_in)
+    private fun showNewsApiFilter() {
+        searchInSpinner.adapter = getSpinnerAdapter(R.array.news_search_in)
         sortBySpinner.adapter = getSpinnerAdapter(R.array.news_sort_by)
 
         dateButton.setOnClickListener {
@@ -154,49 +161,16 @@ abstract class FilterViewHolder(private val itemVew: View, private val type: Typ
             }
         }
 
-        resetButton.setOnClickListener {
-            CurrentFilter.filterForNewsApi = FilterForNewsApi(
-                language = getPreferences().getString("LANGUAGE", "")!!,
-                excludeDomains = CurrentFilter.excludeDomains
-            )
-            searchBar.setQuery("", true)
-
-            whereSearchSpinner.setSelection(0)
-            sortBySpinner.setSelection(0)
-
-            dateText.text = ""
-            closeMenuAndUpdate()
-        }//Для отмены фильтров
-
-        confirmButton.setOnClickListener {
-            val lang = languageArray[languageSpinner.selectedItemPosition]
-
-            saveLanguage(lang)
-
-            CurrentFilter.filterForNewsApi =
-                CurrentFilter.filterForNewsApi.copy(
-                    language = lang,
-                    query = "${searchBar.query}".ifBlank { "a" },
-                    sortBy = sortByArray[sortBySpinner.selectedItemPosition],
-                    searchIn = searchInArray[whereSearchSpinner.selectedItemPosition],
-                    from = dateFrom,
-                    to = dateTo
-                )
-            closeMenuAndUpdate()
-        }//Для применения фильтров
-    }
-
-    private fun showNewsApiFilter() {
         sortByTitle.isVisible = true
         sortBySpinner.isVisible = true
-        whereSearchTitle.isVisible = true
-        whereSearchSpinner.isVisible = true
+        searchInTitle.isVisible = true
+        searchInSpinner.isVisible = true
         dateText.isVisible = true
         dateButton.isVisible = true
         instruction.isVisible = true
     }
 
-    private fun initBingNews() {
+    private fun showBingNewsFilter() {
         val list = itemVew.resources.getStringArray(R.array.news_sort_by).toList().subList(0, 2)
         sortBySpinner.adapter = ArrayAdapter(
             itemVew.context,
@@ -207,95 +181,18 @@ abstract class FilterViewHolder(private val itemVew: View, private val type: Typ
         safeSearchSpinner.adapter = getSpinnerAdapter(R.array.safe_search)
         freshnessSpinner.adapter = getSpinnerAdapter(R.array.freshness)
 
-        resetButton.setOnClickListener {
-            CurrentFilter.filterForBingNews = FilterForBingNews(
-                language = getPreferences().getString("LANGUAGE", "")!!
-            )
-            searchBar.setQuery("", true)
-            sortBySpinner.setSelection(0)
-            safeSearchSpinner.setSelection(0)
-            freshnessSpinner.setSelection(0)
-            Log.e("filterR", "${CurrentFilter.filterForBingNews}")
-            dateText.text = ""
-            closeMenuAndUpdate()
-        }//Для отмены фильтров
-
-        confirmButton.setOnClickListener {
-            val lang = languageArray[languageSpinner.selectedItemPosition]
-            val sortBy = if (sortBySpinner.selectedItemPosition == 0) "Date" else ""
-
-            saveLanguage(lang)
-
-            CurrentFilter.filterForBingNews =
-                CurrentFilter.filterForBingNews.copy(
-                    query = "${searchBar.query}",
-                    language = lang,
-                    sortBy = sortBy,
-                    safeSearch = SafeSearch.values()[safeSearchSpinner.selectedItemPosition],
-                    freshness = Freshness.values()[freshnessSpinner.selectedItemPosition]
-                )
-            Log.e("filterR", "${CurrentFilter.filterForBingNews}")
-
-            closeMenuAndUpdate()
-        }//Для применения фильтров
-    }
-
-    private fun showBingNewsFilter() {
         sortByTitle.isVisible = true
         sortBySpinner.isVisible = true
         safeSearchTitle.isVisible = true
         safeSearchSpinner.isVisible = true
         freshnessTitle.isVisible = true
         freshnessSpinner.isVisible = true
-    }
 
-    private fun initNewscather() {
-        resetButton.setOnClickListener {
-            CurrentFilter.filterForNewscatcher = FilterForNewscather(
-                language = getPreferences().getString("LANGUAGE", "")!!
-            )
-            searchBar.setQuery("", true)
-            closeMenuAndUpdate()
-
-        }
-
-        confirmButton.setOnClickListener {
-            val lang = languageArray[languageSpinner.selectedItemPosition]
-
-            saveLanguage(lang)
-
-            CurrentFilter.filterForNewscatcher =
-                CurrentFilter.filterForNewscatcher.copy(
-                    query = "${searchBar.query}".ifBlank { "a" },
-                    language = lang
-                )
-            closeMenuAndUpdate()
-        }
-    }
-
-    private fun showNewscatherFilter() {
-    }
-
-    private fun initStopGame() {
-        rssTypeSpinner.adapter = getSpinnerAdapter(R.array.stopgame_type_rss)
-
-        confirmButton.setOnClickListener {
-            val type = rssTypeArray[rssTypeSpinner.selectedItemPosition]
-
-            CurrentFilter.filterForStopGame =
-                FilterForStopGame(path = "https://rss.stopgame.ru/$type")
-            closeMenuAndUpdate()
-        }
-    }
-
-    private fun saveLanguage(lang: String) {
-        with(getPreferences().edit()) {
-            putString("LANGUAGE", lang)
-            apply()
-        }
     }
 
     private fun showStopGameFilter() {
+        rssTypeSpinner.adapter = getSpinnerAdapter(R.array.stopgame_type_rss)
+
         languageTitle.visibility = View.GONE
         languageSpinner.visibility = View.GONE
         searchBar.visibility = View.GONE
@@ -303,6 +200,22 @@ abstract class FilterViewHolder(private val itemVew: View, private val type: Typ
 
         rssTypeTitle.isVisible = true
         rssTypeSpinner.isVisible = true
+    }
+
+    private fun showNewsDataFilter() {
+        categorySpinner.adapter = getSpinnerAdapter(R.array.newsdata_category)
+
+        searchBar.visibility = View.GONE
+
+        categoryTitle.isVisible = true
+        categorySpinner.isVisible = true
+    }
+
+    private fun saveLanguage(lang: String) {
+        with(getPreferences().edit()) {
+            putString("LANGUAGE", lang)
+            apply()
+        }
     }
 
     private fun getSpinnerAdapter(res: Int): ArrayAdapter<CharSequence> {
