@@ -19,18 +19,9 @@ android {
     }
 
     buildTypes {
-        debug {
-            buildConfigField "String", "API_KEY_NEWSAPI", "\"c8556aedf85d4a5b80ad98ac35763a7a\""
-            buildConfigField "String", "API_KEY_NEWSAPI_2", "\"e0d13fadfa5741fc899b72692b956672\""
-            buildConfigField "String", "API_KEY_BING", "\"819fe16049mshcb355844ede9c6ep1b22dcjsnf1e2631c27c1\""
-        }
-
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField "String", "API_KEY_NEWSAPI", "\"c8556aedf85d4a5b80ad98ac35763a7a\""
-            buildConfigField "String", "API_KEY_NEWSAPI_2", "\"e0d13fadfa5741fc899b72692b956672\""
-            buildConfigField "String", "API_KEY_BING", "\"819fe16049mshcb355844ede9c6ep1b22dcjsnf1e2631c27c1\""
         }
     }
     compileOptions {
@@ -83,7 +74,7 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
-    //Picasso
-    def picasso_version = "2.71828"
-    implementation "com.squareup.picasso:picasso:$picasso_version"
+    //Coil
+    def coil_version = "2.0.0"
+    implementation "io.coil-kt:coil:$coil_version"
 }
