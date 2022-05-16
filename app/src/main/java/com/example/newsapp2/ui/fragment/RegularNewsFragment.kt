@@ -36,7 +36,7 @@ class RegularNewsFragment : Fragment() {
     private lateinit var pref: SharedPreferences
     private lateinit var typeNewsUrl: TypeNewsUrl
 
-    private lateinit var newsAdapter: NewsPagingAdapter
+    private val newsAdapter = NewsPagingAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,7 +60,6 @@ class RegularNewsFragment : Fragment() {
     }
 
     private fun FragmentRegularNewsBinding.bindAdapter() {
-        newsAdapter = NewsPagingAdapter()
         val header = NewsLoadStateAdapter { newsAdapter.retry() }
         newsAdapter.setOnItemClickListener(object : NewsPagingAdapter.OnItemClickListener {
             override fun onItemClick(id: Long?) {
@@ -135,7 +134,8 @@ class RegularNewsFragment : Fragment() {
 
     private fun FragmentRegularNewsBinding.initGoToUpBtn() {
         goToUpButton.setOnClickListener {
-            if (newsAdapter.itemCount >= 10) newsList.scrollToPosition(10)
+            val position = (newsList.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
+            if (position >= 10) newsList.scrollToPosition(10)
             newsList.smoothScrollToPosition(0)
         }
     }

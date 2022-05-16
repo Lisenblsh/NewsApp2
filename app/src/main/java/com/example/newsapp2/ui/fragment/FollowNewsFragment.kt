@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapp2.R
 import com.example.newsapp2.data.network.TypeNewsUrl
 import com.example.newsapp2.databinding.FragmentFollowNewsBinding
+import com.example.newsapp2.databinding.FragmentRegularNewsBinding
 import com.example.newsapp2.di.Injection
 import com.example.newsapp2.tools.showWebView
 import com.example.newsapp2.ui.adapters.NewsLoadStateAdapter
@@ -51,6 +52,7 @@ class FollowNewsFragment : Fragment() {
     private fun FragmentFollowNewsBinding.bindingElement() {
         bindAdapter()
         initSwipeRefresh()
+        initGoToUpBtn()
     }
 
     private fun FragmentFollowNewsBinding.bindAdapter() {
@@ -61,13 +63,13 @@ class FollowNewsFragment : Fragment() {
                     showWebView(this@FollowNewsFragment, id)
                 }
             }
-
         })
         newsList.adapter = newsAdapter.withLoadStateHeaderAndFooter(
             header = header,
             footer = NewsLoadStateAdapter { newsAdapter.retry() }
         )
         newsList.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+
         lifecycleScope.launch {
             viewModel.pagingDataFavoriteNewsFlow.collectLatest(newsAdapter::submitData)
         }
@@ -103,6 +105,14 @@ class FollowNewsFragment : Fragment() {
         swipeRefresh.setOnRefreshListener {
             newsAdapter.refresh()
             swipeRefresh.isRefreshing = false
+        }
+    }
+
+    private fun FragmentFollowNewsBinding.initGoToUpBtn() {
+        goToUpButton.setOnClickListener {
+            val position = (newsList.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
+            if (position >= 10) newsList.scrollToPosition(10)
+            newsList.smoothScrollToPosition(0)
         }
     }
 }
