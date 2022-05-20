@@ -1,15 +1,17 @@
 package com.example.newsapp2.tools
 
+import android.view.ContextThemeWrapper
 import android.view.View
 import android.widget.ImageView
-import coil.load
+import com.example.newsapp2.R
+import com.squareup.picasso.Picasso
 
 class ImageFun {
-    fun setImage(image: String, view: ImageView) {
-        view.load(image)
+    fun setImage(image: String, imageView: ImageView) {
+        Picasso.get().load(image).into(imageView)
     }
 
-    fun setImage(image: Int, view: View) {
-        (view as? ImageView)?.load(image)
+    fun setImage(image: Int, imageView: View) {
+        Picasso.get().load(image).placeholder(image).into(imageView as? ImageView)
     }
 }
