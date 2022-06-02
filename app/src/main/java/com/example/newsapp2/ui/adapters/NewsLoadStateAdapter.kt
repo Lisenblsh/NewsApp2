@@ -41,12 +41,18 @@ class NewsLoadStateAdapter(private val retry: () -> Unit) :
                 if (loadState is LoadState.Error) (loadState.error as? HttpException)?.code() else 0
             if (loadState is LoadState.Error) {
                 binding.errorMsg.text =
-                    if (code == 426) binding.root.resources.getString(R.string.end_of_list)
-                    else (loadState.error as? HttpException)?.message ?: binding.root.resources.getString(R.string.no_internet)
+                    if (code == 426) {
+                        binding.root.resources.getString(R.string.end_of_list)
+                    } else {
+                        (loadState.error as? HttpException)?.message
+                            ?: binding.root.resources.getString(R.string.no_internet)
+                    }
             }
             binding.progressBar.isVisible = loadState is LoadState.Loading
-            if (code != 426) {
-                binding.retryButton.isVisible = loadState is LoadState.Error
+            binding.retryButton.isVisible = if (code != 426) {
+                loadState is LoadState.Error
+            } else {
+                false
             }
             binding.errorMsg.isVisible = loadState is LoadState.Error
         }
