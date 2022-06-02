@@ -1,9 +1,6 @@
 package com.example.newsapp2.data
 
-import androidx.paging.ExperimentalPagingApi
-import androidx.paging.LoadType
-import androidx.paging.PagingState
-import androidx.paging.RemoteMediator
+import androidx.paging.*
 import androidx.room.withTransaction
 import com.example.newsapp2.data.network.CurrentFilter
 import com.example.newsapp2.data.network.TypeNewsUrl
@@ -33,6 +30,7 @@ class NewsRemoteMediator(
         loadType: LoadType,
         state: PagingState<Int, ArticlesDB>
     ): MediatorResult {
+
         val page = when (loadType) {
             LoadType.REFRESH -> {
                 val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)

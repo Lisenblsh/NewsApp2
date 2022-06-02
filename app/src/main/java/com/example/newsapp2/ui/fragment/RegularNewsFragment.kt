@@ -3,6 +3,7 @@ package com.example.newsapp2.ui.fragment
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -78,6 +79,7 @@ class RegularNewsFragment : Fragment() {
             viewModel.pagingDataRegularNewsFlow.collectLatest(newsAdapter::submitData)
         }
 
+        var isError = false
         lifecycleScope.launch {
             newsAdapter.loadStateFlow.collect { loadState ->
                 header.loadState = loadState.mediator
@@ -91,14 +93,21 @@ class RegularNewsFragment : Fragment() {
                     ?: loadState.prepend as? LoadState.Error
                     ?: loadState.refresh as? LoadState.Error
 
-                errorState?.let {
-                    if ((it.error as? HttpException)?.code() != 426) {
-                        Toast.makeText(
-                            requireContext(),
-                            resources.getString(R.string.error_occurred, it.error.localizedMessage),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                if(errorState != null && !isError)
+                {
+                    errorState.let {
+                        if ((it.error as? HttpException)?.code() != 426) {
+                            Log.e("error message", "error")
+                            isError = true
+                            Toast.makeText(
+                                requireContext(),
+                                resources.getString(R.string.error_occurred, (errorState.error as? HttpException)?.message ?: binding.root.resources.getString(R.string.no_internet)),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
+                } else if  (errorState == null) {
+                    isError = false
                 }
             }
         }

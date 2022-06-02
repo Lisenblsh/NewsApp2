@@ -48,4 +48,5 @@
     <string name="temp_not_work">Temporarily not working</string>
     <string name="newswire">Newswire:</string>
     <string name="category">Category:</string>
+    <string name="no_internet">No Internet connection</string>
 </resources>

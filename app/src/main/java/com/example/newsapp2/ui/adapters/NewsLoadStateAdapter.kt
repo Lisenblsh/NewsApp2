@@ -1,5 +1,6 @@
 package com.example.newsapp2.ui.adapters
 
+import android.accounts.NetworkErrorException
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -41,7 +42,7 @@ class NewsLoadStateAdapter(private val retry: () -> Unit) :
             if (loadState is LoadState.Error) {
                 binding.errorMsg.text =
                     if (code == 426) binding.root.resources.getString(R.string.end_of_list)
-                    else loadState.error.localizedMessage
+                    else (loadState.error as? HttpException)?.message ?: binding.root.resources.getString(R.string.no_internet)
             }
             binding.progressBar.isVisible = loadState is LoadState.Loading
             if (code != 426) {
