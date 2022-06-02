@@ -87,6 +87,15 @@ abstract class FilterViewHolder(private val itemVew: View, private val type: Typ
         resetButton.setOnClickListener {
             val lang = languageArray[languageSpinner.selectedItemPosition]
 
+            searchBar.setQuery("",false)
+            searchInSpinner.setSelection(0)
+            sortBySpinner.setSelection(0)
+            categorySpinner.setSelection(0)
+            freshnessSpinner.setSelection(0)
+            rssTypeSpinner.setSelection(0)
+            safeSearchSpinner.setSelection(0)
+            dateText.text = ""
+
             CurrentFilter.filter = Filter(
                 apiName = CurrentFilter.filter.apiName,
                 lang = lang

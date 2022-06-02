@@ -27,7 +27,10 @@ abstract class SelectViewHolder(private val itemView: View, private val type: Ty
             }
             TypeSetting.ApiSource -> {
                 TypeNewsUrl.values().forEach {
-                    array.add(it.title) }
+                    if(it != TypeNewsUrl.WebSearch){
+                        array.add(it.title)
+                    }
+                }
                 key = "TYPE_NEWS_URL"
                 title.text = itemView.resources.getString(R.string.sources)
             }
