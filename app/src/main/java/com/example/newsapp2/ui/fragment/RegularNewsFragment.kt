@@ -105,7 +105,6 @@ class RegularNewsFragment : Fragment() {
                             errorState.error.localizedMessage
                         }
                         if ((it.error as? HttpException)?.code() != 426) {
-                            Log.e("error message", "error")
                             isError = true
                             Toast.makeText(
                                 requireContext(),
