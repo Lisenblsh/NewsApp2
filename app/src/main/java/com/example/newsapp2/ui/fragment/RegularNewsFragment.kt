@@ -29,6 +29,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
+import java.net.UnknownHostException
 
 class RegularNewsFragment : Fragment() {
 
@@ -96,12 +97,19 @@ class RegularNewsFragment : Fragment() {
                 if(errorState != null && !isError)
                 {
                     errorState.let {
+                        val errorMessage = if ((it.error as? HttpException)?.code() == 426) {
+                            binding.root.resources.getString(R.string.end_of_list)
+                        } else if (errorState.error is UnknownHostException) {
+                            binding.root.resources.getString(R.string.no_internet)
+                        } else {
+                            errorState.error.localizedMessage
+                        }
                         if ((it.error as? HttpException)?.code() != 426) {
                             Log.e("error message", "error")
                             isError = true
                             Toast.makeText(
                                 requireContext(),
-                                resources.getString(R.string.error_occurred, (errorState.error as? HttpException)?.message ?: binding.root.resources.getString(R.string.no_internet)),
+                                resources.getString(R.string.error_occurred, errorMessage),
                                 Toast.LENGTH_SHORT
                             ).show()
                         }

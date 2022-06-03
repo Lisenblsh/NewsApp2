@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapp2.R
 import com.example.newsapp2.databinding.NewsLoadStateBinding
 import retrofit2.HttpException
+import java.net.UnknownHostException
 
 class NewsLoadStateAdapter(private val retry: () -> Unit) :
     LoadStateAdapter<NewsLoadStateAdapter.NewsLoadStateViewHolder>() {
@@ -43,9 +44,10 @@ class NewsLoadStateAdapter(private val retry: () -> Unit) :
                 binding.errorMsg.text =
                     if (code == 426) {
                         binding.root.resources.getString(R.string.end_of_list)
+                    } else if (loadState.error is UnknownHostException) {
+                        binding.root.resources.getString(R.string.no_internet)
                     } else {
-                        (loadState.error as? HttpException)?.message
-                            ?: binding.root.resources.getString(R.string.no_internet)
+                        loadState.error.localizedMessage
                     }
             }
             binding.progressBar.isVisible = loadState is LoadState.Loading

@@ -35,7 +35,7 @@ class NewsFragment : Fragment() {
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             when (position) {
                 0 -> tab.text = resources.getString(R.string.all_news)
-                1 -> tab.text = resources.getString(R.string.favorite)
+                1 -> tab.text = resources.getString(R.string.follows_source)
             }
         }.attach()
     }

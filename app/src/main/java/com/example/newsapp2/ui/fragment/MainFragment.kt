@@ -48,7 +48,7 @@ class MainFragment : Fragment() {
                     imageFun.setImage(R.drawable.newspaper, tabImg)
                 }
                 1 -> {
-                    tabText.text = resources.getString(R.string.home)
+                    tabText.text = resources.getString(R.string.favorite)
                     imageFun.setImage(R.drawable.home, tabImg)
                 }
                 2 -> {
