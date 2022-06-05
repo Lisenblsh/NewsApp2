@@ -74,6 +74,7 @@ class FollowNewsFragment : Fragment() {
             viewModel.pagingDataFavoriteNewsFlow.collectLatest(newsAdapter::submitData)
         }
 
+        var isError = false
         lifecycleScope.launch {
             newsAdapter.loadStateFlow.collect { loadState ->
                 header.loadState = loadState.mediator
@@ -87,23 +88,26 @@ class FollowNewsFragment : Fragment() {
                     ?: loadState.prepend as? LoadState.Error
                     ?: loadState.refresh as? LoadState.Error
 
-                var isError = false
-                errorState?.let {
-                    val errorMessage = if ((it.error as? HttpException)?.code() == 426) {
-                        binding.root.resources.getString(R.string.end_of_list)
-                    } else if (errorState.error is UnknownHostException) {
-                        binding.root.resources.getString(R.string.no_internet)
-                    } else {
-                        errorState.error.localizedMessage
-                    }
-                    if ((it.error as? HttpException)?.code() != 426) {
+                if (errorState != null && !isError) {
+                    errorState.let {
+                        val errorMessage = if ((it.error as? HttpException)?.code() == 426) {
+                            binding.root.resources.getString(R.string.end_of_list)
+                        } else if (errorState.error is UnknownHostException) {
+                            binding.root.resources.getString(R.string.no_internet)
+                        } else {
+                            errorState.error.localizedMessage
+                        }
+                        if ((it.error as? HttpException)?.code() != 426) {
+                            Toast.makeText(
+                                requireContext(),
+                                resources.getString(R.string.error_occurred, errorMessage),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                         isError = true
-                        Toast.makeText(
-                            requireContext(),
-                            resources.getString(R.string.error_occurred, errorMessage),
-                            Toast.LENGTH_SHORT
-                        ).show()
                     }
+                } else if (errorState == null) {
+                    isError = false
                 }
             }
         }

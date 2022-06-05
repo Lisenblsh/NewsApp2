@@ -81,5 +81,6 @@ dependencies {
     //adblock
     def adblock_version = "4.4.0"
     implementation "org.adblockplus:adblock-android-webview:$adblock_version"
+    implementation "org.adblockplus:adblock-android-settings:$adblock_version"
 
 }

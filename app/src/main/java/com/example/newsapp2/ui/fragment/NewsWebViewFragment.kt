@@ -77,11 +77,6 @@ class NewsWebViewFragment : Fragment() {
                     loadUrl(request?.url.toString())
                     return true
                 }
-
-                override fun shouldOverrideUrlLoading(view: WebView?, url: String): Boolean {
-                    loadUrl(url)
-                    return true
-                }
             }
             webChromeClient = object : WebChromeClient() {
                 override fun onProgressChanged(view: WebView?, newProgress: Int) {

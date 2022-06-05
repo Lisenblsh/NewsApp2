@@ -79,8 +79,8 @@ class RegularNewsFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.pagingDataRegularNewsFlow.collectLatest(newsAdapter::submitData)
         }
-
         var isError = false
+
         lifecycleScope.launch {
             newsAdapter.loadStateFlow.collect { loadState ->
                 header.loadState = loadState.mediator
@@ -93,9 +93,7 @@ class RegularNewsFragment : Fragment() {
                     ?: loadState.append as? LoadState.Error
                     ?: loadState.prepend as? LoadState.Error
                     ?: loadState.refresh as? LoadState.Error
-
-                if(errorState != null && !isError)
-                {
+                if (errorState != null && !isError) {
                     errorState.let {
                         val errorMessage = if ((it.error as? HttpException)?.code() == 426) {
                             binding.root.resources.getString(R.string.end_of_list)
@@ -105,15 +103,15 @@ class RegularNewsFragment : Fragment() {
                             errorState.error.localizedMessage
                         }
                         if ((it.error as? HttpException)?.code() != 426) {
-                            isError = true
                             Toast.makeText(
                                 requireContext(),
                                 resources.getString(R.string.error_occurred, errorMessage),
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
+                        isError = true
                     }
-                } else if  (errorState == null) {
+                } else if (errorState == null) {
                     isError = false
                 }
             }
@@ -150,7 +148,8 @@ class RegularNewsFragment : Fragment() {
 
     private fun FragmentRegularNewsBinding.initGoToUpBtn() {
         goToUpButton.setOnClickListener {
-            val position = (newsList.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
+            val position =
+                (newsList.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
             if (position >= 10) newsList.scrollToPosition(10)
             newsList.smoothScrollToPosition(0)
         }
