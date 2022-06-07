@@ -98,11 +98,7 @@ class FollowNewsFragment : Fragment() {
                             errorState.error.localizedMessage
                         }
                         if ((it.error as? HttpException)?.code() != 426) {
-                            Toast.makeText(
-                                requireContext(),
-                                resources.getString(R.string.error_occurred, errorMessage),
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            showMessage(resources.getString(R.string.error_occurred, errorMessage))
                         }
                         isError = true
                     }
@@ -127,5 +123,13 @@ class FollowNewsFragment : Fragment() {
             if (position >= 10) newsList.scrollToPosition(10)
             newsList.smoothScrollToPosition(0)
         }
+    }
+
+    private var toast: Toast? = null
+    private fun showMessage(message: String) {
+        if(toast != null){
+            toast?.cancel()
+        }
+        toast = Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).also { it.show() }
     }
 }

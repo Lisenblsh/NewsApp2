@@ -103,11 +103,7 @@ class RegularNewsFragment : Fragment() {
                             errorState.error.localizedMessage
                         }
                         if ((it.error as? HttpException)?.code() != 426) {
-                            Toast.makeText(
-                                requireContext(),
-                                resources.getString(R.string.error_occurred, errorMessage),
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            showMessage(resources.getString(R.string.error_occurred, errorMessage))
                         }
                         isError = true
                     }
@@ -175,5 +171,13 @@ class RegularNewsFragment : Fragment() {
                 requireActivity().applicationContext, this, typeNewsUrl
             ) // Крч при смене API надо очищять адаптер иначе старые новости остаются
         ).get(NewsViewModel::class.java)
+    }
+
+    private var toast: Toast? = null
+    private fun showMessage(message: String) {
+        if(toast != null){
+            toast?.cancel()
+        }
+        toast = Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).also { it.show() }
     }
 }

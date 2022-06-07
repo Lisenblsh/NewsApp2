@@ -212,7 +212,11 @@ class NewsWebViewFragment : Fragment() {
         }//Поделиться новостью
     }
 
+    private var toast: Toast? = null
     private fun showMessage(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        if(toast != null){
+            toast?.cancel()
+        }
+        toast = Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).also { it.show() }
     }
 }
